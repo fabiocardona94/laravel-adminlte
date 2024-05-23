@@ -9,6 +9,6 @@ class TestController extends Controller
 
     public function index()
     {
-        return view('agrupacionzfip.index');
+        return view('admin.index');
     }
 }
