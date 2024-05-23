@@ -96,7 +96,7 @@
             <div class="d-none d-sm-inline float-right"></div>
             <!-- Default to the left -->
             <strong>Copyright &copy; {{ date("Y") }}
-                <a href="https://www.siocoytex.com">SIO-CO&TEX</a></strong>
+                <a href="https://adminlte.io/">AdminLTE</a></strong>
         </footer>
     </div>
     <!-- ./wrapper -->
