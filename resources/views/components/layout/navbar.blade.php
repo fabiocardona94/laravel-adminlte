@@ -14,7 +14,10 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-
+        {{-- Name user --}}
+        <div class="nav-link">
+            <p class="h5">{{Auth::user()->name}}</p>
+        </div>
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">

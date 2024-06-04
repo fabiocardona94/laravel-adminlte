@@ -28,5 +28,19 @@ class DatabaseSeeder extends Seeder
             'update_password' => 0,
             'license' => date('Y-m-d', strtotime('+1 year'))
         ]);
+
+        User::create([
+            'username' => '1234',
+            'name' => 'Jose Angarita',
+            'cell_phone' => '+573115633158',
+            'email' => 'joseangarita014@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('123456'),
+            'profile_photo_path' => null,
+            'rol' => 'Junior',
+            'active' => 1,
+            'update_password' => 0,
+            'license' => date('Y-m-d', strtotime('+1 year'))
+        ]);
     }
 }

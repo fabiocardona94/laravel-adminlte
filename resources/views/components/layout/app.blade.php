@@ -28,6 +28,12 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css" />
 
+    {{-- Style tables --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap4.css">
+    {{-- sweetalert2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css" rel="stylesheet">
+
     @stack("styles")
 
 
@@ -53,33 +59,11 @@
                 @isset($contentHeader)
                     {{ $contentHeader ?? "" }}
                 @endisset
-                {{--
-                    <div class="content-header">
-                        <div class="container-fluid">
-                            <div class="row mb-2">
-                                <div class="col-sm-6">
-                                    <h1 class="m-0">Starter Page</h1>
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-6">
-                                    <ol class="breadcrumb float-sm-right">
-                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                        <li class="breadcrumb-item active">Starter Page</li>
-                                    </ol>
-                                </div>
-                                <!-- /.col -->
-                            </div>
-                            <!-- /.row -->
-                        </div>
-                        <!-- /.container-fluid -->
-                    </div>
-                    <!-- /.content-header -->
-                --}}
 
                 <!-- Main content -->
                 <div class="content">
                     <div class="container-fluid">
-                        {{-- Anexas los rows y cols  --}}
+                        {{-- Anexas los rows y cols--}}
                         {{ $slot }}
                     </div>
                     <!-- /.container-fluid -->
@@ -96,7 +80,7 @@
             <div class="d-none d-sm-inline float-right"></div>
             <!-- Default to the left -->
             <strong>Copyright &copy; {{ date("Y") }}
-                <a href="https://adminlte.io/">AdminLTE</a></strong>
+                <a href="https://www.coytex.com.co/">CO&TEX SAS</a></strong>
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -110,7 +94,15 @@
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/dist/js/adminlte.min.js"></script>
-
+    
+    {{-- Datatables.net --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap4.js"></script>
+    
+    {{-- sweetalert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts')
 </body>
 
