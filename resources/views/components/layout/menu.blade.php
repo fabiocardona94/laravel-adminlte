@@ -81,6 +81,12 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('cargarArchivo')}}" class="nav-link">
+                        <i class="fas fa-folder-plus nav-icon"></i>
+                        <p>Cargar Archivos</p>
+                    </a>
+                </li>
 
             </ul>
         </nav>

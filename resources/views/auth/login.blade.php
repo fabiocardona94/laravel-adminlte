@@ -41,8 +41,10 @@
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __("Log in") }}
+                {{ __("Login") }}
             </x-primary-button>
         </div>
     </form>
 </x-guest-layout>
+
+
