@@ -23,9 +23,7 @@ Route::prefix('/admin')->name('admin.')->middleware('auth')->group(function () {
                ->name('store');
           
 
-        Route::patch('/{list_reset}',[PasswordResetUsersSapController::class,'update'])
+        Route::patch('/{id}',[PasswordResetUsersSapController::class,'update'])
         ->name('update');
-
-    
     });
 });

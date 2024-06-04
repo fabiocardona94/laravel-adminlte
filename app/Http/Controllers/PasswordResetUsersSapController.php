@@ -63,26 +63,31 @@ class PasswordResetUsersSapController extends Controller
      * Method to update the status and send the email to the user to reset
      * the password and additionally send the temporarily generated password.
      */
-    public function update (Request $request,PasswordResetsUsersSap $list_reset)
+
+    public function update(Request $request, $id)
     {
-        
-        // Validar los datos de la solicitud
+        //Validate the request data
         $validatedData = $request->validate([
             'password_tmp' => 'required|string|max:6',
         ]);
 
+        //Search the record in the database
+        $list_reset = PasswordResetsUsersSap::findOrFail($id);
+
+        //Update registration data
         $list_reset->password_tmp = $validatedData['password_tmp'];
         $list_reset->status = 1;
         $list_reset->save();
-        
-        
-        $usuario = Auth::user();
-        $email = $usuario->email;
-        
-        Mail::to($email)
-            ->send(new ResetPasswordMailable($request->all()));
-   
-        return redirect()->route('admin.solicitar.index')->with('status', 'En unos momentos reciviras un correo para restablecer tu contraseña');
 
+        //Get user email
+        $usuario = auth()->user();
+        $email = $usuario->email;
+
+
+        // Send an e-mail
+        Mail::to($email)->send(new ResetPasswordMailable($request->all()));
+
+        // Redirect with a message
+        return response()->json(['message' => 'Solicitud realizada con éxito, recibirás un correo para restablecer tu contraseña'], 200);
     }
 }

@@ -50,22 +50,18 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <form action="{{ route('admin.solicitar.update',$list_reset) }}" method="POST">
-                                                @csrf @method('PATCH')
-                                                <input type="hidden" name="id" value="{{ $list_reset->id }}">
-                                                <input type="hidden" name="password_tmp" value="{{ $list_reset->password_tmp}}">
-                                                <input type="hidden" name="status" value="{{ $list_reset->status}}">
-                                                <input type="hidden" name="tipo_solicitud" value="{{ $list_reset->tipo_solicitud}}">
-                                                @if ($list_reset->status==1)
-                                                    <button type="button" class="btn btn-sm btn-outline-primary disabled">
-                                                        Email Enviado
-                                                    </button>
-                                                @else
-                                                    <button type="submit" class="btn btn-sm btn-outline-success">
-                                                        Enviar Email
-                                                    </button>
-                                                @endif
-                                            </form>
+                                            @if ($list_reset->status==1)
+                                                <button type="button" class="btn btn-sm btn-outline-primary disabled">
+                                                    Email Enviado
+                                                </button>
+                                            @else
+                                                <button
+                                                    type="button"
+                                                    onclick="ResetPassword({{ $list_reset->id }}, '{{ $list_reset->password_tmp }}', {{ $list_reset->status }}, '{{ $list_reset->tipo_solicitud }}')"
+                                                    class="btn btn-sm btn-outline-success">
+                                                    Enviar Email
+                                                </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -73,7 +69,6 @@
                         </thead>
                     </table>
                 </div>
-                <!-- /.col -->outline-
             </div>
         </div>
     </div>
@@ -136,5 +131,6 @@
                 } );
             } );
         </script>
+       <script src="/dist/js/ajax.js"></script>
     @endpush
 </x-layout.app>

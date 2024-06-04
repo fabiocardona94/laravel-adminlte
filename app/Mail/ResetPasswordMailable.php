@@ -41,7 +41,7 @@ class ResetPasswordMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'admin.emails.restablecimiento',
+            view: 'admin.solicitud.emails.restablecimiento',
         );
     }
 
