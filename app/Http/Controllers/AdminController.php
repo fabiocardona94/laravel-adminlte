@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\ExcelModel;
 use DynamicTableImport as GlobalDynamicTableImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AdminController extends Controller
 {
@@ -16,17 +17,47 @@ class AdminController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
+            'spreadsheet' => 'required|file|mimes:xls,xlsx,csv',
         ]);
     
-        $file = $request->file('file');
-        $tableName = 'table_' . time();  // Genera un nombre de tabla único
+        $file = $request->file('spreadsheet');
     
-        // Importa los datos del archivo Excel a la nueva tabla
-        Excel::import(new GlobalDynamicTableImport($tableName), $file);
+        $reader = IOFactory::createReader('Xlsx');
+        $spreadsheet = $reader->load($file->getPathname());
+        $sheet = $spreadsheet->getActiveSheet();
+
+        ExcelModel::truncate();
     
-        return response()->json(['success' => 'La tabla fue creada en la base de datos y los datos se importaron correctamente.']);
+        $firstRow = true;
+    
+        foreach ($sheet->getRowIterator() as $row) {
+            // Saltar la primera fila
+            if ($firstRow) {
+                $firstRow = false;
+                continue;
+            }
+    
+            $rowData = [];
+            foreach ($row->getCellIterator() as $cell) {
+                $rowData[] = $cell->getValue();
+            }
+    
+            ExcelModel::create([
+                'centro' => $rowData[0],
+                'almacen' => $rowData[1],
+                'material' => $rowData[2],
+                'texto_breve_de_material' => $rowData[3],
+                'grupo_de_articulos' => $rowData[4],
+                'lote' => $rowData[5],
+                'unidad_de_medida' => $rowData[6],
+                'libre_utilizacion' => $rowData[7]
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'Archivo Excel subido exitosamente.');
     }
+    
+    
     
 
 }

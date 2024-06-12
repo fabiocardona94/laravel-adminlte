@@ -11,5 +11,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     })->name('index');
 });
 Route::get('/admin.uploadFiles', [AdminController::class, 'vistaArchivos'])->name('cargarArchivo');
-Route::post('/upload', [AdminController::class, 'upload'])->name('upload');
+
+Route::post('/upload', [AdminController::class, 'upload'])->name('upload.file');
+
 

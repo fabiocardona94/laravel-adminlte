@@ -21,10 +21,10 @@
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css">
     <!-- Incluye los estilos de Dropzone.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
-
-
+    
     <title>{{ config("app.name", "Laravel") }} - {{ $metaTitle ?? "" }}</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -121,67 +121,11 @@
     <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://adminlte.io/themes/v3/dist/js/adminlte.min.js"></script>
     <!-- Incluye los scripts de Dropzone.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+    
     
 
     @stack('scripts')
 
-    {{-- codigo que permite subir archivos de excel al DB --}}
-
-
-    <script>
-        // Configura Dropzone.js
-        Dropzone.autoDiscover = false;
-    
-        // Inicializa Dropzone en el elemento con id="previews"
-        const myDropzone = new Dropzone("#previews", {
-            url: "{{ route('upload') }}", // Ruta de la carga en Laravel
-            autoProcessQueue: false,
-            addRemoveLinks: true,
-            uploadMultiple: true,
-            parallelUploads: 100,
-            maxFiles: 100,
-            previewsContainer: "#previews", // Define el contenedor para las vistas previas de archivos
-            clickable: ".fileinput-button" // Define el botón que abrirá el selector de archivos
-        });
-    
-        // Maneja el inicio de la carga cuando se hace clic en el botón de iniciar carga
-        document.querySelector(".start").addEventListener("click", function() {
-            myDropzone.processQueue();
-        });
-    
-        // Maneja la cancelación de la carga cuando se hace clic en el botón de cancelar
-        document.querySelector(".cancel").addEventListener("click", function() {
-            myDropzone.removeAllFiles(true);
-        });
-    
-        // Actualiza la barra de progreso general
-        myDropzone.on("totaluploadprogress", function(progress) {
-            document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-        });
-    
-        // Muestra la barra de progreso al iniciar la carga
-        myDropzone.on("sending", function(file) {
-            document.querySelector("#total-progress").style.opacity = "1";
-        });
-    
-        // Oculta la barra de progreso al completar la carga
-        myDropzone.on("queuecomplete", function(progress) {
-            document.querySelector("#total-progress").style.opacity = "0";
-        });
-    
-        // Maneja la respuesta del servidor después de cargar un archivo
-        myDropzone.on("success", function(file, response) {
-            console.log(response);
-            alert('Archivo subido correctamente');
-        });
-    
-        // Maneja los errores del servidor
-        myDropzone.on("error", function(file, response) {
-            console.error(response);
-            alert('Error al subir el archivo');
-        });
-    </script>
     
 </body>
 

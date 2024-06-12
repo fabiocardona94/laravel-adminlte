@@ -4,49 +4,43 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card card-default">
-                            <div class="card-header">
-                                <h3 class="card-title">Cargar Archivo Excel</h3>
-                            </div>
-                            <div class="card-body">
-                                <div id="actions" class="row">
-                                    <div class="col-lg-6">
-                                        <div class="btn-group w-100">
-                                            <span class="btn btn-success col fileinput-button dz-clickable">
-                                                <i class="fas fa-plus"></i>
-                                                <span>Add files</span>
-                                            </span>
-                                            <button type="submit" class="btn btn-primary col start">
-                                                <i class="fas fa-upload"></i>
-                                                <span>Start upload</span>
-                                            </button>
-                                            <button type="reset" class="btn btn-warning col cancel">
-                                                <i class="fas fa-times-circle"></i>
-                                                <span>Cancel upload</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 d-flex align-items-center">
-                                        <div class="fileupload-process w-100">
-                                            <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="opacity: 0;">
-                                                <div class="progress-bar progress-bar-success" style="width: 100%;" data-dz-uploadprogress=""></div>
-                                            </div>
-                                        </div>
+                        <div class="card-header">Subir Hoja de Cálculo</div>
+                        <div class="card-body">
+                            <form action="{{ route('upload.file') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="spreadsheet">Seleccionar Archivo:</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="spreadsheet" name="spreadsheet" required>
+                                        <label class="custom-file-label" for="spreadsheet" id="spreadsheetLabel">Elegir archivo</label>
                                     </div>
                                 </div>
-                                <div class="table table-striped files" id="previews">
-                                
+                                <button type="submit" class="btn btn-success">Cargar</button>
+                            </form>
+                            @if(session('success'))
+                                <div class="alert alert-success mt-3">{{ session('success') }}</div>
+                            @endif
+                            @if($errors->any())
+                                <div class="alert alert-danger mt-3">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                            </div>
+                            @endif
                         </div>
-                    
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            // Mostrar el nombre del archivo seleccionado en el campo de entrada de archivos
+            document.getElementById('spreadsheet').addEventListener('change', function() {
+                var fileName = this.files[0].name;
+                document.getElementById('spreadsheetLabel').innerText = fileName;
+            });
+        </script>
     </x-slot>
-
-
-
-    
 </x-layout.app>
