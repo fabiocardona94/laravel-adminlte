@@ -1,4 +1,4 @@
-function ResetPassword(id, password_tmp, status, tipo_solicitud) {
+function ResetPassword(id) {
     Swal.fire({
         title: "Deseas solicitar el restablecimiento de contraseña?",
         showDenyButton: true,
@@ -14,22 +14,19 @@ function ResetPassword(id, password_tmp, status, tipo_solicitud) {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 },
                 body: JSON.stringify({
-                    'id': id,
-                    'password_tmp': password_tmp,
-                    'status': status,
-                    'tipo_solicitud': tipo_solicitud
+                    'id': id
                 })
             })
             .then(response => {
-                // Manejar la respuesta
-                if (!response.ok) {
-                    throw new Error('Error en la solicitud');
-                }
-                return response.json();
+                console.log('Raw response:', response);
+                return response.json(); 
             })
             .then(data => {
-                // Manejar la respuesta del servidor
+                if (!data.status == 'error') {
+                    throw new Error(data.message);
+                }
                 Swal.fire({
+
                     title: data.message,
                     icon: 'success',
                     didClose: () => {
@@ -41,7 +38,15 @@ function ResetPassword(id, password_tmp, status, tipo_solicitud) {
             .catch(error => {
                 // Manejar errores
                 console.error('Error:', error);
-                Swal.fire("Error al realizar la solicitud", "", "error");
+                Swal.fire({
+                    title: "Error al realizar la solicitud",
+                    text: error.message,
+                    icon: "error",
+                    willClose: () => {
+                        // Recargar la página cuando el cuadro de diálogo se cierra
+                        location.reload();
+                    }
+                });
             });
         } else if (result.isDenied) {
             Swal.fire("No se ha realizado la solicitud", "", "info");

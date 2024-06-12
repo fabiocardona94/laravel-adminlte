@@ -22,52 +22,51 @@
                     <div class="d-flex justify-content-end mb-2">
                         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#resetPassword"><i class="fas fa-key mr-1"></i>Restablecer Contraseña</button>
                     </div>
-                    <table id="solicitudes" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Tipo Solicitud</th>
-                                <th>Observación</th>
-                                <th>Fecha de la solicitud</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-
-                            </tr>
-                            <tbody>
-                                @foreach ($password_list_reset as $list_reset)
-                                    <tr>
-                                        <td>{{ $list_reset->tipo_solicitud }}</td>
-                                        <td>{{ $list_reset->observacion }}</td>
-                                        <td>{{ $list_reset->created_at }}</td>
-                                        <td>
-                                            @if ($list_reset->status==1)
-                                                <button type="button" class="btn btn-sm btn-primary">
-                                                    Finalizado
-                                                </button>
+                    <div class="table-responsive">
+                        <table id="solicitudes" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Tipo Solicitud</th>
+                                    <th>Observación</th>
+                                    <th>Fecha de la solicitud</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+    
+                                </tr>
+                                <tbody>
+                                    @foreach ($password_list_reset as $list_reset)
+                                        <tr>
+                                            <td>{{ $list_reset->tipo_solicitud }}</td>
+                                            <td>{{ $list_reset->observacion }}</td>
+                                            <td>{{ $list_reset->created_at }}</td>
+                                            <td>
+                                                @if ($list_reset->status==1)
+                                                    <button type="button" class="btn btn-sm btn-primary">
+                                                        Finalizado
+                                                    </button>
+                                                    @else
+                                                    <button type="button" class="btn btn-sm btn-danger">
+                                                        En Proceso
+                                                    </button>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($list_reset->status==1)
+                                                    <button type="button" class="btn btn-sm btn-outline-primary disabled">
+                                                        Email Enviado
+                                                    </button>
                                                 @else
-                                                <button type="button" class="btn btn-sm btn-warning">
-                                                    En Proceso
-                                                </button>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($list_reset->status==1)
-                                                <button type="button" class="btn btn-sm btn-outline-primary disabled">
-                                                    Email Enviado
-                                                </button>
-                                            @else
-                                                <button
-                                                    type="button"
-                                                    onclick="ResetPassword({{ $list_reset->id }}, '{{ $list_reset->password_tmp }}', {{ $list_reset->status }}, '{{ $list_reset->tipo_solicitud }}')"
-                                                    class="btn btn-sm btn-outline-success">
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword({{ $list_reset->id}})">
                                                     Enviar Email
                                                 </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </thead>
-                    </table>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,6 +130,6 @@
                 } );
             } );
         </script>
-       <script src="/dist/js/ajax.js"></script>
+       <script src="/dist/js/request_password/ajax.js"></script>
     @endpush
 </x-layout.app>
