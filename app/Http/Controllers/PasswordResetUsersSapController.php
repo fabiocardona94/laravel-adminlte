@@ -65,14 +65,14 @@ class PasswordResetUsersSapController extends Controller
      * Method to update the status and send the email to the user to reset
      * the password and additionally send the temporarily generated password.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
 
-        $request->validate([
-            'id' => 'required|integer'
+        // dd($request->id);
+        $request->validate(['id' => 'required|integer|exists:password_resets_users_saps,id'
         ]);
 
-        $list_reset = PasswordResetsUsersSap::findOrFail($id);
+        $list_reset = PasswordResetsUsersSap::findOrFail($request->id);
         // $pass::select(['id', 'user_id', 'tipo_solicitud', 'observacion'])->with('user:id,username,name,email,rol')->where('id', '=', 1)->get();
 
         if (!$list_reset) {

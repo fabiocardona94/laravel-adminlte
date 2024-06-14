@@ -31,7 +31,7 @@
                                     <th>Fecha de la solicitud</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
-    
+
                                 </tr>
                                 <tbody>
                                     @foreach ($password_list_reset as $list_reset)
@@ -56,7 +56,7 @@
                                                         Email Enviado
                                                     </button>
                                                 @else
-                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword({{ $list_reset->id}})">
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword('{{ $list_reset->id}}')">
                                                     Enviar Email
                                                 </button>
                                                 @endif
@@ -121,7 +121,7 @@
             </div>
         </div>
     </div>
-    
+
     @push('scripts')
         <script>
             $(document).ready(function() {
