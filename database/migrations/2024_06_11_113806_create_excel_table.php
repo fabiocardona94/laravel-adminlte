@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('grupo_de_articulos');
             $table->string('lote');
             $table->string('unidad_de_medida');
-            $table->string('libre_utilizacion');
+            $table->integer('libre_utilizacion');
             $table->timestamps();
         });
     }
