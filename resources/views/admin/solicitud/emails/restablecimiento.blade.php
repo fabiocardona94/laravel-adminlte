@@ -60,7 +60,7 @@
             Por favor, utiliza esta contraseña para iniciar sesión y asegúrate de cambiarla a una nueva contraseña segura lo antes posible.
         </p>
         <p>
-            Para más información, visítanos en <a target="_blank" href="https://www.coytex.com.co/">nuestro sitio web</a>
+            Para más información, visítanos en <a target="_blank" href="http://127.0.0.1:8000/">nuestro sitio web</a>
         </p>
     </div>
 </body>

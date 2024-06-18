@@ -23,9 +23,10 @@
                         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#resetPassword"><i class="fas fa-key mr-1"></i>Restablecer Contraseña</button>
                     </div>
                     <div class="table-responsive">
-                        <table id="solicitudes" class="table table-striped table-bordered" style="width:100%">
+                        <table id="solicitudes" class="table table-striped table-bordered mt-2 mb-2" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th>Nombre usuario</th>
                                     <th>Tipo Solicitud</th>
                                     <th>Observación</th>
                                     <th>Fecha de la solicitud</th>
@@ -36,6 +37,7 @@
                                 <tbody>
                                     @foreach ($password_list_reset as $list_reset)
                                         <tr>
+                                            <td>{{ $list_reset->user->name}}</td>
                                             <td>{{ $list_reset->tipo_solicitud }}</td>
                                             <td>{{ $list_reset->observacion }}</td>
                                             <td>{{ $list_reset->created_at }}</td>
@@ -46,7 +48,7 @@
                                                     </button>
                                                     @else
                                                     <button type="button" class="btn btn-sm btn-danger">
-                                                        En Proceso
+                                                        Pendiente
                                                     </button>
                                                 @endif
                                             </td>
@@ -56,7 +58,7 @@
                                                         Email Enviado
                                                     </button>
                                                 @else
-                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword({{ $list_reset->id}})">
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword('{{ $list_reset->id}}')">
                                                     Enviar Email
                                                 </button>
                                                 @endif
@@ -126,7 +128,7 @@
         <script>
             $(document).ready(function() {
                 $('#solicitudes').DataTable( {
-                    order: [[ 2, 'desc' ]]
+                    order: [[ 3, 'desc' ]]
                 } );
             } );
         </script>

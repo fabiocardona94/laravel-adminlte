@@ -14,12 +14,14 @@ class ResetPasswordMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct(
+        public $data,
+        public string $asunto
+    )
     {
         $this->data = $data;
     }
@@ -31,7 +33,7 @@ class ResetPasswordMailable extends Mailable
     {
         return new Envelope(
             from: new Address('prueba@gmail.com','Prueba Correo'),
-            subject: 'Restablecimiento de la  contraseña de la cuenta de prueba',
+            subject:$this->asunto,
         );
     }
 

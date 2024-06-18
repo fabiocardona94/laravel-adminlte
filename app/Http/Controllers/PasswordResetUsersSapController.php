@@ -17,8 +17,7 @@ class PasswordResetUsersSapController extends Controller
      */
     public function index()
     {
-        $userId = Auth::id();
-        $password_list_reset = PasswordResetsUsersSap::where('user_id', $userId)->get();
+        $password_list_reset = PasswordResetsUsersSap::with('user')->get();
         return view('admin.solicitud.index',compact('password_list_reset'));
     }
 
@@ -67,23 +66,21 @@ class PasswordResetUsersSapController extends Controller
     public function update(Request $request, $id)
     {
         
-        $validatedData = $request->validate([
-            'id' => 'required|integer'
+        $request->validate([
+            'id' => ['required','integer']
         ]);
     
-        $list_reset = PasswordResetsUsersSap::findOrFail($id);
+        $list_reset = PasswordResetsUsersSap::with('user')->findOrFail($id);
         
         if (!$list_reset) {
             return response()->json(['message' => 'Ha ocurrido un error.'], 404);
         }
 
-        $password_tmp = $list_reset->password_tmp;
-        $tipo_solicitud = $list_reset->tipo_solicitud;
-
-
-        $usuario = User::find($list_reset->user_id);
+        $usuario = $list_reset->user;
         $email = $usuario->email;
         $name_user = $usuario->name;
+        $password_tmp = $list_reset->password_tmp;
+        $tipo_solicitud = $list_reset->tipo_solicitud;
 
         try {
             $data = [
@@ -91,16 +88,19 @@ class PasswordResetUsersSapController extends Controller
                 'tipo_solicitud' => $tipo_solicitud,
                 'password_tmp' => $password_tmp
             ];
-            Mail::to($email)->send(new ResetPasswordMailable($data));
+            $subject = "Restablecimiento de la  contraseña de la cuenta de prueba: {$name_user}";
+            Mail::to($email)->send(new ResetPasswordMailable($data,$subject));
             
             $list_reset->status = 1;
             $list_reset->save();
             // Redirect with a message
-            return response()->json(['message' => 'Solicitud realizada con éxito, recibirás un correo para restablecer tu contraseña'], 200);
-        } catch (\Throwable $e) {
             return response()->json([
-                'succes' => 'error',
-                'message' =>'Ha ocurrido un error,Vulve a intentarlo'.$e->getMessage(),
+                'status' => 'suceess',
+                'message' => 'Solicitud realizada con éxito, recibirás un correo para restablecer tu contraseña'
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['status' => 'error',
+                'message' => 'Ha ocurrido un error,Vuelve a intentarlo' . $e->getMessage(),
             ], 500);
 
         }

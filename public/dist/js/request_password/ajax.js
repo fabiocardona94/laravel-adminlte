@@ -1,4 +1,20 @@
-function ResetPassword(id) {
+function ResetPassword(idRegistro) {
+    // Validar que el id es un número
+    let id = Number(idRegistro);
+
+    if (!Number.isInteger(id)) {
+        Swal.fire({
+            title: "Error al realizar la solicitud",
+            text: `El ${id} no es un entero`,
+            icon: "error",
+            willClose: () => {
+                // Recargar la página cuando el cuadro de diálogo se cierra
+                location.reload();
+            }
+        });
+        return;
+    }
+  
     Swal.fire({
         title: "Deseas solicitar el restablecimiento de contraseña?",
         showDenyButton: true,
@@ -18,7 +34,7 @@ function ResetPassword(id) {
                 })
             })
             .then(response => {
-                console.log('Raw response:', response);
+                // console.log('Raw response:', response);
                 return response.json(); 
             })
             .then(data => {
@@ -37,10 +53,9 @@ function ResetPassword(id) {
             })
             .catch(error => {
                 // Manejar errores
-                console.error('Error:', error);
+                // console.error('Error:', error);
                 Swal.fire({
                     title: "Error al realizar la solicitud",
-                    text: error.message,
                     icon: "error",
                     willClose: () => {
                         // Recargar la página cuando el cuadro de diálogo se cierra
