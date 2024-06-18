@@ -1,5 +1,4 @@
 function ResetPassword(idRegistro) {
-    // Validar que el id es un número
     let id = Number(idRegistro);
 
     if (!Number.isInteger(id)) {
@@ -14,7 +13,7 @@ function ResetPassword(idRegistro) {
         });
         return;
     }
-  
+
     Swal.fire({
         title: "Deseas solicitar el restablecimiento de contraseña?",
         showDenyButton: true,

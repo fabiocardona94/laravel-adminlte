@@ -10,6 +10,8 @@ class PasswordResetsUsersSap extends Model
 {
     use HasFactory;
 
+    protected $table = 'password_resets_users_saps';
+
     protected $fillable = [
         'user_id',
         'tipo_solicitud',

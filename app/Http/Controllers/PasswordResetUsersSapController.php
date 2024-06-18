@@ -63,17 +63,19 @@ class PasswordResetUsersSapController extends Controller
      * Method to update the status and send the email to the user to reset
      * the password and additionally send the temporarily generated password.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+
         
         $request->validate([
             'id' => ['required','integer']
         ]);
     
-        $list_reset = PasswordResetsUsersSap::with('user')->findOrFail($id);
-        
+        $list_reset = PasswordResetsUsersSap::with('user')->findOrFail($request->id);
+
+
         if (!$list_reset) {
-            return response()->json(['message' => 'Ha ocurrido un error.'], 404);
+            return response()->json(['status' => 'error', 'message' => 'Ha ocurrido un error.'], 404);
         }
 
         $usuario = $list_reset->user;
@@ -88,9 +90,9 @@ class PasswordResetUsersSapController extends Controller
                 'tipo_solicitud' => $tipo_solicitud,
                 'password_tmp' => $password_tmp
             ];
+
             $subject = "Restablecimiento de la  contraseña de la cuenta de prueba: {$name_user}";
-            Mail::to($email)->send(new ResetPasswordMailable($data,$subject));
-            
+            Mail::to($email)->send(new ResetPasswordMailable($data, $subject));
             $list_reset->status = 1;
             $list_reset->save();
             // Redirect with a message

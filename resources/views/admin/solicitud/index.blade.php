@@ -32,7 +32,7 @@
                                     <th>Fecha de la solicitud</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
-    
+
                                 </tr>
                                 <tbody>
                                     @foreach ($password_list_reset as $list_reset)
@@ -123,7 +123,7 @@
             </div>
         </div>
     </div>
-    
+
     @push('scripts')
         <script>
             $(document).ready(function() {

@@ -13,9 +13,7 @@ use Illuminate\Queue\SerializesModels;
 class ResetPasswordMailable extends Mailable
 {
     use Queueable, SerializesModels;
-
-
-    /**
+  /**
      * Create a new message instance.
      */
     public function __construct(
@@ -23,7 +21,8 @@ class ResetPasswordMailable extends Mailable
         public string $asunto
     )
     {
-        $this->data = $data;
+        // $this->data = $data;
+
     }
 
     /**
