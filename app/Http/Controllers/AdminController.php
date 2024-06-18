@@ -16,7 +16,7 @@ class AdminController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'spreadsheet' => 'required|file|mimes:xls,xlsx,csv',
+            'spreadsheet' => 'required|file|mimes:xls,xlsx',
             'action' => 'required|in:replace,append', // Validar la opción seleccionada
         ]);
 
@@ -34,37 +34,53 @@ class AdminController extends Controller
         $insertData = [];
 
         foreach ($sheet->getRowIterator() as $row) {
-
-            // Saltar la primera fila 
+            // Saltar la primera fila
             if ($row->getRowIndex() === 1) {
                 continue;
             }
-
+        
             $rowData = [];
+            $isEmptyRow = true; // Bandera para verificar si la fila está vacía
+        
             foreach ($row->getCellIterator() as $cell) {
-
-                if ($cell) {
-                    
+                $cellValue = $cell->getValue();
+                
+                // Limpiar espacios en blanco alrededor de la celda
+                $trimmedValue = trim($cellValue);
+                
+                // Considerar la celda vacía si después de limpiar espacios no tiene contenido
+                $isEmptyCell = ($trimmedValue === '');
+        
+                // Si la celda tiene valor no vacío después de limpiar, la fila no está vacía
+                if (!$isEmptyCell) {
+                    $isEmptyRow = false;
                 }
-
-                $rowData[] = $cell->getValue();
-
+        
+                // Agregar el valor limpiado o una cadena vacía si está vacío
+                $rowData[] = !$isEmptyCell ? $trimmedValue : '';
             }
-
-            // Preparar los datos para la inserción
+        
+            // Si la fila está completamente vacía, detiene la iteración
+            if ($isEmptyRow) {
+                break;
+            }
+        
+            // Preparar los datos para la inserción, manejar celdas vacías con ''
             $insertData[] = [
-                'centro' => $rowData[0],
-                'almacen' => $rowData[1],
-                'material' => $rowData[2],
-                'texto_breve_de_material' => $rowData[3],
-                'grupo_de_articulos' => $rowData[4],
-                'lote' => $rowData[5],
-                'unidad_de_medida' => $rowData[6],
-                'libre_utilizacion' => $rowData[7],
+                'centro' => $rowData[0] ?? '',
+                'almacen' => $rowData[1] ?? '',
+                'material' => $rowData[2] ?? '',
+                'texto_breve_de_material' => $rowData[3] ?? '',
+                'grupo_de_articulos' => $rowData[4] ?? '',
+                'lote' => $rowData[5] ?? '', // Dejar vacío si es null o solo espacios
+                'unidad_de_medida' => $rowData[6] ?? '',
+                'libre_utilizacion' => $rowData[7] ?? '',
                 'created_at' => now(),
-                'updated_at' => now(), 
+                'updated_at' => now(),
             ];
         }
+        
+        
 
         // Insertar los datos al principio de la tabla
         ExcelModel::insert($insertData);
