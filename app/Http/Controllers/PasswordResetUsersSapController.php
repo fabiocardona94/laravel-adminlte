@@ -9,16 +9,47 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Yajra\DataTables\Facades\DataTables;
 
 class PasswordResetUsersSapController extends Controller
 {
     /**
-     * I check the user's requests to reset password and show them in their respective view.
+     *Show views of password reset requests
      */
     public function index()
     {
-        $password_list_reset = PasswordResetsUsersSap::with('user')->get();
-        return view('admin.solicitud.index',compact('password_list_reset'));
+        return view('admin.solicitud.index');
+    }
+    
+    /**
+     *Method to obtain the list of requests to reset the password
+     */
+    public function datatable()
+    {
+        $password_list_reset = PasswordResetsUsersSap::with('user:id,name');
+        
+        // $password_list_reset = PasswordResetsUsersSap::select('id','id_user', 'tipo_solicitud', 'observacion','password_tmp','status','created_at')
+        //                         ->with('user:id,name')
+        //                         ->get();
+
+        return DataTables::of($password_list_reset)
+            ->addColumn('user_name', function($row){
+                return $row->user->name;
+            })
+            ->addColumn('status', function($row){
+                return $row->status == 1 
+                    ? '<button type="button" class="btn btn-sm btn-primary">Finalizado</button>'
+                    : '<button type="button" class="btn btn-sm btn-danger">Pendiente</button>';
+            })
+            ->addColumn('actions', function($row){
+                return $row->status == 1
+                    ? '<button type="button" class="btn btn-sm btn-outline-primary disabled">Email Enviado</button>'
+                    : '<button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword(\'' . $row->id . '\')">Enviar Email</button>';
+            })
+            ->rawColumns(['status', 'actions'])
+            ->make(true);
+    
+    
     }
 
     /**

@@ -23,4 +23,11 @@ class PasswordResetsUsersSap extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    protected function casts(): array
+    {
+        return[
+            'created_at' => 'date:y-m-d g:i:s'
+        ];
+    }
 }

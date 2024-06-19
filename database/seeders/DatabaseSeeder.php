@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-
+use App\Models\PasswordResetsUsersSap;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,34 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
+        PasswordResetsUsersSap::factory(50)->create();
 
-        User::create([
-            'username' => '12345678',
-            'name' => 'USUARIO TEST',
-            'cell_phone' => '+573109992514',
-            'email' => 'usuario@test.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('12345678'),
-            'profile_photo_path' => null,
-            'rol' => 'developer',
-            'active' => 1,
-            'update_password' => 0,
-            'license' => date('Y-m-d', strtotime('+1 year'))
-        ]);
+        $this->call(UserSeeder::class);
+        // $user = User::factory()
+        //     ->has(PasswordResetsUsersSap::factory()->count(3))
+        //     ->create();
 
-        User::create([
-            'username' => '1234',
-            'name' => 'Jose Angarita',
-            'cell_phone' => '+573115633158',
-            'email' => 'joseangarita014@gmail.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('123456'),
-            'profile_photo_path' => null,
-            'rol' => 'Junior',
-            'active' => 1,
-            'update_password' => 0,
-            'license' => date('Y-m-d', strtotime('+1 year'))
-        ]);
     }
 }

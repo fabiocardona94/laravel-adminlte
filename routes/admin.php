@@ -19,6 +19,9 @@ Route::prefix('/admin')->name('admin.')->middleware('auth')->group(function () {
         Route::get('/',[PasswordResetUsersSapController::class,'index'])
                ->name('index');
                
+        Route::get('/datatable',[PasswordResetUsersSapController::class,'datatable'])
+               ->name('datatable');
+               
         Route::post('/',[PasswordResetUsersSapController::class,'store'])
                ->name('store');
           

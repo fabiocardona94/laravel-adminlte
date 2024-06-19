@@ -35,36 +35,6 @@
 
                                 </tr>
                                 <tbody>
-                                    @foreach ($password_list_reset as $list_reset)
-                                        <tr>
-                                            <td>{{ $list_reset->user->name}}</td>
-                                            <td>{{ $list_reset->tipo_solicitud }}</td>
-                                            <td>{{ $list_reset->observacion }}</td>
-                                            <td>{{ $list_reset->created_at }}</td>
-                                            <td>
-                                                @if ($list_reset->status==1)
-                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                        Finalizado
-                                                    </button>
-                                                    @else
-                                                    <button type="button" class="btn btn-sm btn-danger">
-                                                        Pendiente
-                                                    </button>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($list_reset->status==1)
-                                                    <button type="button" class="btn btn-sm btn-outline-primary disabled">
-                                                        Email Enviado
-                                                    </button>
-                                                @else
-                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="ResetPassword('{{ $list_reset->id}}')">
-                                                    Enviar Email
-                                                </button>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </thead>
                         </table>
@@ -128,7 +98,18 @@
         <script>
             $(document).ready(function() {
                 $('#solicitudes').DataTable( {
-                    order: [[ 3, 'desc' ]]
+                    order: [[ 3, 'desc' ]],
+                    processing: true,
+                    serverSide: true,
+                    ajax: '{{ route('admin.solicitar.datatable') }}',
+                    columns: [
+                        { data: 'user_name', name: 'user_name' },
+                        { data: 'tipo_solicitud', name: 'tipo_solicitud' },
+                        { data: 'observacion', name: 'observacion' },
+                        { data: 'created_at', name: 'created_at' },
+                        { data: 'status', name: 'status', orderable: false, searchable: false },
+                        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                    ]
                 } );
             } );
         </script>
