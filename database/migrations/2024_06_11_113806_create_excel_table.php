@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('excel', function (Blueprint $table) {
+        Schema::create('cargue', function (Blueprint $table) {
             $table->id('id');
             $table->string('centro');
             $table->string('almacen');
@@ -30,7 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('excel');
+        Schema::dropIfExists('cargue');
     }
 };
 
