@@ -7,7 +7,7 @@
                         <div class="card">
                             <div class="card-header">Subir Hoja de Cálculo</div>
                             <div class="card-body">
-                                <form action="{{ route('upload.file') }}" method="post" enctype="multipart/form-data" id="uploadForm">
+                                <form action="{{ route('admin.cargue.upload.file') }}" method="post" enctype="multipart/form-data" id="uploadForm">
                                     @csrf
                                     <div class="form-group">
                                         <label for="spreadsheet">Seleccionar Archivo:</label>

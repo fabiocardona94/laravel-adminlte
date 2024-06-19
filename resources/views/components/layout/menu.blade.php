@@ -82,7 +82,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('cargarArchivo')}}" class="nav-link">
+                    <a href="{{ route('admin.cargue.cargarArchivo')}}" class="nav-link">
                         <i class="fas fa-folder-plus nav-icon"></i>
                         <p>Cargar Archivos</p>
                     </a>
