@@ -27,11 +27,6 @@ class PasswordResetUsersSapController extends Controller
     public function datatable()
     {
         $password_list_reset = PasswordResetsUsersSap::with('user:id,name');
-        
-        // $password_list_reset = PasswordResetsUsersSap::select('id','id_user', 'tipo_solicitud', 'observacion','password_tmp','status','created_at')
-        //                         ->with('user:id,name')
-        //                         ->get();
-
         return DataTables::of($password_list_reset)
             ->addColumn('user_name', function($row){
                 return $row->user->name;

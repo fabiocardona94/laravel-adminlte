@@ -38,9 +38,11 @@
                             <tfoot>
                                 <tr>
                                     <th>Filtrar</th>
-                                    <th>Tipo Solicitud</th>
-                                    <th>Observación</th>
-                                    <th>Fecha de Creación</th>
+                                    <th>Filtrar</th>
+                                    <th>Filtrar</th>
+                                    <th>Filtrar</th>
+                                    <th>Filtrar</th>
+                                    <th>Filtrar</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -99,66 +101,9 @@
             </div>
         </div>
     </div>
-
+    
     @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#solicitudes').DataTable( {
-                    "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                    },
-                    // responsive: true,
-                    // dom:'Bfrtilp',
-                    // buttons: [
-                    //     {
-                    //         extend: 'excelHtml5',
-                    //         text: '<i class="fas fa-file-excel"></i>',
-                    //         titleAttr: 'Exportar en formato Excel',
-                    //         className: 'btn btn-success'
-                    //     },
-                    //     {
-                    //         extend: 'pdfHtml5',
-                    //         text: '<i class="fas fa-file-pdf"></i>',
-                    //         titleAttr: 'Exportar en formato Pdf',
-                    //         className: 'btn btn-danger'
-                    //     },
-                    // ],
-                    order: [[ 3, 'desc' ]],
-                    processing: true,
-                    serverSide: true,
-                    ajax: '{{ route('admin.solicitar.datatable') }}',
-                    columns: [
-                        { data: 'user_name', name: 'user_name' },
-                        { data: 'tipo_solicitud', name: 'tipo_solicitud' },
-                        { data: 'observacion', name: 'observacion' },
-                        { data: 'created_at', name: 'created_at' },
-                        { data: 'status', name: 'status', orderable: false, searchable: false },
-                        { data: 'actions', name: 'actions', orderable: false, searchable: false },
-                    ],
-                    initComplete: function () {
-                        $('#solicitudes tfoot tr').appendTo('#solicitudes thead');
-                        this.api()
-                            .columns()
-                            .every(function () {
-                                let column = this;
-                                let title = column.footer().textContent;
-                
-                                // Create input element
-                                let input = document.createElement('input');
-                                input.placeholder = title;
-                                column.footer().replaceChildren(input);
-                
-                                // Event listener for user input
-                                input.addEventListener('keyup', () => {
-                                    if (column.search() !== this.value) {
-                                        column.search(input.value).draw();
-                                    }
-                                });
-                            });
-                    }
-                } );
-            } );
-        </script>
+       <script src="/dist/js/request_password/bring_requests.js"></script>
        <script src="/dist/js/request_password/ajax.js"></script>
     @endpush
 </x-layout.app>
