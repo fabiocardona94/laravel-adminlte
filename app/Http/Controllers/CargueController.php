@@ -19,7 +19,6 @@ class CargueController extends Controller
             'spreadsheet' => 'required|file|mimes:xls,xlsx',
             'action' => 'required|in:replace,append', // Validar la opción seleccionada
         ]);
-
         $file = $request->file('spreadsheet');
 
         $reader = IOFactory::createReader('Xlsx');
@@ -80,12 +79,15 @@ class CargueController extends Controller
             ];
         }
         
-        
-
         // Insertar los datos al principio de la tabla
         Cargue::insert($insertData);
 
         $message = ($request->action === 'replace') ? 'Archivo Excel reemplazado exitosamente.' : 'Datos del archivo Excel anexados exitosamente.';
-        return redirect()->back()->with('success', $message);
+
+        // Preparar la respuesta JSON
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+        ]);
     }
 }

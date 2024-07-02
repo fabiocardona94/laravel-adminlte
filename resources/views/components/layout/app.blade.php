@@ -121,8 +121,9 @@
     <script src="https://adminlte.io/themes/v3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://adminlte.io/themes/v3/dist/js/adminlte.min.js"></script>
     <!-- Incluye los scripts de Dropzone.js -->
-    
-    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 
     @stack('scripts')
 

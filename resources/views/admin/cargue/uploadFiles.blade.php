@@ -27,10 +27,10 @@
                                             <label class="custom-control-label" for="appendData">Anexar Datos</label>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-success">Cargar</button>
+                                    <button class="btn btn-success" type="submit">Cargar</button>
                                 </form>
                                 @if(session('success'))
-                                    <div class="alert alert-success mt-3">{{ session('success') }}</div>
+                                    <div class="alert alert-success mt-3" id="successMessage">{{ session('success') }}</div>
                                 @endif
                                 @if($errors->any())
                                     <div class="alert alert-danger mt-3">
@@ -48,6 +48,14 @@
             </div>
         </div>
 
+        <!-- SweetAlert2 CSS y JS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+        <!-- jQuery y jQuery Form -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+
         <script>
             // Mostrar el nombre del archivo seleccionado en el campo de entrada de archivos
             document.getElementById('spreadsheet').addEventListener('change', function() {
@@ -57,6 +65,64 @@
                 } else {
                     document.getElementById('spreadsheetLabel').innerText = 'Elegir archivo';
                 }
+            });
+
+            $(document).ready(function() {
+                $('#uploadForm').ajaxForm({
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Subiendo...',
+                            text: 'El archivo está siendo subido.',
+                            icon: 'info',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        let percent = Math.round((position / total) * 100);
+                        Swal.update({
+                            title: 'Subiendo...',
+                            html: `El archivo se está subiendo: ${percent}% completado.`,
+                            timerProgressBar: true,
+                            onBeforeOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    complete: function(xhr) {
+                        Swal.hideLoading();
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.status === 'success') {
+                                Swal.fire({
+                                    title: '¡Éxito!',
+                                    text: xhr.responseJSON.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar'
+                                }).then(() => {
+                                    $('#uploadForm')[0].reset();
+                                    document.getElementById('spreadsheetLabel').innerText = 'Elegir archivo';
+                                });
+                            } else if (xhr.responseJSON.status === 'error') {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: xhr.responseJSON.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hubo un problema al subir el archivo.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    }
+                });
             });
         </script>
     </x-slot>
