@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\BankQuestion;
+use App\Models\Evaluation;
+use App\Models\EvaluationQuestion;
+use App\Models\Option;
 use App\Models\User;
 
 use Illuminate\Database\Seeder;
@@ -14,14 +18,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        Evaluation::factory(10)->create();
+        BankQuestion::factory(10)->create();
+        Option::factory(10)->create();
+        EvaluationQuestion::factory(10)->create();
+
 
         User::create([
-            'username' => '12345678',
-            'name' => 'USUARIO TEST',
-            'cell_phone' => '+573109992514',
-            'email' => 'usuario@test.com',
+            'username' => '1234',
+            'name' => 'Prueva',
+            'cell_phone' => '+57828823',
+            'email' => 'prueba@test.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('12345678'),
+            'password' => bcrypt('123456'),
             'profile_photo_path' => null,
             'rol' => 'developer',
             'active' => 1,
