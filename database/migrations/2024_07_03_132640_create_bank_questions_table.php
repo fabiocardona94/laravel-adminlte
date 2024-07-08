@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('bank_questions', function (Blueprint $table) {
             $table->id();
-            $table->string('question', 200);
+            $table->string('question_title', 200);
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }

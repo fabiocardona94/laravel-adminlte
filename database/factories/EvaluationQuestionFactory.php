@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\BankQuestion;
 use App\Models\Evaluation;
+use App\Models\Evaluations\BankQuestion as EvaluationsBankQuestion;
+use App\Models\Evaluations\Evaluation as EvaluationsEvaluation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +21,8 @@ class EvaluationQuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_evaluation' =>Evaluation::factory(),
-            'id_question' =>BankQuestion::factory(),
+            'id_evaluation' =>EvaluationsEvaluation::factory(),
+            'id_question' =>EvaluationsBankQuestion::factory(),
         ];
     }
 }

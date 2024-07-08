@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Evaluations\Evaluation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -52,5 +55,10 @@ class User extends Authenticatable
             'active' => 'integer',
             // 'is_admin' => 'integer',
         ];
+    }
+
+    public function evaluations(): BelongsToMany
+    {
+        return $this->belongsToMany(Evaluation::class, 'evaluation_users', 'user_id', 'evaluation_id',);
     }
 }

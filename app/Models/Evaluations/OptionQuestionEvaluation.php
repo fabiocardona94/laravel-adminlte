@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Evaluations;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Option extends Model
+class OptionQuestionEvaluation extends Model
 {
     use HasFactory;
-
-    protected $table = 'options';
+    protected $table = 'option_question_evaluations';
     protected $fillable = [
-        'id_question',
+        'question_id',
         'option',
     ];
 
     public function pregunta() : BelongsTo
     {
-        return $this->belongsTo(BankQuestion::class, 'id_question');
+        return $this->belongsTo(BankQuestion::class, 'question_id');
     }
 }

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title', 200);
             $table->string('description', 200);
-            $table->dateTime('star_date');
-            $table->dateTime('end_date');
+            $table->tinyInteger('status')->default(0);
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->timestamps();
         });
     }
