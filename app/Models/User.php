@@ -59,6 +59,6 @@ class User extends Authenticatable
 
     public function evaluations(): BelongsToMany
     {
-        return $this->belongsToMany(Evaluation::class, 'evaluation_users', 'user_id', 'evaluation_id',);
+        return $this->belongsToMany(Evaluation::class, 'evaluations_re_users', 'user_id', 'evaluation_id',);
     }
 }

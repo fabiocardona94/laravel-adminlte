@@ -6,6 +6,7 @@ use App\Models\BankQuestion;
 use App\Models\Evaluation;
 use App\Models\Evaluations\BankQuestion as EvaluationsBankQuestion;
 use App\Models\Evaluations\Evaluation as EvaluationsEvaluation;
+use App\Models\Evaluations\EvaluationBankQuestion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,7 @@ class EvaluationQuestionFactory extends Factory
     {
         return [
             'id_evaluation' =>EvaluationsEvaluation::factory(),
-            'id_question' =>EvaluationsBankQuestion::factory(),
+            'id_question' =>EvaluationBankQuestion::factory(),
         ];
     }
 }

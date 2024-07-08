@@ -5,6 +5,10 @@ namespace Database\Seeders;
 use App\Models\BankQuestion;
 use App\Models\Evaluation;
 use App\Models\EvaluationQuestion;
+use App\Models\Evaluations\Evaluation as EvaluationsEvaluation;
+use App\Models\Evaluations\EvaluationBankQuestion;
+use App\Models\Evaluations\EvaluationQuestion as EvaluationsEvaluationQuestion;
+use App\Models\Evaluations\EvaluationQuestionOption;
 use App\Models\Option;
 use App\Models\User;
 
@@ -18,10 +22,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        Evaluation::factory(10)->create();
-        BankQuestion::factory(10)->create();
-        Option::factory(10)->create();
-        EvaluationQuestion::factory(10)->create();
+        EvaluationsEvaluation::factory(10)->create();
+        EvaluationBankQuestion::factory(10)->create();
+        EvaluationQuestionOption::factory(10)->create();
+       EvaluationsEvaluationQuestion::factory(10)->create();
 
 
         User::create([

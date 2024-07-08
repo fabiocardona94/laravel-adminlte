@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tr_evaluation_questions', function (Blueprint $table) {
+        Schema::create('evaluation_re_questions', function (Blueprint $table) {
             $table->unsignedBigInteger('evaluation_id');
             $table->unsignedBigInteger('question_id');
-            $table->unsignedBigInteger('evaluation_user_id');
             $table->primary(['evaluation_id', 'question_id']);
 
             $table->timestamps();
@@ -23,11 +22,7 @@ return new class extends Migration
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
     
-            $table->foreign('question_id')->references('id')->on('bank_questions')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-    
-            $table->foreign('evaluation_user_id')->references('id')->on('evaluation_users')
+            $table->foreign('question_id')->references('id')->on('evaluation_bank_questions')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });
@@ -38,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tr_evaluation_questions');
+        Schema::dropIfExists('evaluation_re_questions');
     }
 };

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\BankQuestion;
 use App\Models\Evaluations\BankQuestion as EvaluationsBankQuestion;
+use App\Models\Evaluations\EvaluationBankQuestion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class OptionFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_question' => EvaluationsBankQuestion::factory(),
+            'id_question' => EvaluationBankQuestion::factory(),
             'option' => $this->faker->text(20),
             'created_at' => now(),
             'updated_at' => now(),

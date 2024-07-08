@@ -9,12 +9,11 @@ class EvaluationQuestion extends Model
 {
     use HasFactory;
 
-    protected $table = 'tr_evaluation_questions';
+    protected $table = 'evaluation_re_questions';
 
     protected $fillable = [
         'evaluation_id',
         'question_id',
-        'evaluation_users_id',
     ];
 
 }

@@ -12,7 +12,7 @@ class EvaluationUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'evaluation_users';
+    protected $table = 'evaluations_re_users';
 
     protected $fillable = [
         'evaluation_id',

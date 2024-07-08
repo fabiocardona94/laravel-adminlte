@@ -17,17 +17,17 @@ class Evaluation extends Model
         'title',
         'description',
         'star_date',
-        'status',
         'end_date',
+        'status',
     ];
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'evaluation_users', 'evaluation_id', 'user_id');
+        return $this->belongsToMany(User::class, 'evaluations_re_users', 'evaluation_id', 'user_id');
     }
 
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(BankQuestion::class, 'tr_evaluation_questions', 'evaluation_id', 'question_id');
+        return $this->belongsToMany(EvaluationBankQuestion::class, 'evaluation_re_questions', 'evaluation_id', 'question_id');
     }
 }

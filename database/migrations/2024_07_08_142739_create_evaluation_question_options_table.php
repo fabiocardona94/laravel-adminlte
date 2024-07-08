@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('option_question_evaluations', function (Blueprint $table) {
+        Schema::create('evaluation_question_options', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('question_id');
             $table->string('question_option', 200);
+            $table->boolean('is_correct')->default(false);
+            $table->integer('percentage_value');
             $table->tinyInteger('status')->default(0);
 
             $table->timestamps();
 
-            $table->foreign('question_id')->references('id')->on('bank_questions')
+            $table->foreign('question_id')->references('id')->on('evaluation_bank_questions')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
         });
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('option_question_evaluations');
+        Schema::dropIfExists('evaluation_question_options');
     }
 };
