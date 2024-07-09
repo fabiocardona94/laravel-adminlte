@@ -46,6 +46,13 @@
                                     <span id="progressPercentage">0%</span> - <span id="fileSize">0 KB</span>
                                 </div>
 
+                                <!-- Contenedor para la animación de carga y el mensaje -->
+                                <div class="text-center mt-2" id="processingInfo" style="display: none;">
+                                    <img src="{{ asset('images/loading.gif') }}" alt="Cargando..." style="width: 60px; height: 60px;">
+                                    <p>Procesando la información...</p>
+                                </div>
+                                
+
                                 <div id="uploadStatus" class="mt-4"></div>
                             </div>
                         </div>
@@ -62,7 +69,9 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 
-        <!-- JavaScript para mostrar el nombre del archivo seleccionado -->
+        
+
+        <!-- JavaScript para mostrar el nombre del archivo seleccionado y su tamaño -->
         <script>
             document.getElementById('fileUpload').addEventListener('change', function(event) {
                 var inputFile = event.target;
@@ -73,8 +82,18 @@
                 // Mostrar el tamaño del archivo seleccionado
                 var fileSize = inputFile.files[0].size;
                 var fileSizeElement = document.getElementById('fileSize');
-                fileSizeElement.textContent = (fileSize / 1024).toFixed(2) + ' KB'; // Convertir a KB
+                fileSizeElement.textContent = formatFileSize(fileSize);
             });
+
+            function formatFileSize(size) {
+                if (size >= 1073741824) {
+                    return (size / 1073741824).toFixed(2) + ' GB';
+                } else if (size >= 1048576) {
+                    return (size / 1048576).toFixed(2) + ' MB';
+                } else {
+                    return (size / 1024).toFixed(2) + ' KB';
+                }
+            }
         </script>
 
         <!-- JavaScript para manejar la subida de archivos con progreso -->
@@ -87,6 +106,7 @@
                 let progressBar = document.querySelector('#progressBar');
                 let progressPercentage = document.querySelector('#progressPercentage');
                 let fileSizeElement = document.querySelector('#fileSize');
+                let processingInfo = document.querySelector('#processingInfo');
                 let actionUrl = form.getAttribute('action');
 
                 let fileUpload = document.getElementById('fileUpload').files[0];
@@ -100,7 +120,12 @@
 
                     // Mostrar el tamaño del archivo cargado
                     let loadedSize = e.loaded;
-                    fileSizeElement.textContent = (loadedSize / 1024).toFixed(2) + ' KB / ' + (fileSize / 1024).toFixed(2) + ' KB';
+                    fileSizeElement.textContent = formatFileSize(loadedSize) + ' / ' + formatFileSize(fileSize);
+
+                    // Mostrar mensaje de procesamiento cuando la carga llega al 100%
+                    if (percentage === 100) {
+                        processingInfo.style.display = 'block';
+                    }
                 });
 
                 ajax.addEventListener("load", function() {
@@ -109,24 +134,51 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Éxito',
-                            text: response.message
+                            text: response.message,
+                            timer: 6000
                         });
-                        progressBar.style.width = '0%'; // Resetear barra de progreso
+
+                        // Resetear barra de progreso y otros indicadores
+                        progressBar.style.width = '0%';
                         progressPercentage.textContent = '0%';
-                        fileSizeElement.textContent = '0 KB / ' + (fileSize / 1024).toFixed(2) + ' KB';
-                        form.reset(); // Resetear el formulario
+                        fileSizeElement.textContent = '0 KB';
+                        processingInfo.style.display = 'none';
+
+                        // Resetear el formulario y el nombre del archivo
+                        form.reset();
+                        document.querySelector('.custom-file-label').textContent = 'Elegir archivo';
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
                             text: response.message
                         });
+                        processingInfo.style.display = 'none';
                     }
+                });
+
+                ajax.addEventListener("error", function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema con la subida del archivo. Por favor, inténtelo de nuevo.'
+                    });
+                    processingInfo.style.display = 'none';
                 });
 
                 ajax.open("POST", actionUrl);
                 ajax.send(formData);
             });
+
+            function formatFileSize(size) {
+                if (size >= 1073741824) {
+                    return (size / 1073741824).toFixed(2) + ' GB';
+                } else if (size >= 1048576) {
+                    return (size / 1048576).toFixed(2) + ' MB';
+                } else {
+                    return (size / 1024).toFixed(2) + ' KB';
+                }
+            }
         </script>
     </x-slot>
 </x-layout.app>
