@@ -1,53 +1,47 @@
 <x-layout.app meta-title='ZFIP - Admin' meta-description="Sistema de Información Zona Franca Internacional Pereira">
-    <x-slot name="contentHeader">
-    </x-slot>
-    <div class="content-header">
-        <div class="container-fluid">
-            @if (session('status'))
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        Swal.fire({
-                            title: 'Listo',
-                            icon: 'success',
-                            text: 'La solicitud ha sido enviada',
-                            confirmButtonText: 'Aceptar',
-                            confirmButtonColor: "#00A100",
-                        });
+    <div class="row mb-2">
+        @if (session('status'))
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    Swal.fire({
+                        title: 'Listo',
+                        icon: 'success',
+                        text: 'La solicitud ha sido enviada',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: "#00A100",
                     });
-                </script>
-            @endif
-            <div class="row mb-2">
-                <div class="col-sm-12 ">
-                    <h1 class="m-0 mb-3">Lista Solicitudes</h1>
-                    <div class="d-flex justify-content-end mb-2">
-                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#resetPassword"><i class="fas fa-key mr-1"></i>Restablecer Contraseña</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="solicitudes" class="table table-striped table-bordered mt-2 mb-2" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Nombre usuario</th>
-                                    <th>Tipo Solicitud</th>
-                                    <th>Observación</th>
-                                    <th>Fecha de la solicitud</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
+                });
+            </script>
+        @endif
+        <div class="col-sm-12 ">
+            <h1 class="m-0 mb-3">Lista Solicitudes</h1>
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#resetPassword"><i class="fas fa-key mr-1"></i>Restablecer Contraseña</button>
+            </div>
+            <div class="table-responsive">
+                <table id="solicitudes" class="table table-striped table-bordered mt-2 mb-2" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre usuario</th>
+                            <th>Tipo Solicitud</th>
+                            <th>Observación</th>
+                            <th>Fecha de la solicitud</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
 
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>Filtrar</th>
-                                    <th>Filtrar</th>
-                                    <th>Filtrar</th>
-                                    <th>Filtrar</th>
-                                    <th>Filtrar</th>
-                                    <th>Filtrar</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
