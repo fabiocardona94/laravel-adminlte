@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\Request;
 
 class Evaluation extends Model
 {
@@ -16,7 +17,7 @@ class Evaluation extends Model
     protected $fillable = [
         'title',
         'description',
-        'star_date',
+        'start_date',
         'end_date',
         'status',
     ];
@@ -28,6 +29,7 @@ class Evaluation extends Model
 
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(EvaluationBankQuestion::class, 'evaluation_re_questions', 'evaluation_id', 'question_id');
+        return $this->belongsToMany(EvaluationBankQuestion::class, 'evaluation_re_questions', 'evaluation_id', 'question_id')
+                                                                    ->wherePivot('status', 1);
     }
 }

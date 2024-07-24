@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('question_option', 200);
             $table->boolean('is_correct')->default(false);
             $table->integer('percentage_value');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(1);
 
             $table->timestamps();
 

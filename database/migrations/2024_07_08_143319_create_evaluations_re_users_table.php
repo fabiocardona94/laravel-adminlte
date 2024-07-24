@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('evaluation_id');
             $table->unsignedBigInteger('user_id');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(1);
             $table->dateTime('start_time');
             $table->dateTime('end_time');
 
@@ -26,7 +26,7 @@ return new class extends Migration
                     ->onDelete('cascade');
     
             $table->foreign('user_id')->references('id')->on('users')
-                    ->onUpdate('cascade')
+                    ->onDelete('set null')
                     ->onDelete('cascade');
         });
     }

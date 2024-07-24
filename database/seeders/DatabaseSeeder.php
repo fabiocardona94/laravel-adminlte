@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        EvaluationsEvaluation::factory(10)->create();
-        EvaluationBankQuestion::factory(10)->create();
-        EvaluationQuestionOption::factory(10)->create();
-       EvaluationsEvaluationQuestion::factory(10)->create();
+    //     EvaluationsEvaluation::factory(10)->create();
+    //     EvaluationBankQuestion::factory(10)->create();
+    //     EvaluationQuestionOption::factory(10)->create();
+    //    EvaluationsEvaluationQuestion::factory(10)->create();
 
 
         User::create([

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evaluation_re_questions', function (Blueprint $table) {
             $table->unsignedBigInteger('evaluation_id');
             $table->unsignedBigInteger('question_id');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(1);
             $table->primary(['evaluation_id', 'question_id']);
 
             $table->timestamps();

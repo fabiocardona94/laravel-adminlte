@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evaluation_bank_questions', function (Blueprint $table) {
             $table->id();
             $table->string('question_title', 200);
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
