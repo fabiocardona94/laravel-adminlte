@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Evaluations\EvaluationBankQuestion;
 use App\Models\Evaluations\EvaluationQuestionOption;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class BanksQuestionsController extends Controller
 {
@@ -52,5 +53,32 @@ class BanksQuestionsController extends Controller
                 'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function questionList()
+    {
+        $questions = EvaluationBankQuestion::select('id', 'question_title', 'status')->get();
+        return DataTables::of($questions)
+        ->addColumn('status', function($row){
+            return $row->status == 1 
+                ? '<span class="badge badge-success">Activa</span>'
+                : '<span class="badge badge-danger">Inactiva</span>';
+        })
+        ->addColumn('actions', function($row){
+            return
+                '
+                    <div class="d-flex">
+                        <button class="btn" type="button"">
+                            <i class="far fa-edit" style="color: #1655c0;"></i>
+                        </button>
+                        <a class="btn" type="button">
+                            <i class="far fa-question-circle" style="color: #12f321;"></i>
+                        </a>
+                    </div>
+                ';
+        })
+        ->rawColumns(['status', 'actions'])
+        ->make(true);
+
     }
 }

@@ -16,7 +16,6 @@ class EvaluationsQuestionsController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar los datos de entrada
         $request->validate([
             'evaluation_id' => 'required|integer',
             'unrelated_questions' => 'required|array',
@@ -33,21 +32,19 @@ class EvaluationsQuestionsController extends Controller
 
         try {
             foreach ($questions as $question_id) {
-                // Verificar si la pregunta existe
                 $there_is_question = EvaluationBankQuestion::find($question_id);
                 if (!$there_is_question) {
                     return redirect()->back()->with('error', 'Una de las preguntas no existe.');
                 } else {
-                    // Verificar el status de la pregunta en la tabla de relación
+
                     $status_question = EvaluationQuestion::where('question_id', $question_id)
                         ->where('evaluation_id', $evaluation_id)
                         ->first();
 
                     if ($status_question && $status_question->status == 0) {
-                        // Si la pregunta ya está en la relación pero su estado es 0, actualizar a 1
                         $status_question->update(['status' => 1]);
                     } else {
-                        // Si la pregunta no está en la relación, crear una nueva entrada
+
                         EvaluationQuestion::create([
                             'evaluation_id' => $evaluation_id,
                             'question_id' => $question_id,

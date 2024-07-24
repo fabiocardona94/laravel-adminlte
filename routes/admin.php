@@ -40,8 +40,8 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/index',[BanksQuestionsController::class,'index'])
             ->name('index');
 
-        // Route::delete('/delete\{id}',[BanksQuestionsController::class,'delete'])
-        //     ->name('delete');
+            Route::get('/questions',[BanksQuestionsController::class,'questionList'])
+            ->name('questionList');
                
         Route::post('/store',[BanksQuestionsController::class,'store'])
             ->name('store');        

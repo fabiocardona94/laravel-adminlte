@@ -129,55 +129,55 @@
         </div>
     </div>
     @push('scripts')
-    <script src="/dist/js/evaluations/evaluation.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#evaluations').DataTable( {
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'All']
-                ],
-                order: [[ 3, 'desc' ]],
-                processing: true,
-                serverSide: true,
-                ajax: '/admin/evaluacion/evaluations',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'title', name: 'title' },
-                    { data: 'description', name: 'description' },
-                    { data: 'start_date', name: 'start_date' },
-                    { data: 'end_date', name: 'end_date' },
-                    { data: 'status', name: 'status', orderable: false, searchable: false },
-                    { data: 'actions', name: 'actions', orderable: false, searchable: false },
-                ],
-                initComplete: function () {
-                    $('#evaluations tfoot tr').appendTo('#evaluations thead');
-                    this.api()
-                        .columns()
-                        .every(function () {
-                            let column = this;
-                            let title = column.footer().textContent;
-            
-                            // Create input element
-                            let input = document.createElement('input');
-                            input.classList.add('form-control', 'p-2');
-                            input.placeholder = title;
-                            column.footer().replaceChildren(input);
-            
-                            // Event listener for user input
-                            input.addEventListener('keyup', () => {
-                                if (column.search() !== this.value) {
-                                    column.search(input.value).draw();
-                                }
+        <script src="/dist/js/evaluations/evaluation.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#evaluations').DataTable( {
+                    "language": {
+                        "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    },
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    order: [[ 3, 'desc' ]],
+                    processing: true,
+                    serverSide: true,
+                    ajax: '/admin/evaluacion/evaluations',
+                    columns: [
+                        { data: 'id', name: 'id' },
+                        { data: 'title', name: 'title' },
+                        { data: 'description', name: 'description' },
+                        { data: 'start_date', name: 'start_date' },
+                        { data: 'end_date', name: 'end_date' },
+                        { data: 'status', name: 'status', orderable: false, searchable: false },
+                        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                    ],
+                    initComplete: function () {
+                        $('#evaluations tfoot tr').appendTo('#evaluations thead');
+                        this.api()
+                            .columns()
+                            .every(function () {
+                                let column = this;
+                                let title = column.footer().textContent;
+                
+                                // Create input element
+                                let input = document.createElement('input');
+                                input.classList.add('form-control', 'p-2');
+                                input.placeholder = title;
+                                column.footer().replaceChildren(input);
+                
+                                // Event listener for user input
+                                input.addEventListener('keyup', () => {
+                                    if (column.search() !== this.value) {
+                                        column.search(input.value).draw();
+                                    }
+                                });
                             });
-                        });
-                },
+                    },
+                } );
             } );
-        } );
-    </script>
+        </script>
 
     @endpush
 </x-layout.app>
