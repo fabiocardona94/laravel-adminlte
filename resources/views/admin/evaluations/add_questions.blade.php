@@ -3,14 +3,14 @@
         <div class="col-12">
             <div class="card mt-2">
                 <div class="card-header">
-                    <div class="d-flex justify-content-start">
+                    <div class="d-flex justify-content-start h4">
                         <a href="{{ route('admin.evaluacion.index')}}">
                             <i class="fas fa-arrow-left"></i>
                         </a>
                     </div>
                     @if($evaluation)
                         <div class="text-center">
-                            <p class="h4">{{ $evaluation->title }}</p>
+                            <p class="h4">Editando:{{ $evaluation->title }}</p>
                         </div>
                     @else
                         <div class="card-body">
@@ -21,13 +21,24 @@
                 </div>
             </div>
             <div class="card mt-2">
-                <div class="card-header bg-danger">
-                  <h3 class="card-title">Eliminar Pregunta</h3>
-        
+                <div class="card-header bg-success">
+                  <h3 class="card-title">Cantidad de preguntas: {{$quantity_associated_questions }}</h3>
+
                   <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-plus" style="color: #0a53d1;"></i>
+                            <strong>
+                                Agregar Pregunta
+                            </strong>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestion">
+                                <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
+                            </button>
+                            <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
+                        </div>
+                    </div>
                   </div>
                 </div>
                 <div class="card-body">
@@ -37,111 +48,96 @@
                             @method('PATCH')
 
                             <input type="hidden" name="evaluation_id" value="{{$evaluation->id}}">
-                            <table id="associated_questions" class="table table-bordered" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Titulo</th>
-                                        <div class="d-flex justify-content-end pb-2">
-                                            <button type="submit" class="btn btn-danger text-center">Eliminar Preguntas</button>
+                            @if ($associated_questions->isEmpty())
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <strong>
+                                        Esta Evaluación aun no tiene preguntas asignadas
+                                    </strong>
+                                </div>
+                            </div>
+                            @else
+                                @foreach ($associated_questions as $question)
+                                    <div class="card shadow">
+                                        <div class="card-body d-flex justify-content-between align-items-center">
+                                            <strong>
+                                                {{ $question->question_title }}
+                                            </strong>
+                                            <div class="ml-auto">
+                                                <a href="" class="" title="Ve respuestas de esta pregunta">
+                                                    <i class="far fa-eye" style="color: #000000;"></i>
+                                                </a>
+                                                <a href="" class="" title="Eliminar pregunta de la evaluación"{{ $evaluation->title }} >
+                                                    <i class="fas fa-trash-alt" style="color: #f00000;"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if ($associated_questions->isEmpty())
-                                        <tr>
-                                            <td colspan="3">
-                                                <p class="text-center">Esta evaluación aún no tiene preguntas asignadas</p>
-                                            </td>
-                                        </tr>
-                                    @else
-                                        @foreach ($associated_questions as $question)
-                                            <tr>
-                                                <td>
-                                                    {{ $question->question_title }}
-                                                    <div class="d-flex justify-content-end pb-2">
-                                                        <input type="checkbox" name="associated_questions[]" value="{{$question->id}}" class="">
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
+                                        <div class="d-flex justify-content-end m-0">
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-plus" style="color: #0a53d1;"></i>
+                                                    <strong>
+                                                        Agregar Pregunta
+                                                    </strong>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestion">
+                                                        <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
+                                                    </button>
+                                                    <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            @endif
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="card mt-2">
-                <div class="card-header bg-success">
-                  <h3 class="card-title">Agregar Pregunta</h3>
-        
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                      <i class="fas fa-minus"></i>
+        </div>
+    </div>
+    <!-- Modal questions -->
+    <div class="modal fade" id="createQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title ml-2" id="exampleModalLabel">
+                        <i class="far fa-question-circle"></i>
+                        Crear Pregunta
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                  </div>
                 </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <form action=" {{ route('admin.evaliacion_pregunta.store')}}" method="POST">
-                        @csrf
-                        <input type="hidden" name="evaluation_id" value="{{$evaluation->id}}">
-                        <table id="evaluations" class="table table-bordered" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Titulo
-                                    </th>
-                                    <div class="d-flex justify-content-end pb-2">
-                                        <button type="submit" class="btn btn-success text-center">Añadair Preguntas</button>
-                                    </div>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($unrelated_questions->isEmpty())
-                                    <tr>
-                                        <td colspan="3">
-                                            <p class="text-center">Por el momento no hay mas preguntas</p>
-                                        </td>
-                                    </tr>
-                                @else
-                                    @foreach ($unrelated_questions as $unrelated_questions)
-                                        <tr>
-                                            <td>
-                                                {{$unrelated_questions->question_title}}
-                                                <div class="d-flex justify-content-end pb-2">
-                                                    <input type="checkbox" name="unrelated_questions[]" value="{{$unrelated_questions->id}}" class="">
-                                                </div>
-                                            </td>
-                                        </tr> 
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
+                <div class="modal-body">
+                    <form id="createQuestionForm">
+                        <input type="hidden" value="{{ $evaluation->id }}" id="evaluationId">
+                        <div class="form-group">
+                            <i class="fas fa-pencil-alt"></i>
+                            <label for="question_title" class="col-form-label">Titulo de la pregunta</label>
+                            <textarea class="form-control" id="question_title" name="question_title" required cols="30" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group" id="divOptions">
+                            <i class="fas fa-check-square"></i>
+                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <br>
+                        </div>
+                        <button class="btn btn-sm btn-primary" type="button" id="buttonAddOption" onclick="addOption()">
+                            <i class="fas fa-plus"></i> Agregar Opción
+                        </button>
+                        <div class="text-center mb-2 mt-2">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-outline-success">Crear</button>
+                        </div>
                     </form>
-                </div>
                 </div>
             </div>
         </div>
     </div>
     @push('scripts')
         <script src="/dist/js/evaluations/evaluation.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('#associated_questions').DataTable( {
-                        "language": {
-                            "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                        },
-                        lengthMenu: [
-                            [10, 25, 50, -1],
-                            [10, 25, 50, 'All']
-                        ],
-                        order: [[ 3, 'desc' ]],
-                        // processing: true,
-                        // serverSide: true,
-                });
-            });
-        </script>
-        </script>
     @endpush
 </x-layout.app>

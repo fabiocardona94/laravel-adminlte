@@ -19,7 +19,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::get('/evaluations',[EvaluationsController::class,'evaluations'])
             ->name('evaluations');
-            
+
         Route::get('/preguntas/{id}',[EvaluationsController::class,'getEvaluationQuestions'])
             ->name('getEvaluationQuestions');
 
@@ -32,27 +32,27 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::patch('/update/{id}',[EvaluationsController::class,'update'])
             ->name('update');
-         
+
     });
 
     Route::prefix('pregunta')->name('pregunta.')->group(function () {
-        
+
         Route::get('/index',[BanksQuestionsController::class,'index'])
             ->name('index');
 
-        // Route::delete('/delete\{id}',[BanksQuestionsController::class,'delete'])
-        //     ->name('delete');
-               
+        Route::get('/questions',[BanksQuestionsController::class,'listQuestions'])
+            ->name('listQuestions');
+
         Route::post('/store',[BanksQuestionsController::class,'store'])
-            ->name('store');        
+            ->name('store');
     });
 
     Route::prefix('evaliacion_pregunta')->name('evaliacion_pregunta.')->group(function () {
-        
+
         Route::post('/store',[EvaluationsQuestionsController::class,'store'])
-            ->name('store');   
-            
+            ->name('store');
+
         Route::patch('/editar',[EvaluationsQuestionsController::class,'update'])
-            ->name('update');       
+            ->name('update');
     });
 });

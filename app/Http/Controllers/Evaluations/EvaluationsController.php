@@ -20,7 +20,7 @@ class EvaluationsController extends Controller
     }
 
 
-    
+
     /**
      * Method for creating a new evaluation
      */
@@ -32,9 +32,9 @@ class EvaluationsController extends Controller
             'start_date' => 'required',
             'end_date' => 'required',
         ]);
-        
+
         try {
-            
+
             Evaluation::create($validatedData);
             return response()->json([
                 'status' => 'success',
@@ -72,7 +72,7 @@ class EvaluationsController extends Controller
     /**
      * Method to update the evaluation
      */
-    public function update(Request $request, $id) 
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
@@ -81,7 +81,7 @@ class EvaluationsController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|integer',
         ]);
-    
+
         try {
             $evaluation = Evaluation::findOrFail($id);
             $evaluation->title = $validatedData['title'];
@@ -90,7 +90,7 @@ class EvaluationsController extends Controller
             $evaluation->end_date = $validatedData['end_date'];
             $evaluation->status = $validatedData['status'];
             $evaluation->save();
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Evaluación actualizada exitosamente',
@@ -112,7 +112,7 @@ class EvaluationsController extends Controller
         $evaluations = Evaluation::select('id', 'title', 'description', 'start_date', 'end_date', 'status')->get();
         return DataTables::of($evaluations)
         ->addColumn('status', function($row){
-            return $row->status == 1 
+            return $row->status == 1
                 ? '<span class="badge badge-success">Activa</span>'
                 : '<span class="badge badge-danger">Inactiva</span>';
         })
@@ -121,11 +121,11 @@ class EvaluationsController extends Controller
                 '
                     <div class="d-flex">
                         <button class="btn" type="button" data-toggle="modal" data-target="#editEvalution" data-id="' . $row->id . '"
-                            onclick="openEditEvaluationModal(' . $row->id . ')">
+                            onclick="openEditEvaluationModal(' . $row->id . ')" title="Editar '.$row->title.'">
                             <i class="far fa-edit" style="color: #1655c0;"></i>
                         </button>
-                        <a href="' . route('admin.evaluacion.getEvaluationQuestions', ['id' => $row->id]) . '" class="btn" type="button">
-                            <i class="far fa-question-circle" style="color: #12f321;"></i>
+                        <a href="' . route('admin.evaluacion.getEvaluationQuestions', ['id' => $row->id]) . '" class="btn" type="button" title="Agregar Preguntas para la '.$row->title.'">
+                            <i class="fas fa-plus" style="color: #0a53d1;"></i>
                         </a>
                     </div>
                 ';
@@ -134,9 +134,9 @@ class EvaluationsController extends Controller
         ->make(true);
 
     }
-    
+
     /**
-     * Mehod for get the Questions asosiations and not asosiations of the evaluation 
+     * Mehod for get the Questions asosiations and not asosiations of the evaluation
      */
     public function getEvaluationQuestions($id)
     {
@@ -148,15 +148,14 @@ class EvaluationsController extends Controller
         }
 
         $associated_questions  = $evaluation->questions;
+        $quantity_associated_questions = $associated_questions->count();
 
         $associated_question_ids = $evaluation->questions->pluck('id')->toArray();
 
         $unrelated_questions = EvaluationBankQuestion::whereNotIn('id', $associated_question_ids)->get();
 
-
-
-        return view('admin.evaluations.add_questions',compact('evaluation','associated_questions','unrelated_questions'));
+        return view('admin.evaluations.add_questions',compact('evaluation','associated_questions','unrelated_questions','quantity_associated_questions'));
     }
 
-    
+
 }

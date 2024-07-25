@@ -3,6 +3,15 @@ let optionCount = 0;
 
 
 // -----------------------------------------------------Evaluations--------------------------------------//
+
+let formCreateEvaluation = document.getElementById("createEvaluationForm");
+if(formCreateEvaluation)
+{
+    formCreateEvaluation.addEventListener('submit', function(event) {
+        event.preventDefault();
+        createEvaluation();
+    });
+}
 // Method to create a new evaluation
 function createEvaluation(){
 
@@ -15,7 +24,7 @@ function createEvaluation(){
         url: '/admin/evaluacion/store',
         method: 'POST',
         data: {
-            _token: csrfToken, 
+            _token: csrfToken,
             title: title,
             description: description,
             start_date: startDate,
@@ -50,13 +59,14 @@ function createEvaluation(){
 }
 
 
+
 //Method to open the modal and be able to edit the evaluation data.
 function openEditEvaluationModal(id) {
     $.ajax({
         url: '/admin/evaluacion/' + id + '',
         method: 'GET',
         success: function(response) {
-            if(response.status === 'success') {  
+            if(response.status === 'success') {
                     // Llenar los campos del modal con los datos de la evaluación
                     $('#evaluation_id').val(response.data.id);
                     $('#title_evaluation').val(response.data.title);
@@ -96,6 +106,16 @@ function openEditEvaluationModal(id) {
 
 //Method to update the evaluation
 
+
+let FormEditEvaluation = document.getElementById("createEvaluationForm");
+if(FormEditEvaluation)
+{
+    FormEditEvaluation.addEventListener('submit', function(event) {
+        event.preventDefault();
+        updateEvalution();
+    });
+}
+
 function updateEvalution(){
 
     const id = document.getElementById('evaluation_id').value;
@@ -109,7 +129,7 @@ function updateEvalution(){
         url: '/admin/evaluacion/update/'+id,
         method: 'PATCH',
         data: {
-            _token: csrfToken, 
+            _token: csrfToken,
             title: title,
             description: description,
             start_date: startDate,
@@ -123,7 +143,7 @@ function updateEvalution(){
                     title: response.message,
                     icon: 'success',
                     confirmButtonText: "Aceptar",
-                    
+
                 }).then(() => {
                     // Cerrar el modal
                     $('#editEvalution').modal('hide');
@@ -154,9 +174,18 @@ function updateEvalution(){
 
 
 // Method to create a new Question
+
+let formCreateQuestion = document.getElementById("createQuestionForm");
+if(formCreateQuestion)
+{
+    formCreateQuestion.addEventListener('submit', function(event) {
+        event.preventDefault();
+        createQuestion();
+    });
+}
 function createQuestion(){
     const question_title = document.getElementById('question_title').value;
-
+    const evaluation_id = document.getElementById('evaluationId').value;
     const optionElements = document.querySelectorAll('[id^="option_"]');
     let options = [];
 
@@ -168,13 +197,16 @@ function createQuestion(){
     console.log("Titulo Pregunta "+question_title);
     console.log("Opcion"+options);
     console.log("Token"+csrfToken);
+    console.log("Id de la evaluación"+evaluation_id);
+
 
     $.ajax({
         url: '/admin/pregunta/store',
         method: 'POST',
         data: {
-            _token: csrfToken, 
+            _token: csrfToken,
             question_title: question_title,
+            evaluation_id: evaluation_id,
             options: options
         },
         success: function(response) {
@@ -236,6 +268,8 @@ function addOption() {
     newInput.id = `option_${optionCount}`;
     newInput.name = `option_${optionCount}`;
     newInput.required = true;
+
+
 
     // Create a new remove button
     const removeButton = document.createElement('button');

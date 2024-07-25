@@ -35,8 +35,6 @@
     {{-- sweetalert2 --}}
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <!-- Select2 -->
-    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
 
     @stack("styles")
 
@@ -127,9 +125,7 @@
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap4.js"></script>
 
-    {{-- Select2 --}}
-    <script src="/plugins/select2/js/select2.full.min.js"></script>
-      
+
 
     {{-- sweetalert2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

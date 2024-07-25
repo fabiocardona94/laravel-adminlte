@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <nav class="nav nav-pills flex-column flex-sm-row mt-2">
-                <a 
+                <a
                  class="flex-sm-fill text-sm-center nav-link {{ request()->routeIs(["admin.evaluacion.index"]) ? "active" : "" }}" href="{{ route('admin.evaluacion.index')}}">Evaluciones
                 </a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('admin.pregunta.index')}}">Preguntas</a>
@@ -12,7 +12,7 @@
             <p class="m-0 mb-3 text-center h2">Listado de las evaluaciones</p>
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createEvalution"><i class="fas fa-edit"></i></i>Crear Evaluación</button>
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createEvalution" title="Crear Evaluación"><i class="fas fa-edit"></i></i>Crear Evaluación</button>
                 </div>
                 <table id="evaluations" class="table table-bordered mb-2" style="width:100%">
                     <thead>
@@ -47,38 +47,42 @@
     <div class="modal fade" id="createEvalution" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title ml-2" id="exampleModalLabel">Crear Evaluación</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <i class="fas fa-pencil-alt"></i>
-                        <label for="title" class="col-form-label">Titulo de la evaluación</label>
-                        <input type="text" value="" class="form-control" id="title" name="" required>
+                <form id="createEvaluationForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-2" id="exampleModalLabel">Crear Evaluación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <i class="far fa-comment-dots"></i>
-                        <label for="description" class="col-form-label">Descripción de la evaluación</label>
-                        <input type="text" value="" class="form-control" id="description" name="description" required>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <i class="fas fa-pencil-alt"></i>
+                            <label for="title" class="col-form-label">Titulo de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="title" name="" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="far fa-comment-dots"></i>
+                            <label for="description" class="col-form-label">Descripción de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="description" name="description" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="fas fa-calendar-check"></i>
+                            <label for="start_date" class="col-form-label">Fecha en que inicia la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="fas fa-calendar-times"></i>
+                            <label for="end_date" class="col-form-label">Fecha en que termina la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="end_date" name="end_date" required
+                            >
+
+                        </div>
+                        <div class="text-center mb-2 mt-2">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-outline-success">Crear</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <i class="fas fa-calendar-check"></i>
-                        <label for="start_date" class="col-form-label">Fecha en que inicia la evaluación</label>
-                        <input type="datetime-local" value="" class="form-control" id="start_date" name="start_date" required >
-                    </div>
-                    <div class="form-group">
-                        <i class="fas fa-calendar-times"></i>
-                        <label for="end_date" class="col-form-label">Fecha en que termina la evaluación</label>
-                        <input type="datetime-local" value="" class="form-control" id="end_date" name="end_date" required >
-                    </div>
-                    <div class="text-center mb-2 mt-2">
-                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-outline-success" onclick="createEvaluation()">Crear</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -94,6 +98,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <form id="editEvaluationForm">
                         <input type="hidden" id="evaluation_id" name="evaluation_id">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
@@ -122,8 +127,10 @@
                         </div>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" onclick="" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-outline-success" onclick="updateEvalution()">Actualizar</button>
+                            <button type="submit" class="btn btn-outline-success">Actualizar</button>
                         </div>
+
+                    </form>
                 </div>
             </div>
         </div>
@@ -160,13 +167,13 @@
                         .every(function () {
                             let column = this;
                             let title = column.footer().textContent;
-            
+
                             // Create input element
                             let input = document.createElement('input');
                             input.classList.add('form-control', 'p-2');
                             input.placeholder = title;
                             column.footer().replaceChildren(input);
-            
+
                             // Event listener for user input
                             input.addEventListener('keyup', () => {
                                 if (column.search() !== this.value) {

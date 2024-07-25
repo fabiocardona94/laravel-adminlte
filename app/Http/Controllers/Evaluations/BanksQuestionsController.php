@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Evaluations\EvaluationBankQuestion;
 use App\Models\Evaluations\EvaluationQuestionOption;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Contracts\DataTable;
+use Yajra\DataTables\Facades\DataTables;
 
 class BanksQuestionsController extends Controller
 {
-    
+
     /**
      *  Method to show the view of the questions that are in the system
      */
@@ -24,24 +26,25 @@ class BanksQuestionsController extends Controller
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
+            'evaluation_id' => 'required|string|integer',
             'options' => 'required|array',
             'options.*' => 'required|string|max:255',
         ]);
-    
+
         try {
             // Crear la pregunta
             $question = new EvaluationBankQuestion();
             $question->question_title = $validatedData['question_title'];
             $question->save();
-    
+
             // Crear las opciones asociadas a la pregunta
             foreach ($validatedData['options'] as $optionTitle) {
-                $option = new EvaluationQuestionOption(); 
+                $option = new EvaluationQuestionOption();
                 $option->question_id = $question->id;
                 $option->question_option = $optionTitle;
                 $option->save();
             }
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Pregunta creada exitosamente'
@@ -52,5 +55,34 @@ class BanksQuestionsController extends Controller
                 'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+     /**
+     * Method for get the data of the evaluations and view end datatable
+     */
+    public function listQuestions()
+    {
+        $evaluations = EvaluationBankQuestion::select('id', 'question_title', 'status')->get();
+        return DataTables::of($evaluations)
+        ->addColumn('status', function($row){
+            return $row->status == 1
+                ? '<span class="badge badge-success">Activa</span>'
+                : '<span class="badge badge-danger">Inactiva</span>';
+        })
+        ->addColumn('actions', function($row){
+            return
+                '
+                    <div class="d-flex">
+                        <button class="btn" type="button"
+                            <i class="far fa-edit" style="color: #1655c0;"></i>
+                        </button>
+                        <a href="#" class="btn" type="button">
+                            <i class="far fa-question-circle" style="color: #12f321;"></i>
+                        </a>
+                    </div>
+                ';
+        })
+        ->rawColumns(['status', 'actions'])
+        ->make(true);
     }
 }

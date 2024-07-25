@@ -12,20 +12,22 @@
                 <div class="d-flex justify-content-end mb-2 mt-2">
                     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
                 </div>
-                <table id="questions" class="table table-striped table-bordered mt-2 mb-2" style="width:100%">
+                <table id="questions" class="table table-bordered mt-2 mb-2" style="width:100%">
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Titulo</th>
                             <th>Estado</th>
                             <th>Acciones</th>
-    
+
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            {{-- <th>Filtrar</th>
                             <th>Filtrar</th>
-                            <th>Filtrar</th> --}}
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
+                            <th>Filtrar</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -38,7 +40,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 
+                    <h5
                         class="modal-title ml-2" id="exampleModalLabel">
                         <i class="far fa-question-circle"></i>
                         Crear Pregunta
@@ -57,7 +59,7 @@
                         <i class="fas fa-check-square"></i>
                         <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                         <br>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="addOption()"> 
+                        <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
                             <i class="fas fa-plus"></i> Agregar Opción
                         </button>
                     </div>
@@ -70,6 +72,52 @@
         </div>
     </div>
     @push('scripts')
-    <script src="/dist/js/evaluations/evaluation.js"></script>
+        <script src="/dist/js/evaluations/evaluation.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#questions').DataTable( {
+                    "language": {
+                        "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    },
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    order: [[ 3, 'desc' ]],
+                    processing: true,
+                    serverSide: true,
+                    ajax: '/admin/pregunta/questions',
+                    columns: [
+                        { data: 'id', name: 'id' },
+                        { data: 'question_title', name: 'question_title' },
+                        { data: 'status', name: 'status', orderable: false, searchable: false },
+                        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+                    ],
+                    initComplete: function () {
+                        $('#evaluations tfoot tr').appendTo('#evaluations thead');
+                        this.api()
+                            .columns()
+                            .every(function () {
+                                let column = this;
+                                let title = column.footer().textContent;
+
+                                // Create input element
+                                let input = document.createElement('input');
+                                input.classList.add('form-control', 'p-2');
+                                input.placeholder = title;
+                                column.footer().replaceChildren(input);
+
+                                // Event listener for user input
+                                input.addEventListener('keyup', () => {
+                                    if (column.search() !== this.value) {
+                                        column.search(input.value).draw();
+                                    }
+                                });
+                            });
+                    },
+                } );
+            } );
+        </script>
+
     @endpush
 </x-layout.app>
