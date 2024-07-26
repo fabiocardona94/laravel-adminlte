@@ -124,7 +124,7 @@ class EvaluationsController extends Controller
                             onclick="openEditEvaluationModal(' . $row->id . ')" title="Editar '.$row->title.'">
                             <i class="far fa-edit" style="color: #1655c0;"></i>
                         </button>
-                        <a href="' . route('admin.evaluacion.getEvaluationQuestions', ['id' => $row->id]) . '" class="btn" type="button" title="Agregar Preguntas para la '.$row->title.'">
+                        <a href="' . route('admin.evaluacion.preguntas', ['id' => $row->id]) . '" class="btn" type="button" title="Agregar Preguntas para la '.$row->title.'">
                             <i class="fas fa-plus" style="color: #0a53d1;"></i>
                         </a>
                     </div>

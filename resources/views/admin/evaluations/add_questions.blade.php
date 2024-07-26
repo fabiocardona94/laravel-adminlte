@@ -42,58 +42,56 @@
                   </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <form action="{{ route('admin.evaliacion_pregunta.update')}}" method="POST">
-                            @csrf
-                            @method('PATCH')
+                    <form action="{{-- {{ route('')}} --}}" method="POST">
+                        @csrf
+                        @method('PATCH')
 
-                            <input type="hidden" name="evaluation_id" value="{{$evaluation->id}}">
-                            @if ($associated_questions->isEmpty())
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <strong>
-                                        Esta Evaluación aun no tiene preguntas asignadas
-                                    </strong>
-                                </div>
+                        <input type="hidden" name="evaluation_id" value="{{$evaluation->id}}">
+                        @if ($associated_questions->isEmpty())
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <strong>
+                                    Esta Evaluación aun no tiene preguntas asignadas
+                                </strong>
                             </div>
-                            @else
-                                @foreach ($associated_questions as $question)
-                                    <div class="card shadow">
-                                        <div class="card-body d-flex justify-content-between align-items-center">
-                                            <strong>
-                                                {{ $question->question_title }}
-                                            </strong>
-                                            <div class="ml-auto">
-                                                <a href="" class="" title="Ve respuestas de esta pregunta">
-                                                    <i class="far fa-eye" style="color: #000000;"></i>
-                                                </a>
-                                                <a href="" class="" title="Eliminar pregunta de la evaluación"{{ $evaluation->title }} >
-                                                    <i class="fas fa-trash-alt" style="color: #f00000;"></i>
-                                                </a>
-                                            </div>
+                        </div>
+                        @else
+                            @foreach ($associated_questions as $question)
+                                <div class="card shadow">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <strong>
+                                            {{ $question->question_title }}
+                                        </strong>
+                                        <div class="ml-auto">
+                                            <a href="" class="" title="Ve respuestas de esta pregunta">
+                                                <i class="far fa-eye" style="color: #000000;"></i>
+                                            </a>
+                                            <button  type="button" class="btn" title="Eliminar pregunta de la evaluación"{{ $evaluation->title }} >
+                                                <i class="fas fa-trash-alt" style="color: #f00000;"></i>
+                                            </button>
                                         </div>
-                                        <div class="d-flex justify-content-end m-0">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-plus" style="color: #0a53d1;"></i>
-                                                    <strong>
-                                                        Agregar Pregunta
-                                                    </strong>
+                                    </div>
+                                    <div class="d-flex justify-content-end m-0">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-plus" style="color: #0a53d1;"></i>
+                                                <strong>
+                                                    Agregar Pregunta
+                                                </strong>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
+                                                    <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
                                                 </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
-                                                        <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
-                                                    </button>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
-                                                </div>
+                                                <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
+                            @endforeach
 
-                            @endif
-                        </form>
-                    </div>
+                        @endif
+                    </form>
                 </div>
             </div>
         </div>
@@ -139,5 +137,6 @@
     </div>
     @push('scripts')
         <script src="/dist/js/evaluations/evaluation.js"></script>
+        <script></script>
     @endpush
 </x-layout.app>

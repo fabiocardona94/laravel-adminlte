@@ -24,14 +24,14 @@ Route::prefix('/admin')->name('admin.')->group(function () {
             ->name('viewQuestionsAssociated');
 
         Route::get('/preguntas/{id}',[EvaluationsController::class,'getEvaluationQuestions'])
-            ->name('getEvaluationQuestions');
+            ->name('preguntas');
 
+        Route::get('/{id}',[EvaluationsController::class,'edit'])
+            ->name('edit');
 
         Route::post('/store',[EvaluationsController::class,'store'])
                ->name('store');
 
-        Route::get('/{id}',[EvaluationsController::class,'edit'])
-             ->name('edit');
 
         Route::patch('/update/{id}',[EvaluationsController::class,'update'])
             ->name('update');
@@ -53,12 +53,12 @@ Route::prefix('/admin')->name('admin.')->group(function () {
             ->name('createquestionasociated');
     });
 
-    Route::prefix('evaliacion_pregunta')->name('evaliacion_pregunta.')->group(function () {
+    Route::prefix('evaluacion_pregunta')->name('evaluacion_pregunta.')->group(function () {
 
         Route::post('/store',[EvaluationsQuestionsController::class,'store'])
             ->name('store');
 
-        Route::patch('/editar',[EvaluationsQuestionsController::class,'update'])
+        Route::patch('/editar/{id}',[EvaluationsQuestionsController::class,'update'])
             ->name('update');
     });
 });

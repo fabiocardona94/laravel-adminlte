@@ -19,6 +19,7 @@ function createEvaluation(){
     const description = document.getElementById('description').value;
     const startDate = document.getElementById('start_date').value;
     const endDate = document.getElementById('end_date').value;
+    const btnCreateEvaluation = document.getElementById('btn_create_valuation').value;
 
     $.ajax({
         url: '/admin/evaluacion/store',
@@ -54,10 +55,12 @@ function createEvaluation(){
                 title: "Hubo un error al crear la evaluación",
                 icon: "error",
             });
+        },
+        complete: function() {
+            btnCreateEvaluation.disabled = false;
         }
     });
 }
-
 
 
 //Method to open the modal and be able to edit the evaluation data.
@@ -167,9 +170,6 @@ function updateEvalution(){
     });
 
 }
-
-
-
 
 
 // -----------------------------------------------------Questionss--------------------------------------//
@@ -287,6 +287,7 @@ function createQuestioAsocciated(){
                 }).then(() => {
                     $('#createQuestionAsociated').modal('hide');
                     $('#questions').DataTable().ajax.reload();
+                    location.reload();
                 });
             } else {
                 alert('Error: ' + response.message);

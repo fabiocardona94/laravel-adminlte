@@ -79,7 +79,7 @@
                         </div>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success">Crear</button>
+                            <button type="submit" id="btn_create_valuation" class="btn btn-outline-success">Crear</button>
                         </div>
                     </div>
                 </form>
