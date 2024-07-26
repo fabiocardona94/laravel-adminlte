@@ -76,7 +76,7 @@ class EvaluationsController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string|max:300',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|integer',

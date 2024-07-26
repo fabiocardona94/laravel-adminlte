@@ -20,6 +20,9 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/evaluations',[EvaluationsController::class,'evaluations'])
             ->name('evaluations');
 
+        Route::get('/viewquestions',[EvaluationsController::class,'viewQuestionsAssociated'])
+            ->name('viewQuestionsAssociated');
+
         Route::get('/preguntas/{id}',[EvaluationsController::class,'getEvaluationQuestions'])
             ->name('getEvaluationQuestions');
 
@@ -45,6 +48,9 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::post('/store',[BanksQuestionsController::class,'store'])
             ->name('store');
+
+        Route::post('/createquestionasociated',[BanksQuestionsController::class,'createAssociatedQuestion'])
+            ->name('createquestionasociated');
     });
 
     Route::prefix('evaliacion_pregunta')->name('evaliacion_pregunta.')->group(function () {

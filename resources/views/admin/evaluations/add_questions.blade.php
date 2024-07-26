@@ -33,7 +33,7 @@
                             </strong>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestion">
+                            <button type="button" onclick="" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
                                 <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
                             </button>
                             <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
@@ -81,7 +81,7 @@
                                                     </strong>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestion">
+                                                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
                                                         <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
                                                     </button>
                                                     <a class="dropdown-item" href="#"><i class="fas fa-plus" style="color: #111111;"></i><strong>Del banco de preguntas</strong></a>
@@ -99,7 +99,7 @@
         </div>
     </div>
     <!-- Modal questions -->
-    <div class="modal fade" id="createQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal fade" id="createQuestionAsociated" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -113,7 +113,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="createQuestionForm">
+                    <form id="createQuestionAsocciatedForm">
                         <input type="hidden" value="{{ $evaluation->id }}" id="evaluationId">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
@@ -121,7 +121,7 @@
                             <textarea class="form-control" id="question_title" name="question_title" required cols="30" rows="2" required></textarea>
                         </div>
                         <div class="form-group" id="divOptions">
-                            <i class="fas fa-check-square"></i>
+                            <i class="fas fa-list-ul"></i>
                             <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
                         </div>

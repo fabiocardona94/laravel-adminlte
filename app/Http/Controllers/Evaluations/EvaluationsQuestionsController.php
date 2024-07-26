@@ -72,15 +72,15 @@ class EvaluationsQuestionsController extends Controller
             'associated_questions' => 'required|array',
             'associated_questions.*' => 'integer',
         ]);
-    
+
         $question_ids = $request->input('associated_questions');
-    
+
         try {
             foreach ($question_ids as $question_id) {
                 EvaluationQuestion::where('question_id', $question_id)
                     ->update(['status' => 0]);
             }
-    
+
             return redirect()->back()->with('success', 'Preguntas actualizadas exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Ocurrió un error al actualizar las preguntas.');
