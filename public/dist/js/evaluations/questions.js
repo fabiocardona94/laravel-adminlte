@@ -1,4 +1,4 @@
-// const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const Tokencsrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 // Method to create a new Question
 let formCreateQuestion = document.getElementById("createQuestionForm");
 if(formCreateQuestion)
@@ -21,7 +21,7 @@ function createQuestion(){
     });
     // console.log("Titulo Pregunta "+question_title);
     // console.log("Opcion"+options);
-    // console.log("Token"+csrfToken);
+    // console.log("Token"+Token);
 
 
     $.ajax({
@@ -125,5 +125,64 @@ function createQuestioAsocciated(){
             });
         }
     });
+}
+
+function updateAssociatedQuestion (evaluation_id,question_id){
+
+    // console.log('Id Evaluación '+evaluation_id);
+    // console.log('Id Pregunta '+question_id);
+    // console.log('Token '+Token);
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, actualizar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/admin/evaluacion_pregunta/update/'+ evaluation_id + '/' + question_id,
+                method: 'PATCH',
+                data: {
+                    _token:Tokencsrf,
+                    evaluation_id: evaluation_id,
+                    question_id: question_id,
+                },
+                success: function(response) {
+                    if(response.status === 'success') {
+                        Swal.fire({
+
+                            title: response.message,
+                            icon: 'success',
+                            confirmButtonText: "Aceptar",
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        alert('Error: ' + response.message);
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Hubo un error al eliminar la pregunta",
+                        icon: "error",
+                    });
+                }
+                // .finally(() =>{
+                //     btnCreateEvaluation.removeAttribute('disabled')
+                // }),
+            });
+        }
+    });
+
+
 }
 

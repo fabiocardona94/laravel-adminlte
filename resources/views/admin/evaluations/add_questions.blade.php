@@ -60,7 +60,7 @@
                                         <button type="button" class="btn" onclick="seeAQuestionOptions({{ $question->id }},'{{ $question->question_title }}')" title="Ve respuestas de esta pregunta">
                                             <i class="far fa-eye" style="color: #000000;"></i>
                                         </button>
-                                        <button  type="button" class="btn" title="Eliminar pregunta de la evaluación"{{ $evaluation->title }} >
+                                        <button  type="button" class="btn" onclick="updateAssociatedQuestion({{ $evaluation->id}},{{ $question->id}})" title="Eliminar pregunta de la evaluación"{{ $evaluation->title }} >
                                             <i class="fas fa-trash-alt" style="color: #f00000;"></i>
                                         </button>
                                     </div>
@@ -161,6 +161,5 @@
         <script src="/dist/js/evaluations/evaluations.js"></script>
         <script src="/dist/js/evaluations/questions.js"></script>
         <script src="/dist/js/evaluations/options.js"></script>
-        <script></script>
     @endpush
 </x-layout.app>

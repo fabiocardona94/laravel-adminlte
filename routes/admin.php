@@ -52,6 +52,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::post('/createquestionasociated',[BanksQuestionsController::class,'createAssociatedQuestion'])
             ->name('createquestionasociated');
+
     });
 
     Route::prefix('evaluacion_pregunta')->name('evaluacion_pregunta.')->group(function () {
@@ -59,8 +60,8 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::post('/store',[EvaluationsQuestionsController::class,'store'])
             ->name('store');
 
-        Route::patch('/editar/{id}',[EvaluationsQuestionsController::class,'update'])
-            ->name('update');
+        Route::patch('/update/{evaluation_id}/{question_id}',[EvaluationsQuestionsController::class,'update'])
+        ->name('update');
     });
 
     Route::prefix('opciones')->name('opciones.')->group(function () {

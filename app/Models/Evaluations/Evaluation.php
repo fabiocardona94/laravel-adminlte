@@ -13,7 +13,7 @@ class Evaluation extends Model
     use HasFactory;
 
     protected $table = 'evaluations';
-    
+
     protected $fillable = [
         'title',
         'description',

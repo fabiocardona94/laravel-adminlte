@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Evaluations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Evaluations\Evaluation;
-use App\Models\Evaluations\EvaluationBankQuestion;
 use App\Models\Evaluations\EvaluationQuestion;
 use Illuminate\Http\Request;
 
@@ -66,20 +64,39 @@ class EvaluationsQuestionsController extends Controller
     /**
      * Method to update the status of a question associated with an evaluation
      */
-    public function update(Request $request,$id)
+    public function update(Request $request,$evaluation_id,$question_id)
     {
-        return $id;
         $request->validate([
-            'id' => 'required|integer',
+            'evaluation_id' => 'required|integer',
+            'question_id' => 'required|integer',
         ]);
 
         try {
-            EvaluationQuestion::where('question_id', $id)
-                ->update(['status' => 0]);
 
-            return redirect()->back()->with('success', 'Preguntas actualizadas exitosamente.');
+            $evaluationQuestion = EvaluationQuestion::where('evaluation_id', $evaluation_id)
+                ->where('question_id', $question_id)
+                ->first();
+
+            if (!$evaluationQuestion) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No se encontró la evaluación o la pregunta'
+                ], 404);
+            }
+
+            // Actualizar el estado de la pregunta en la evaluación
+            $evaluationQuestion->status = 0;
+            $evaluationQuestion->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pregunta eliminada de la evaluación correctamente'
+            ], 200);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Ocurrió un error al actualizar las preguntas.');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hubo un error al actualizar la pregunta: ' . $e->getMessage()
+            ], 500);
         }
     }
 

@@ -105,6 +105,15 @@ class BanksQuestionsController extends Controller
         }
     }
 
+    /**
+     * Method for edit an question
+     */
+    function update ()
+    {
+    }
+
+
+
 
     /**
      * Method for get the data of the evaluations and view end datatable
