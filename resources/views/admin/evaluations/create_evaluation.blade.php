@@ -68,18 +68,23 @@
                         <div class="form-group">
                             <i class="fas fa-calendar-check"></i>
                             <label for="start_date" class="col-form-label">Fecha en que inicia la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="start_date" name="start_date" required>
+                            <input type="datetime-local" value="" class="form-control" id="start_date" name="start_date"
+                                min="{{ date('Y-m-d\TH:i') }}"
+                                value="{{ date('Y-m-d\TH:i') }}" required
+                            >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-times"></i>
                             <label for="end_date" class="col-form-label">Fecha en que termina la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="end_date" name="end_date" required
+                            <input type="datetime-local" value="" class="form-control" id="end_date" name="end_date required"
+                                min="{{ date('Y-m-d\TH:i') }}"
+                                value="{{ date('Y-m-d\TH:i') }}"
+                                required
                             >
-
                         </div>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="btn_create_valuation" class="btn btn-outline-success">Crear</button>
+                            <button type="submit" id="btnCreateEvaluation" class="btn btn-outline-success">Crear</button>
                         </div>
                     </div>
                 </form>
@@ -113,12 +118,18 @@
                         <div class="form-group">
                             <i class="fas fa-calendar-check"></i>
                             <label for="start_date_evaluation" class="col-form-label">Fecha en que inicia la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="start_date_evaluation" name="start_date_evaluation" required>
+                            <input type="datetime-local" value="" class="form-control" id="start_date_evaluation" name="start_date_evaluation"
+                                min="{{ date('Y-m-d\TH:i') }}"
+                                value="{{ date('Y-m-d\TH:i') }}" required
+                            >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-times"></i>
                             <label for="end_date_evaluation" class="col-form-label">Fecha en que termina la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="end_date_evaluation" name="end_date_evaluation" required>
+                            <input type="datetime-local" value="" class="form-control" id="end_date_evaluation" name="end_date_evaluation"
+                                min="{{ date('Y-m-d\TH:i') }}"
+                                value="{{ date('Y-m-d\TH:i') }}" required
+                            >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-toggle-on"></i>
@@ -126,7 +137,7 @@
                             <select class="form-control text-black" name="evaluation_status" id="evaluation_status"></select>
                         </div>
                         <div class="text-center mb-2 mt-2">
-                            <button type="button" class="btn btn-outline-danger" onclick="" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-outline-success">Actualizar</button>
                         </div>
 
@@ -136,7 +147,7 @@
         </div>
     </div>
     @push('scripts')
-    <script src="/dist/js/evaluations/evaluation.js"></script>
+    <script src="/dist/js/evaluations/evaluations.js"></script>
     <script>
         $(document).ready(function() {
             $('#evaluations').DataTable( {

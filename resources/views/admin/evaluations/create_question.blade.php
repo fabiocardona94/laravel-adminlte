@@ -123,7 +123,8 @@
         </div>
     </div>
     @push('scripts')
-        <script src="/dist/js/evaluations/evaluation.js"></script>
+        <script src="/dist/js/evaluations/questions.js"></script>
+        <script src="/dist/js/evaluations/options.js"></script>
         <script>
             $(document).ready(function() {
                 $('#questions').DataTable( {

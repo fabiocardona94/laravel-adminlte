@@ -11,7 +11,7 @@ class EvaluationBankQuestion extends Model
 {
     use HasFactory;
     protected $table = 'evaluation_bank_questions';
-    
+
     protected $fillable = [
         'question_title',
         'status',
@@ -21,9 +21,11 @@ class EvaluationBankQuestion extends Model
     {
         return $this->belongsToMany(Evaluation::class, 'evaluation_re_questions', 'question_id', 'evluation_id');
     }
-    
+
     public function options() : HasMany
     {
-        return $this->hasMany(EvaluationQuestion::class, 'question_id');
+        return $this->hasMany(EvaluationQuestionOption::class, 'question_id')
+                    ->select('question_id', 'question_option', 'is_correct');
     }
 }
+//

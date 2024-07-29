@@ -3,6 +3,7 @@
 use App\Http\Controllers\Evaluations\BanksQuestionsController;
 use App\Http\Controllers\Evaluations\EvaluationsController;
 use App\Http\Controllers\Evaluations\EvaluationsQuestionsController;
+use App\Http\Controllers\Evaluations\OptionsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -60,5 +61,11 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::patch('/editar/{id}',[EvaluationsQuestionsController::class,'update'])
             ->name('update');
+    });
+
+    Route::prefix('opciones')->name('opciones.')->group(function () {
+
+        Route::get('opcionesasociadas/{id}',[OptionsController::class,'optionsOfAQuestion'])
+            ->name('opciones.asociadas');
     });
 });
