@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Evaluations;
 
 use App\Http\Controllers\Controller;
+use App\Models\Evaluations\Evaluation;
 use App\Models\Evaluations\EvaluationBankQuestion;
 use App\Models\Evaluations\EvaluationQuestion;
 use App\Models\Evaluations\EvaluationQuestionOption;
@@ -85,7 +86,7 @@ class BanksQuestionsController extends Controller
 
             }
 
-            //Insertar los datos a la tabla realional entre las evaluaciones y preguntas
+            //Insertar los datos a la tabla relacional entre las evaluaciones y preguntas
             EvaluationQuestion::create([
                 'evaluation_id' => $validatedData['evaluation_id'],
                 'question_id' => $question->id,
@@ -140,5 +141,57 @@ class BanksQuestionsController extends Controller
         })
         ->rawColumns(['status', 'actions'])
         ->make(true);
+    }
+
+    /**
+     *Method to obtain questions from the question bank and questions associated with an evaluation
+     */
+    public function consultQuestionBank($id)
+    {
+        //Busco las preguntas existentes en la relacion de muchos a muchos en el modelo Evaluation
+        $evaluation = Evaluation::select('id', 'title', 'description')
+                                ->with('inactiveQuestions')
+                                ->find($id);
+        //Valido si existe relaciones y si  no envio  un mensaje
+        if (!$evaluation) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Evaluación no encontrada'
+            ], 404);
+        }
+
+        //Si existe obtengo las preguntas relacinadas
+        try {
+            $asociated_questions  = $evaluation->inactiveQuestions;
+            $quantity_associated_questions = $asociated_questions->count();
+
+            $associated_question_ids = $evaluation->inactiveQuestions->pluck('id')->toArray();
+            $page = request()->input('page', 1); // Página actual
+            $perPage = 10; // Número de preguntas por página
+
+            // Busca en el banco de preguntas las preguntas que no están relacionadas
+            $unrelated_questions = EvaluationBankQuestion::whereNotIn('id', $associated_question_ids)
+                                                        ->select('id', 'question_title')
+                                                        ->paginate($perPage, ['*'], 'page', $page);
+
+
+            return response()->json([
+                'status' => 'success',
+                'asociated_questions'  => $asociated_questions,
+                'unrelated_questions'  => $unrelated_questions->items(),
+                'quantity_associated_questions'  => $quantity_associated_questions,
+                'pagination' => [
+                    'current_page' => $unrelated_questions->currentPage(),
+                    'last_page' => $unrelated_questions->lastPage(),
+                    'per_page' => $unrelated_questions->perPage(),
+                    'total' => $unrelated_questions->total(),
+                ],
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

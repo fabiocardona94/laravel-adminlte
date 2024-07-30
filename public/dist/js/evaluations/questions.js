@@ -23,14 +23,12 @@ function createQuestion(){
     // console.log("Opcion"+options);
     // console.log("Token"+Token);
 
-
     $.ajax({
         url: '/admin/pregunta/store',
         method: 'POST',
         data: {
             _token: csrfToken,
             question_title: question_title,
-            // evaluation_id: evaluation_id,
             options: options
         },
         success: function(response) {
@@ -127,6 +125,8 @@ function createQuestioAsocciated(){
     });
 }
 
+
+// Method to update the status of an question ascociated
 function updateAssociatedQuestion (evaluation_id,question_id){
 
     // console.log('Id Evaluación '+evaluation_id);
@@ -186,3 +186,85 @@ function updateAssociatedQuestion (evaluation_id,question_id){
 
 }
 
+//Method to obtain questions from the question bank
+
+
+function consultQuestionBank(id, page = 1) {
+    console.log(id);
+
+    $.ajax({
+        url: '/admin/pregunta/bancopreguntas/' + id,
+        method: 'GET',
+        data: {
+            _token: csrfToken,
+            id: id,
+            page: page,
+        },
+        success: function(response) {
+            if (response.status === 'success') {
+                console.log('Contador ' + response.quantity_associated_questions);
+
+                // Limpia la tabla antes de agregar nuevos datos
+                $('#associated_questions tbody').empty();
+
+                // Llena la tabla con las preguntas no asociadas
+                response.unrelated_questions.forEach(function(question) {
+                    $('#associated_questions tbody').append(`
+                        <tr>
+                            <td>${question.question_title}
+                                <div class="d-flex justify-content-end pb-2">
+                                    <input type="checkbox" name="unrelated_questions[]" value="${question.id}" class="">
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                // Actualiza el paginador
+                updatePagination(response.pagination,id);
+
+                // Muestra el modal
+                $('#bankQuestions').modal('show');
+
+            } else {
+                alert('Error: ' + response.message);
+                Swal.fire({
+                    title: response.message,
+                    icon: "error",
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                title: "No se ha podido obtener las preguntas",
+                icon: "error",
+            });
+        }
+    });
+}
+
+function updatePagination(pagination,id) {
+    let paginationHtml = '';
+
+    if (pagination.current_page > 1) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="#" onclick="consultQuestionBank(${id}, ${pagination.current_page - 1})"> <span aria-hidden="true">&laquo;</span></a></li>`;
+    } else {
+        paginationHtml += `<li class="page-item disabled"><a class="page-link"><span aria-hidden="true">&laquo;</span></a></li>`;
+    }
+
+    for (let i = 1; i <= pagination.last_page; i++) {
+        if (i === pagination.current_page) {
+            paginationHtml += `<li class="page-item active" aria-current="page"><a class="page-link" href="#" onclick="consultQuestionBank(${id}, ${i})">${i}</a></li>`;
+        } else {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="#" onclick="consultQuestionBank(${id}, ${i})">${i}</a></li>`;
+        }
+    }
+
+    if (pagination.current_page < pagination.last_page) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="#" onclick="consultQuestionBank(${id}, ${pagination.current_page + 1})"><span aria-hidden="true">&raquo;</span></a></li>`;
+    } else {
+        paginationHtml += `<li class="page-item disabled"><a class="page-link"><span aria-hidden="true">&raquo;</span></a></li>`;
+    }
+
+    $('.pagination').html(paginationHtml);
+}

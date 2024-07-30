@@ -141,20 +141,17 @@ class EvaluationsController extends Controller
     public function getEvaluationQuestions($id)
     {
         $evaluation = Evaluation::select('id', 'title', 'description')
-                                ->with('questions')
+                                ->with('activeQuestions')
                                 ->find($id);
+
         if(!$evaluation){
             return redirect()->route('admin.evaluacion.index')->with('error', 'Evaluación no encontrada');
         }
 
-        $associated_questions  = $evaluation->questions;
+        $associated_questions  = $evaluation->activeQuestions;
         $quantity_associated_questions = $associated_questions->count();
 
-        $associated_question_ids = $evaluation->questions->pluck('id')->toArray();
-
-        $unrelated_questions = EvaluationBankQuestion::whereNotIn('id', $associated_question_ids)->get();
-
-        return view('admin.evaluations.add_questions',compact('evaluation','associated_questions','unrelated_questions','quantity_associated_questions'));
+        return view('admin.evaluations.view_associated_questions',compact('evaluation','associated_questions','quantity_associated_questions'));
     }
 
 

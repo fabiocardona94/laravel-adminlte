@@ -47,6 +47,9 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/questions',[BanksQuestionsController::class,'listQuestions'])
             ->name('listQuestions');
 
+        Route::get('/bancopreguntas/{id}',[BanksQuestionsController::class,'consultQuestionBank'])
+            ->name('bancopreguntas');
+
         Route::post('/store',[BanksQuestionsController::class,'store'])
             ->name('store');
 
