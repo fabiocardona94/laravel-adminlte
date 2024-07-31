@@ -193,7 +193,7 @@
                             </nav>
                         </div>
                         <div class="text-center mb-2 mt-2">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Añadir Preguntas</button>
+                            <button type="button" class="btn btn-primary disabled" id="btnEnviarOptions" data-dismiss="modal">Añadir Preguntas</button>
                         </div>
                     </div>
                 </form>

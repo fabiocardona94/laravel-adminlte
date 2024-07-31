@@ -1,6 +1,5 @@
-
 // const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-let optionCount = 0;
+let optionCounts = 0;
 // Method to add a new option
 function addOption() {
     optionCount++;

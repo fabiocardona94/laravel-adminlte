@@ -73,10 +73,9 @@
             </div>
         </div>
     </div>
-
-      <!-- Modal edit Evaluation -->
-    <div class="modal fade" id="editQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog">
+       <!-- Modal edit Questions -->
+    <div class="modal fade" id="modalEditQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title ml-2" id="exampleModalLabel">Editar Pregunta</h5>
@@ -86,32 +85,30 @@
                 </div>
                 <div class="modal-body">
                     <form id="editQuestionForm">
-                        <input type="hidden" id="evaluation_id" name="evaluation_id">
+                        <input type="hidden" id="question_id" name="evaluation_id">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="title_evaluation" class="col-form-label">Titulo de la pregunta</label>
-                            <input type="text" value="" class="form-control" id="title_evaluation" name="title_evaluation" required>
+                            <label for="title_question_edit" class="col-form-label">Titulo de la pregunta</label>
+                            <input type="text" value="" class="form-control" id="title_question_edit" name="title_question_edit" required>
                         </div>
                         <div class="form-group">
-                            <i class="far fa-comment-dots"></i>
-                            <label for="description_evaluation" class="col-form-label">Descripción de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="description_evaluation" name="description_evaluation" required>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <label for="question_status_edit" class="col-form-label">Estado</label>
+                            <select class="form-control text-black" name="question_status_edit" id="question_status_edit"></select>
                         </div>
                         <div class="form-group">
-                            <i class="fas fa-calendar-check"></i>
-                            <label for="start_date_evaluation" class="col-form-label">Fecha en que inicia la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="start_date_evaluation" name="start_date_evaluation" required>
+                            <i class="fas fa-list-ul"></i>
+                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <br>
                         </div>
-                        <div class="form-group">
-                            <i class="fas fa-calendar-times"></i>
-                            <label for="end_date_evaluation" class="col-form-label">Fecha en que termina la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="end_date_evaluation" name="end_date_evaluation" required>
+                        <div class="form-group" id="containerEditOptions">
+                            <i class="fas fa-list-ul"></i>
+                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <br>
                         </div>
-                        <div class="form-group">
-                            <i class="fas fa-toggle-on"></i>
-                            <label for="end_date_evaluation" class="col-form-label">Estado</label>
-                            <select class="form-control text-black" name="evaluation_status" id="evaluation_status"></select>
-                        </div>
+                        <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
+                            <i class="fas fa-plus"></i> Agregar Opción
+                        </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" onclick="" data-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-outline-success">Actualizar</button>

@@ -24,7 +24,8 @@ class BanksQuestionsController extends Controller
     /**
      * Method for creating a new question
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
@@ -107,10 +108,65 @@ class BanksQuestionsController extends Controller
     }
 
     /**
+     * Method to open modal and display question data.
+     */
+    function edit($id)
+    {
+
+        $question = EvaluationBankQuestion::select('id','question_title','status')->find($id);
+        $options_asociated = EvaluationBankQuestion::with('options')
+        ->find($id);
+
+
+        if (!$question) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Pregunta no encontrada'
+            ], 404);
+        }
+
+        try {
+
+            return response()->json([
+                'status' => 'success',
+                'question' => $question,
+                'options_asociated' => $options_asociated
+            ], 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Method for edit an question
      */
-    function update ()
+    function update (Request $request,$id)
     {
+        $validatedData = $request->validate([
+            'question_title' => 'required|string|max:255',
+            'status' => 'required|integer',
+        ]);
+
+        try {
+            $question = EvaluationBankQuestion::findOrFail($id);
+            $question->question_title = $validatedData['question_title'];
+            $question->status = $validatedData['status'];
+            $question->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pregunta actualizada exitosamente',
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -132,8 +188,7 @@ class BanksQuestionsController extends Controller
             return
                 '
                     <div class="d-flex">
-                        <button class="btn" type="button" data-toggle="modal" data-target="#editQuestion" data-id="' . $row->id . '"
-                            onclick="openEditEvaluationModal(' . $row->id . ')" title="Editar '.$row->title.'">
+                        <button class="btn" type="button" onclick="openModalEditQuestion(' . $row->id . ')" title="Editar '.$row->title.'">
                             <i class="far fa-edit" style="color: #1655c0;"></i>
                         </button>
                     </div>

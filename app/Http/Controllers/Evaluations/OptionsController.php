@@ -24,7 +24,7 @@ class OptionsController extends Controller
             ], 404);
         }
 
-            // Asegúrate de extraer solo las opciones
+        // Asegúrate de extraer solo las opciones
         $options = $questions->options->map(function($option) {
             return [
                 'question_option' => $option->question_option,
@@ -38,4 +38,5 @@ class OptionsController extends Controller
         ], 200);
 
     }
+
 }

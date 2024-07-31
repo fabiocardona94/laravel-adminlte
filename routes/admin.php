@@ -50,11 +50,18 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/bancopreguntas/{id}',[BanksQuestionsController::class,'consultQuestionBank'])
             ->name('bancopreguntas');
 
+        Route::get('/edit/{id}',[BanksQuestionsController::class,'edit'])
+            ->name('edit');
+
         Route::post('/store',[BanksQuestionsController::class,'store'])
             ->name('store');
 
         Route::post('/createquestionasociated',[BanksQuestionsController::class,'createAssociatedQuestion'])
             ->name('createquestionasociated');
+
+        Route::patch('/update/{id}',[BanksQuestionsController::class,'update'])
+            ->name('update');
+
 
     });
 
