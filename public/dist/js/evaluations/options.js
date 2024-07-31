@@ -78,22 +78,28 @@ function seeAQuestionOptions(id,title){
                 if (Array.isArray(response.data)) {
                     // Crear los elementos para cada opción
                     response.data.forEach(option => {
-                        // Crear un div para la opción
-                        const optionDiv = $('<div class="form-group"></div>');
-                        // Crear el input para la opción
-                        const inputOptions = $('<input type="text" readonly class="form-control">');
-                        // Establecer el valor del input
-                        inputOptions.val(option.question_option);
+                        if(data.length === 0){
+                            const message =$('<p class="form-group text-danger">Esta pregunta no tiene resouestas asociadas</p>');
+                            $('#optionsContainer').append(message);
 
-                        if (option.is_correct === 1) {
-                            inputOptions.addClass('text-success');
-                        } else {
-                            inputOptions.addClass('text-danger');
+                        }else{
+                            // Crear un div para la opción
+                            const optionDiv = $('<div class="form-group"></div>');
+                            // Crear el input para la opción
+                            const inputOptions = $('<input type="text" readonly class="form-control">');
+                            // Establecer el valor del input
+                            inputOptions.val(option.question_option);
+
+                            if (option.is_correct === 1) {
+                                inputOptions.addClass('text-success');
+                            } else {
+                                inputOptions.addClass('text-danger');
+                            }
+                            // Añadir el input al div
+                            optionDiv.append(inputOptions);
+                            // Añadir el div al contenedor
+                            $('#optionsContainer').append(optionDiv);
                         }
-                        // Añadir el input al div
-                        optionDiv.append(inputOptions);
-                        // Añadir el div al contenedor
-                        $('#optionsContainer').append(optionDiv);
                     });
                 } else {
                     console.error('Expected an array but received:', response.data);

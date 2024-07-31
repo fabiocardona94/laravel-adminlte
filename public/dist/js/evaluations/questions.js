@@ -130,103 +130,14 @@ function createQuestioAsocciated(){
 
 function openModalEditQuestion(id){
     optionCount = 0;
-    console.log('Id '+id);
-
+    // console.log('Id '+id);
     $.ajax({
         url: '/admin/pregunta/edit/' + id ,
         method: 'GET',
         success: function(response) {
             if(response.status === 'success') {
-                // Llenar los campos del modal con los datos de la evaluación
-                $('#question_id').val(response.question.id);
-                $('#title_question_edit').val(response.question.question_title);
-                $('#question_status_edit').val(response.question.status);
-
-                // Limpiar el select antes de agregar opciones
-                $('#question_status_edit').empty();
-
-                // Agregar la opción actual
-                if(response.question.status == 0) {
-                    $('#question_status_edit').append(new Option("INACTIVA", "0", true, true));
-                    $('#question_status_edit').append(new Option("ACTIVA", "1"));
-                } else {
-                    $('#question_status_edit').append(new Option("ACTIVA", "1", true, true));
-                    $('#question_status_edit').append(new Option("INACTIVA", "0"));
-                }
-
-                // Verifica si response.options_asociated es un array
-                if (Array.isArray(response.options_asociated.options)) {
-                    // Limpiar el contenedor de opciones
-                    $('#containerEditOptions').empty();
-
-                    response.options_asociated.options.forEach(options => {
-                        optionCount++;
-                        // Create a new div element to hold the label, input, and remove button
-                        const newOptionDiv = document.createElement('div');
-                        newOptionDiv.classList.add('form-group');
-                        newOptionDiv.id = `option_div_${optionCount}`;
-
-                        // Create a new label element
-                        const newLabel = document.createElement('label');
-                        newLabel.for = `option_${optionCount}`;
-                        newLabel.className = 'col-form-label';
-                        newLabel.textContent = `Opción ${optionCount}`;
-
-                        // Create a wrapper for input and remove button
-                        const inputWrapper = document.createElement('div');
-                        inputWrapper.classList.add('d-flex', 'align-items-center');
-
-                        // Create a new input element
-                        const newInput = document.createElement('input');
-                        newInput.type = 'text';
-                        newInput.className = 'form-control';
-                        newInput.id = `option_${optionCount}`;
-                        newInput.name = `option_${optionCount}`;
-                        newInput.value = options.question_option;
-                        newInput.required = true;
-
-                        if (options.is_correct === 1) {
-                            newInput.classList.add('text-success');
-                        } else {
-                            newInput.classList.add('text-danger');
-                        }
-
-
-
-                        // Create a new remove button
-                        const removeButton = document.createElement('button');
-                        removeButton.type = 'button';
-                        removeButton.className = 'btn btn-danger btn-sm ml-2';
-                        removeButton.textContent = 'X';
-                        removeButton.title = 'Eliminar Opción';
-                        removeButton.onclick = function() { removeOption(optionCount); };
-
-
-                        // Append the input and remove button to the input wrapper
-                        inputWrapper.appendChild(newInput);
-                        // inputWrapper.appendChild(correctOptionButton);
-                        inputWrapper.appendChild(removeButton);
-
-                        // Append the label and input wrapper to the new div
-                        newOptionDiv.appendChild(newLabel);
-                        newOptionDiv.appendChild(inputWrapper);
-
-                        // Append the new div to the divOptions container
-                        document.getElementById('containerEditOptions').appendChild(newOptionDiv);
-
-                        // // Añadir el div al contenedor
-                        // $('#containerEditOptions').append(newOptionDiv);
-                    });
-
-                    // Muestra el modal (si es necesario)
-                    $('#modalEditQuestion').modal('show');
-                } else {
-                    console.error('options_asociated no es un array:', response.options_asociated);
-                    Swal.fire({
-                        title: 'Error en los datos recibidos',
-                        icon: 'error',
-                    });
-                }
+                getDataQuestuion(response.question);
+                getOptionsasociateds(response.options_asociated.options);
             } else {
                 $('#modalEditQuestion').modal('hide');
                 Swal.fire({
@@ -244,6 +155,102 @@ function openModalEditQuestion(id){
         }
     });
 }
+
+//Method to obtain the data of a question and show them in the modal
+function getDataQuestuion(dataQuestion){
+
+    // Llenar los campos del modal con los datos de la evaluación
+    $('#question_id').val(dataQuestion.id);
+    $('#title_question_edit').val(dataQuestion.question_title);
+    $('#question_status_edit').val(dataQuestion.status);
+
+    // Limpiar el select antes de agregar opciones
+    $('#question_status_edit').empty();
+
+    // Agregar la opción actual
+    if(dataQuestion.status == 0) {
+        $('#question_status_edit').append(new Option("INACTIVA", "0", true, true));
+        $('#question_status_edit').append(new Option("ACTIVA", "1"));
+    } else {
+        $('#question_status_edit').append(new Option("ACTIVA", "1", true, true));
+        $('#question_status_edit').append(new Option("INACTIVA", "0"));
+    }
+}
+
+//Method to obtain the associated options of a question and show them in the modal
+function getOptionsasociateds(options){
+
+    // Verifica si response.options_asociated es un array
+    if (Array.isArray(options)) {
+        // Limpiar el contenedor de opciones
+        $('#containerEditOptions').empty();
+
+        options.forEach(options => {
+            optionCount++;
+            // Create a new div element to hold the label, input, and remove button
+            const newOptionDiv = document.createElement('div');
+            newOptionDiv.classList.add('form-group');
+            newOptionDiv.id = `option_div_${optionCount}`;
+
+            // Create a new label element
+            const newLabel = document.createElement('label');
+            newLabel.for = `option_${optionCount}`;
+            newLabel.className = 'col-form-label';
+            newLabel.textContent = `Opción ${optionCount}`;
+
+            // Create a wrapper for input and remove button
+            const inputWrapper = document.createElement('div');
+            inputWrapper.classList.add('d-flex', 'align-items-center');
+
+            // Create a new input element
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'form-control';
+            newInput.id = `option_${optionCount}`;
+            newInput.name = `option_${optionCount}`;
+            newInput.value = options.question_option;
+            newInput.required = true;
+
+            if (options.is_correct === 1) {
+                newInput.classList.add('text-success');
+            } else {
+                newInput.classList.add('text-danger');
+            }
+
+            // Create a new remove button
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-danger btn-sm ml-2';
+            removeButton.textContent = 'X';
+            removeButton.title = 'Eliminar Opción';
+            removeButton.onclick = function() { removeOption(optionCount); };
+
+
+            // Append the input and remove button to the input wrapper
+            inputWrapper.appendChild(newInput);
+            // inputWrapper.appendChild(correctOptionButton);
+            inputWrapper.appendChild(removeButton);
+
+            // Append the label and input wrapper to the new div
+            newOptionDiv.appendChild(newLabel);
+            newOptionDiv.appendChild(inputWrapper);
+
+            // Append the new div to the divOptions container
+            document.getElementById('containerEditOptions').appendChild(newOptionDiv);
+        });
+
+        // Muestra el modal
+        $('#modalEditQuestion').modal('show');
+    } else {
+        console.error('options_asociated no es un array:', response.options_asociated);
+        Swal.fire({
+            title: 'Error en los datos recibidos',
+            icon: 'error',
+        });
+    }
+
+}
+
 //Method to update the data of a question.
 
 
