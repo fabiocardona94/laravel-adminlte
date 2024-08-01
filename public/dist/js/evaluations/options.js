@@ -1,5 +1,4 @@
-// const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-let optionCounts = 0;
+let optionCount = 0;
 // Method to add a new option
 function addOption() {
     optionCount++;
@@ -58,71 +57,65 @@ function removeOption(optionId) {
     optionDiv.remove();
 }
 
-//Method for get the options an
+//Method for get the options an question
 function seeAQuestionOptions(id,title){
     // console.log('Id '+id);
     // console.log('Titulo de la pregunta '+title);
 
-    $.ajax({
-        url: '/admin/opciones/opcionesasociadas/' + id ,
-        method: 'GET',
-        success: function(response) {
-            if(response.status === 'success') {
-                // Actualizar el valor del input
-                document.getElementById('add_question_title').textContent = title;
+    fetch(`/admin/opciones/opcionesasociadas/${id}`)
+    .then(response => response.json())
+    .then((response) => {
+        if(response.status === 'success') {
 
-                // Limpiar el contenedor de opciones
-                $('#optionsContainer').empty();
+            // Actualizar el valor del input
+            document.getElementById('add_question_title').textContent = title;
+            // Limpiar el contenedor de opciones
+            $('#optionsContainer').empty();
 
-                // Verifica si response.data es un array
-                if (Array.isArray(response.data)) {
-                    // Crear los elementos para cada opción
-                    response.data.forEach(option => {
-                        if(data.length === 0){
-                            const message =$('<p class="form-group text-danger">Esta pregunta no tiene resouestas asociadas</p>');
-                            $('#optionsContainer').append(message);
+            // Verifica si response.data es un array
+            if (Array.isArray(response.data)) {
+                // Crear los elementos para cada opción
+                response.data.forEach(option => {
+                    // Crear un div para la opción
+                    const optionDiv = $('<div class="form-group"></div>');
+                    // Crear el input para la opción
+                    const inputOptions = $('<input type="text" readonly class="form-control">');
+                    // Establecer el valor del input
+                    inputOptions.val(option.question_option);
 
-                        }else{
-                            // Crear un div para la opción
-                            const optionDiv = $('<div class="form-group"></div>');
-                            // Crear el input para la opción
-                            const inputOptions = $('<input type="text" readonly class="form-control">');
-                            // Establecer el valor del input
-                            inputOptions.val(option.question_option);
-
-                            if (option.is_correct === 1) {
-                                inputOptions.addClass('text-success');
-                            } else {
-                                inputOptions.addClass('text-danger');
-                            }
-                            // Añadir el input al div
-                            optionDiv.append(inputOptions);
-                            // Añadir el div al contenedor
-                            $('#optionsContainer').append(optionDiv);
-                        }
-                    });
-                } else {
-                    console.error('Expected an array but received:', response.data);
-                    Swal.fire({
-                        title: "Datos no válidos recibidos",
-                        icon: "error"
-                    });
-                }
-                // Abrir el modal
-                $('#viewOptions').modal('show');
+                    if (option.is_correct === 1) {
+                        inputOptions.addClass('text-success');
+                    } else {
+                        inputOptions.addClass('text-danger');
+                    }
+                    // Añadir el input al div
+                    optionDiv.append(inputOptions);
+                    // Añadir el div al contenedor
+                    $('#optionsContainer').append(optionDiv);
+                });
             } else {
+                console.error('Expected an array but received:', response.data);
                 Swal.fire({
-                    title: response.message,
+                    title: "Datos no válidos recibidos",
                     icon: "error"
                 });
+                console.log('E1');
             }
-        },
-        error: function(xhr, status, error) {
+            // Abrir el modal
+            $('#viewOptions').modal('show');
+        } else {
             Swal.fire({
-                title: "Hubo un error al obtener las opciones de esta pregunta",
+                title: response.message,
                 icon: "error"
             });
+            console.log('E2');
         }
+    })
+    .catch((err) => {
+        Swal.fire({
+            title: "Hubo un error al obtener las opciones de esta pregunta",
+            icon: "error"
+        });
+        console.log('E3');
     });
-
 }

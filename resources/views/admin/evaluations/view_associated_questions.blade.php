@@ -33,7 +33,7 @@
                                 </strong>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
+                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#mdlCreateQuestionAsociated">
                                     <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
                                 </button>
                                 <button type="button" class="dropdown-item" onclick="consultQuestionBank({{ $evaluation->id }})">
@@ -76,7 +76,7 @@
                                         </strong>
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <button type="button" class="dropdown-item" data-toggle="modal" data-target="#createQuestionAsociated">
+                                        <button type="button" class="dropdown-item" data-toggle="modal" data-target="#mdlCreateQuestionAsociated">
                                             <i class="fas fa-plus" style="color: #111111;"></i><strong>Nueva pregunta</strong></a>
                                         </button>
                                         <button type="button" class="dropdown-item" onclick="consultQuestionBank({{ $evaluation->id }})">
@@ -92,8 +92,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal questions -->
-    <div class="modal fade" id="createQuestionAsociated" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <!-- Modal questions asociated -->
+    <div class="modal fade" id="mdlCreateQuestionAsociated" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -124,7 +124,7 @@
                         </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success">Crear</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnCreateAssociatedQuestion">Crear</button>
                         </div>
                     </form>
                 </div>
@@ -149,7 +149,7 @@
                         <div id="optionsContainer">
                         </div>
                         <div class="text-center mb-2 mt-2">
-                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Atras</button>
+                            <button type="button" class="btn btn-outline-danger"  data-dismiss="modal">Atras</button>
                         </div>
                     </div>
                 </form>
@@ -202,7 +202,7 @@
     </div>
     @push('scripts')
         <script src="/dist/js/evaluations/evaluations.js"></script>
-        <script src="/dist/js/evaluations/questions.js"></script>
+        <script  src="/dist/js/evaluations/questions.js"></script>
         <script src="/dist/js/evaluations/options.js"></script>
     @endpush
 </x-layout.app>

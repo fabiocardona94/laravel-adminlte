@@ -1,17 +1,29 @@
+
 const Tokencsrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-let  optionCount = 0;
+const BtnCreateQuestion = document.getElementById('btnCreateQuestion');
+const btnCreateAssociatedQuestion = document.getElementById('btnCreateAssociatedQuestion');
+const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQuestion');
+let  optionCounts = 0;
+
+const headersFetch1 = {
+    "Content-Type": "application/json",
+    "Accept": "application/json, text-plain, */*",
+    "X-Requested-With": "XMLHttpRequest",
+    "X-CSRF-TOKEN": Tokencsrf
+};
 // Method to create a new Question
 let formCreateQuestion = document.getElementById("createQuestionForm");
 if(formCreateQuestion)
 {
     formCreateQuestion.addEventListener('submit', function(event) {
         event.preventDefault();
+        BtnCreateQuestion.setAttribute('disabled','disabled');
         createQuestion();
     });
 }
 
 function createQuestion(){
-    const question_title = document.getElementById('question_title').value;
+    const question_title = document.getElementById('questionTitle').value;
     const optionElements = document.querySelectorAll('[id^="option_"]');
     let options = [];
 
@@ -24,39 +36,44 @@ function createQuestion(){
     // console.log("Opcion"+options);
     // console.log("Token"+Token);
 
-    $.ajax({
-        url: '/admin/pregunta/store',
-        method: 'POST',
-        data: {
-            _token: csrfToken,
-            question_title: question_title,
-            options: options
-        },
-        success: function(response) {
-            if(response.status === 'success') {
-                Swal.fire({
+    let data = {
+        question_title: question_title,
+        options: options
+    }
 
-                    title: response.message,
-                    icon: 'success',
-                    confirmButtonText: "Aceptar",
-                }).then(() => {
-                    $('#createQuestion').modal('hide');
-                    $('#questions').DataTable().ajax.reload();
-                });
-            } else {
-                alert('Error: ' + response.message);
-                Swal.fire({
-                    title: response.message,
-                    icon: "error",
-                });
-            }
-        },
-        error: function(xhr, status, error) {
+    fetch(`/admin/pregunta/store`,{
+        method : 'POST',
+        headers : headersFetch1,
+        body : JSON.stringify(data)
+
+    })
+    .then(response => response.json())
+    .then(response =>{
+        if(response.status === 'success') {
             Swal.fire({
-                title: "Hubo un error al crear la pregunta",
+                title: response.message,
+                icon: 'success',
+                confirmButtonText: "Aceptar",
+            }).then(() => {
+                $('#mdlcreateQuestion').modal('hide');
+                $('#questions').DataTable().ajax.reload();
+            });
+        } else {
+            alert('Error: ' + response.message);
+            Swal.fire({
+                title: response.message,
                 icon: "error",
             });
         }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Hubo un error al crear la pregunta",
+            icon: "error",
+        });
+    })
+    .finally(() =>{
+        BtnCreateQuestion.removeAttribute('disabled');
     });
 }
 
@@ -67,11 +84,13 @@ if(formCreateQuestionAsocciated)
 {
     formCreateQuestionAsocciated.addEventListener('submit', function(event) {
         event.preventDefault();
+        btnCreateAssociatedQuestion.setAttribute('disabled','disabled');
         createQuestioAsocciated();
     });
 }
 
-function createQuestioAsocciated(){
+function createQuestioAsocciated()
+{
     const question_title = document.getElementById('question_title').value;
     const evaluation_id = document.getElementById('evaluationId').value;
     const optionElements = document.querySelectorAll('[id^="option_"]');
@@ -82,83 +101,82 @@ function createQuestioAsocciated(){
             options.push(input.value.trim());
         }
     });
-    console.log("Titulo Pregunta "+question_title);
-    console.log("Opcion"+options);
-    console.log("Token"+csrfToken);
-    console.log("Id de la evaluación"+evaluation_id);
+    // console.log("Titulo Pregunta "+question_title);
+    // console.log("Opcion"+options);
+    // console.log("Token"+csrfToken);
+    // console.log("Id de la evaluación"+evaluation_id);
 
+    let data = {
+        question_title: question_title,
+        evaluation_id: evaluation_id,
+        options: options
+    }
 
-    $.ajax({
-        url: '/admin/pregunta/createquestionasociated',
-        method: 'POST',
-        data: {
-            _token: csrfToken,
-            question_title: question_title,
-            evaluation_id: evaluation_id,
-            options: options
-        },
-        success: function(response) {
-            if(response.status === 'success') {
-                Swal.fire({
+    fetch(`/admin/pregunta/createquestionasociated`,{
+        method : 'POST',
+        headers : headersFetch1,
+        body : JSON.stringify(data)
 
-                    title: response.message,
-                    icon: 'success',
-                    confirmButtonText: "Aceptar",
-                }).then(() => {
-                    $('#createQuestionAsociated').modal('hide');
-                    $('#questions').DataTable().ajax.reload();
-                    location.reload();
-                });
-            } else {
-                alert('Error: ' + response.message);
-                Swal.fire({
-                    title: response.message,
-                    icon: "error",
-                });
-            }
-        },
-        error: function(xhr, status, error) {
+    })
+    .then(response => response.json())
+    .then(response =>{
+        if(response.status === 'success') {
             Swal.fire({
-                title: "Hubo un error al crear la pregunta",
+                title: response.message,
+                icon: 'success',
+                confirmButtonText: "Aceptar",
+            }).then(() => {
+                $('#mdlCreateQuestionAsociated').modal('hide');
+                location.reload();
+            });
+        } else {
+            alert('Error: ' + response.message);
+            Swal.fire({
+                title: response.message,
                 icon: "error",
             });
         }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Hubo un error al crear la pregunta",
+            icon: "error",
+        });
+    })
+    .finally(() =>{
+        btnCreateAssociatedQuestion.removeAttribute('disabled');
     });
 }
 
 // Method to display evaluation data in a modal.
 
 function openModalEditQuestion(id){
-    optionCount = 0;
-    // console.log('Id '+id);
-    $.ajax({
-        url: '/admin/pregunta/edit/' + id ,
-        method: 'GET',
-        success: function(response) {
-            if(response.status === 'success') {
-                getDataQuestuion(response.question);
-                getOptionsasociateds(response.options_asociated.options);
-            } else {
-                $('#modalEditQuestion').modal('hide');
-                Swal.fire({
-                    title: response.message,
-                    icon: "error"
-                });
-            }
-        },
-        error: function(xhr, status, error) {
-            $('#modalEditQuestion').modal('hide ');
+    optionCounts = 0;
+    fetch(`/admin/pregunta/edit/${id}`)
+    .then(response => response.json())
+    .then(response =>{
+        if(response.status === 'success') {
+            getDataQuestuion(response.question);
+            getOptionsasociateds(response.options_asociated.options);
+        } else {
+            $('#modalEditQuestion').modal('hide');
             Swal.fire({
-                title: "Hubo un error al obtener los datos de la evaluación",
+                title: response.message,
                 icon: "error"
             });
         }
-    });
+    })
+    .catch(error => {
+        $('#modalEditQuestion').modal('hide ');
+        Swal.fire({
+            title: "Hubo un error al obtener los datos de la evaluación",
+            icon: "error"
+        });
+    })
 }
 
 //Method to obtain the data of a question and show them in the modal
 function getDataQuestuion(dataQuestion){
-
     // Llenar los campos del modal con los datos de la evaluación
     $('#question_id').val(dataQuestion.id);
     $('#title_question_edit').val(dataQuestion.question_title);
@@ -186,17 +204,17 @@ function getOptionsasociateds(options){
         $('#containerEditOptions').empty();
 
         options.forEach(options => {
-            optionCount++;
+            optionCounts++;
             // Create a new div element to hold the label, input, and remove button
             const newOptionDiv = document.createElement('div');
             newOptionDiv.classList.add('form-group');
-            newOptionDiv.id = `option_div_${optionCount}`;
+            newOptionDiv.id = `option_div_${optionCounts}`;
 
             // Create a new label element
             const newLabel = document.createElement('label');
-            newLabel.for = `option_${optionCount}`;
+            newLabel.for = `option_${optionCounts}`;
             newLabel.className = 'col-form-label';
-            newLabel.textContent = `Opción ${optionCount}`;
+            newLabel.textContent = `Opción ${optionCounts}`;
 
             // Create a wrapper for input and remove button
             const inputWrapper = document.createElement('div');
@@ -206,8 +224,8 @@ function getOptionsasociateds(options){
             const newInput = document.createElement('input');
             newInput.type = 'text';
             newInput.className = 'form-control';
-            newInput.id = `option_${optionCount}`;
-            newInput.name = `option_${optionCount}`;
+            newInput.id = `option_${optionCounts}`;
+            newInput.name = `option_${optionCounts}`;
             newInput.value = options.question_option;
             newInput.required = true;
 
@@ -223,7 +241,7 @@ function getOptionsasociateds(options){
             removeButton.className = 'btn btn-danger btn-sm ml-2';
             removeButton.textContent = 'X';
             removeButton.title = 'Eliminar Opción';
-            removeButton.onclick = function() { removeOption(optionCount); };
+            removeButton.onclick = function() { removeOption(optionCounts); };
 
 
             // Append the input and remove button to the input wrapper
@@ -259,6 +277,7 @@ if(FormEditQuestion)
 {
     FormEditQuestion.addEventListener('submit', function(event) {
         event.preventDefault();
+        btnEditAssociatedQuestion.setAttribute('disabled','disabled')
         updateQuestion();
     });
 }
@@ -268,46 +287,54 @@ function updateQuestion(){
     const id = document.getElementById('question_id').value;
     const question_title = document.getElementById('title_question_edit').value;
     const status = document.getElementById('question_status_edit').value;
-    console.log('id '+id);
-    console.log('title '+question_title);
-    console.log('status '+status);
+    // console.log('id '+id);
+    // console.log('title '+question_title);
+    // console.log('status '+status);
     status === "INACTIVA" ? status == 0:  status == 1;
-    $ .ajax({
-        url: '/admin/pregunta/update/'+id,
-        method: 'PATCH',
-        data: {
-            _token: Tokencsrf,
-            question_title: question_title,
-            status: status,
-        },
-        success: function(response) {
-            if(response.status === 'success') {
-                Swal.fire({
 
-                    title: response.message,
-                    icon: 'success',
-                    confirmButtonText: "Aceptar",
 
-                }).then(() => {
-                    // Cerrar el modal
-                    $('#modalEditQuestion').modal('hide');
-                    // Recargar la DataTable
-                    $('#questions').DataTable().ajax.reload();
-                });
-            } else {
-                alert('Error: ' + response.message);
-                Swal.fire({
-                    title: response.message,
-                    icon: "error",
-                });
-            }
-        },
-        error: function(xhr, status, error) {
+    let data = {
+        question_title: question_title,
+        status: status,
+    }
+
+    fetch(`/admin/pregunta/update/${id}`,{
+        method : 'PATCH',
+        headers : headersFetch1,
+        body : JSON.stringify(data)
+
+    })
+    .then(response => response.json())
+    .then(response =>{
+        if(response.status === 'success') {
             Swal.fire({
-                title: "Hubo un error al crear la evaluación",
+
+                title: response.message,
+                icon: 'success',
+                confirmButtonText: "Aceptar",
+
+            }).then(() => {
+                // Cerrar el modal
+                $('#modalEditQuestion').modal('hide');
+                // Recargar la DataTable
+                $('#questions').DataTable().ajax.reload();
+            });
+        } else {
+            alert('Error: ' + response.message);
+            Swal.fire({
+                title: response.message,
                 icon: "error",
             });
         }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Hubo un error al crear la evaluación",
+            icon: "error",
+        });
+    })
+    .finally(() =>{
+        btnEditAssociatedQuestion.removeAttribute('disabled');
     });
 
 }
@@ -331,42 +358,43 @@ function updateAssociatedQuestion (evaluation_id,question_id){
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.ajax({
-                url: '/admin/evaluacion_pregunta/update/'+ evaluation_id + '/' + question_id,
-                method: 'PATCH',
-                data: {
-                    _token:Tokencsrf,
-                    evaluation_id: evaluation_id,
-                    question_id: question_id,
-                },
-                success: function(response) {
-                    if(response.status === 'success') {
-                        Swal.fire({
 
-                            title: response.message,
-                            icon: 'success',
-                            confirmButtonText: "Aceptar",
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        alert('Error: ' + response.message);
-                        Swal.fire({
-                            title: response.message,
-                            icon: "error",
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
+            let data = {
+                evaluation_id: evaluation_id,
+                question_id: question_id,
+            }
+
+            fetch(`/admin/evaluacion_pregunta/update/${evaluation_id}/${question_id}`,{
+                method : 'PATCH',
+                headers : headersFetch1,
+                body : JSON.stringify(data)
+
+            })
+            .then(response => response.json())
+            .then(response =>{
+                if(response.status === 'success') {
                     Swal.fire({
-                        title: "Hubo un error al eliminar la pregunta",
+
+                        title: response.message,
+                        icon: 'success',
+                        confirmButtonText: "Aceptar",
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    alert('Error: ' + response.message);
+                    Swal.fire({
+                        title: response.message,
                         icon: "error",
                     });
                 }
-                // .finally(() =>{
-                //     btnCreateEvaluation.removeAttribute('disabled')
-                // }),
-            });
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: "Hubo un error al eliminar la pregunta",
+                    icon: "error",
+                });
+            })
         }
     });
 
@@ -375,59 +403,106 @@ function updateAssociatedQuestion (evaluation_id,question_id){
 
 //Method to obtain questions from the question bank
 
-
 function consultQuestionBank(id, page = 1) {
-    console.log(id);
+    // console.log(id);
+    let data = {
+        page: page,
+    }
+    fetch(`/admin/pregunta/bancopreguntas/${id}`,{
+        method : 'GET',
+        headers : headersFetch1,
+        body : JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(response =>{
+        if (response.status === 'success') {
+            console.log('Contador ' + response.quantity_associated_questions);
+            console.log('Holaa ');
 
-    $.ajax({
-        url: '/admin/pregunta/bancopreguntas/' + id,
-        method: 'GET',
-        data: {
-            _token: csrfToken,
-            id: id,
-            page: page,
-        },
-        success: function(response) {
-            if (response.status === 'success') {
-                console.log('Contador ' + response.quantity_associated_questions);
+            // Limpia la tabla antes de agregar nuevos datos
+            $('#associated_questions tbody').empty();
 
-                // Limpia la tabla antes de agregar nuevos datos
-                $('#associated_questions tbody').empty();
+            // Llena la tabla con las preguntas no asociadas
+            response.unrelated_questions.forEach(function(question) {
+                $('#associated_questions tbody').append(`
+                    <tr>
+                        <td>${question.question_title}
+                            <div class="d-flex justify-content-end pb-2">
+                                <input type="checkbox" id="selectOptions" name="unrelated_questions[]" value="${question.id}" class="">
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            });
 
-                // Llena la tabla con las preguntas no asociadas
-                response.unrelated_questions.forEach(function(question) {
-                    $('#associated_questions tbody').append(`
-                        <tr>
-                            <td>${question.question_title}
-                                <div class="d-flex justify-content-end pb-2">
-                                    <input type="checkbox" id="selectOptions" name="unrelated_questions[]" value="${question.id}" class="">
-                                </div>
-                            </td>
-                        </tr>
-                    `);
-                });
+            // Actualiza el paginador
+            updatePagination(response.pagination,id);
 
-                // Actualiza el paginador
-                updatePagination(response.pagination,id);
+            // Muestra el modal
+            $('#bankQuestions').modal('show');
 
-                // Muestra el modal
-                $('#bankQuestions').modal('show');
-
-            } else {
-                alert('Error: ' + response.message);
-                Swal.fire({
-                    title: response.message,
-                    icon: "error",
-                });
-            }
-        },
-        error: function(xhr, status, error) {
+        } else {
+            alert('Error: ' + response.message);
             Swal.fire({
-                title: "No se ha podido obtener las preguntas",
+                title: response.message,
                 icon: "error",
             });
         }
-    });
+    })
+    .catch(error =>{
+        Swal.fire({
+            title: "No se ha podido obtener las preguntas",
+            icon: "error",
+        });
+    })
+    // $.ajax({
+    //     method: 'GET',
+    //     data: {
+    //         _token: csrfToken,
+    //         id: id,
+    //         page: page,
+    //     },
+    //     success: function(response) {
+    //         if (response.status === 'success') {
+    //             console.log('Contador ' + response.quantity_associated_questions);
+
+    //             // Limpia la tabla antes de agregar nuevos datos
+    //             $('#associated_questions tbody').empty();
+
+    //             // Llena la tabla con las preguntas no asociadas
+    //             response.unrelated_questions.forEach(function(question) {
+    //                 $('#associated_questions tbody').append(`
+    //                     <tr>
+    //                         <td>${question.question_title}
+    //                             <div class="d-flex justify-content-end pb-2">
+    //                                 <input type="checkbox" id="selectOptions" name="unrelated_questions[]" value="${question.id}" class="">
+    //                             </div>
+    //                         </td>
+    //                     </tr>
+    //                 `);
+    //             });
+
+    //             // Actualiza el paginador
+    //             updatePagination(response.pagination,id);
+
+    //             // Muestra el modal
+    //             $('#bankQuestions').modal('show');
+
+    //         } else {
+    //             alert('Error: ' + response.message);
+    //             Swal.fire({
+    //                 title: response.message,
+    //                 icon: "error",
+    //             });
+    //         }
+    //     },
+    //     error: function(xhr, status, error) {
+    //         Swal.fire({
+    //             title: "No se ha podido obtener las preguntas",
+    //             icon: "error",
+    //         });
+    //     }
+    // });
 }
 
 function updatePagination(pagination,id) {

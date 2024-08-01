@@ -117,18 +117,18 @@ class EvaluationsController extends Controller
                 : '<span class="badge badge-danger">Inactiva</span>';
         })
         ->addColumn('actions', function($row){
-            return
-                '
-                    <div class="d-flex">
-                        <button class="btn" type="button" data-toggle="modal" data-target="#editEvalution" data-id="' . $row->id . '"
-                            onclick="openEditEvaluationModal(' . $row->id . ')" title="Editar '.$row->title.'">
-                            <i class="far fa-edit" style="color: #1655c0;"></i>
-                        </button>
-                        <a href="' . route('admin.evaluacion.preguntas', ['id' => $row->id]) . '" class="btn" type="button" title="Agregar Preguntas para la '.$row->title.'">
-                            <i class="fas fa-plus" style="color: #0a53d1;"></i>
-                        </a>
-                    </div>
-                ';
+            $rutaPreguntas = route('admin.evaluacion.preguntas', ['id' => $row->id]);
+            return   <<<EOF
+                <div class="d-flex">
+                    <button class="btn" type="button" dsata-toggle="modal" data-target="#editEvalution" data-id="{$row->id}"
+                        onclick="openEditEvaluationModal({$row->id})" title="Editar $row->title">
+                        <i class="far fa-edit" style="color: #1655c0;"></i>
+                    </button>
+                    <a href="{$rutaPreguntas}" class="btn" type="button" title="Agregar Preguntas para la {$row->title}">
+                        <i class="fas fa-plus" style="color: #0a53d1;"></i>
+                    </a>
+                </div>
+            EOF;
         })
         ->rawColumns(['status', 'actions'])
         ->make(true);

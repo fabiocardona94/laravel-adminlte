@@ -10,7 +10,7 @@
             <h1 class="m-0 mb-3 text-center">Listado de preguntas</h1>
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#mdlcreateQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
                 </div>
                 <table id="questions" class="table table-bordered mt-2 mb-2" style="width:100%">
                     <thead>
@@ -35,8 +35,8 @@
         </div>
     </div>
 
-    <!-- Modal questions -->
-    <div class="modal fade" id="createQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <!-- Modal create questions -->
+    <div class="modal fade" id="mdlcreateQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -53,12 +53,12 @@
                     <form id="createQuestionForm">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="question_title" class="col-form-label">Titulo de la pregunta</label>
-                            <textarea class="form-control" id="question_title" name="question_title" required cols="30" rows="2" required></textarea>
+                            <label for="questionTitle" class="col-form-label">Titulo de la pregunta</label>
+                            <textarea class="form-control" id="questionTitle" name="questionTitle" required cols="30" rows="2" required></textarea>
                         </div>
                         <div class="form-group" id="divOptions">
                             <i class="fas fa-list-ul"></i>
-                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
                         </div>
                         <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
@@ -66,7 +66,7 @@
                         </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success">Crear</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnCreateQuestion">Crear</button>
                         </div>
                     </form>
                 </div>
@@ -110,8 +110,8 @@
                             <i class="fas fa-plus"></i> Agregar Opción
                         </button>
                         <div class="text-center mb-2 mt-2">
-                            <button type="button" class="btn btn-outline-danger" onclick="" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success">Actualizar</button>
+                            <button type="button" class="btn btn-outline-danger"  data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnEditAssociatedQuestion" >Actualizar</button>
                         </div>
 
                     </form>
@@ -120,7 +120,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="/dist/js/evaluations/questions.js"></script>
+        <script  src="/dist/js/evaluations/questions.js"></script>
         <script src="/dist/js/evaluations/options.js"></script>
         <script>
             $(document).ready(function() {

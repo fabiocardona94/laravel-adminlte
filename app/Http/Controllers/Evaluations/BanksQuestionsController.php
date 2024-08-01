@@ -203,6 +203,7 @@ class BanksQuestionsController extends Controller
      */
     public function consultQuestionBank($id)
     {
+        return $id;
         //Busco las preguntas existentes en la relacion de muchos a muchos en el modelo Evaluation
         $evaluation = Evaluation::select('id', 'title', 'description')
                                 ->with('inactiveQuestions')

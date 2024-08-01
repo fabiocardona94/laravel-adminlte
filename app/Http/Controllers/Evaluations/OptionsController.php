@@ -14,6 +14,8 @@ class OptionsController extends Controller
      */
     function optionsOfAQuestion($id)
     {
+
+
         $questions = EvaluationBankQuestion::with('options')
         ->find($id);
 

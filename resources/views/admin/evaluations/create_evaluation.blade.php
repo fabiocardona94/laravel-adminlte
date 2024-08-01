@@ -12,7 +12,7 @@
             <p class="m-0 mb-3 text-center h2">Listado de las evaluaciones</p>
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#createEvalution" title="Crear Evaluación"><i class="fas fa-edit"></i></i>Crear Evaluación</button>
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#mdlCreateEvalution" title="Crear Evaluación"><i class="fas fa-edit"></i></i>Crear Evaluación</button>
                 </div>
                 <table id="evaluations" class="table table-bordered mb-2" style="width:100%">
                     <thead>
@@ -26,7 +26,7 @@
                             <th>Acciones</th>
 
                         </tr>
-                    </thead>
+                </thead>
                     <tfoot>
                         <tr>
                             <th>Filtrar</th>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Modal create evaluation -->
-    <div class="modal fade" id="createEvalution" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal fade" id="mdlCreateEvalution" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="createEvaluationForm">
@@ -57,26 +57,27 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="title" class="col-form-label">Titulo de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="title" name="" required>
+                            <label for="titleEvaluation" class="col-form-label">Titulo de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="titleEvaluation" name="titleEvaluation" required>
                         </div>
                         <div class="form-group">
                             <i class="far fa-comment-dots"></i>
-                            <label for="description" class="col-form-label">Descripción de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="description" name="description" required>
+                            <label for="descriptionEvaluation" class="col-form-label">Descripción de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="descriptionEvaluation" name="descriptionEvaluation" required>
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-check"></i>
-                            <label for="start_date" class="col-form-label">Fecha en que inicia la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="start_date" name="start_date"
+                            <label for="startDate" class="col-form-label">Fecha en que inicia la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="startDate" name="startDate"
                                 min="{{ date('Y-m-d\TH:i') }}"
-                                value="{{ date('Y-m-d\TH:i') }}" required
+                                value="{{ date('Y-m-d\TH:i') }}"
+                                required
                             >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-times"></i>
-                            <label for="end_date" class="col-form-label">Fecha en que termina la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="end_date" name="end_date required"
+                            <label for="endDate" class="col-form-label">Fecha en que termina la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="endDate" name="endDate"
                                 min="{{ date('Y-m-d\TH:i') }}"
                                 value="{{ date('Y-m-d\TH:i') }}"
                                 required
@@ -93,7 +94,7 @@
     </div>
 
     <!-- Modal edit Evaluation -->
-    <div class="modal fade" id="editEvalution" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal fade" id="mdlEditEvalution" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,41 +105,41 @@
                 </div>
                 <div class="modal-body">
                     <form id="editEvaluationForm">
-                        <input type="hidden" id="evaluation_id" name="evaluation_id">
+                        <input type="hidden" id="idEvaluation" name="idEvaluation">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="title_evaluation" class="col-form-label">Titulo de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="title_evaluation" name="title_evaluation" required>
+                            <label for="editEvaluationTitle" class="col-form-label">Titulo de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="editEvaluationTitle" name="editEvaluationTitle" required>
                         </div>
                         <div class="form-group">
                             <i class="far fa-comment-dots"></i>
-                            <label for="description_evaluation" class="col-form-label">Descripción de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="description_evaluation" name="description_evaluation" required>
+                            <label for="editEvaluationDescription" class="col-form-label">Descripción de la evaluación</label>
+                            <input type="text" value="" class="form-control" id="editEvaluationDescription" name="editEvaluationDescription" required>
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-check"></i>
-                            <label for="start_date_evaluation" class="col-form-label">Fecha en que inicia la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="start_date_evaluation" name="start_date_evaluation"
+                            <label for="editEvaluationStarDate" class="col-form-label">Fecha en que inicia la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="editEvaluationStarDate" name="editEvaluationStarDate"
                                 min="{{ date('Y-m-d\TH:i') }}"
                                 value="{{ date('Y-m-d\TH:i') }}" required
                             >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-calendar-times"></i>
-                            <label for="end_date_evaluation" class="col-form-label">Fecha en que termina la evaluación</label>
-                            <input type="datetime-local" value="" class="form-control" id="end_date_evaluation" name="end_date_evaluation"
+                            <label for="editEvaluationEndDate" class="col-form-label">Fecha en que termina la evaluación</label>
+                            <input type="datetime-local" value="" class="form-control" id="editEvaluationEndDate" name="editEvaluationEndDate"
                                 min="{{ date('Y-m-d\TH:i') }}"
                                 value="{{ date('Y-m-d\TH:i') }}" required
                             >
                         </div>
                         <div class="form-group">
                             <i class="fas fa-toggle-on"></i>
-                            <label for="end_date_evaluation" class="col-form-label">Estado</label>
-                            <select class="form-control text-black" name="evaluation_status" id="evaluation_status"></select>
+                            <label for="editEvaluationStatus" class="col-form-label">Estado</label>
+                            <select class="form-control text-black" name="editEvaluationStatus" id="editEvaluationStatus"></select>
                         </div>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success">Actualizar</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnEditEvaluation">Actualizar</button>
                         </div>
 
                     </form>
@@ -147,7 +148,7 @@
         </div>
     </div>
     @push('scripts')
-    <script src="/dist/js/evaluations/evaluations.js"></script>
+    <script  src="/dist/js/evaluations/evaluations.js"></script>
     <script>
         $(document).ready(function() {
             $('#evaluations').DataTable( {
