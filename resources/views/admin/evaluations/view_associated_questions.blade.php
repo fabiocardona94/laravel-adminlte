@@ -12,6 +12,7 @@
                         <div class="text-center">
                             <p class="h4">Editando:{{ $evaluation->title }}</p>
                         </div>
+                        <input type="hidden" value="{{ $evaluation->id }}" id="evaluationId">
                     @else
                         <div class="card-body">
                             <p class="text-center">No se encontró la evaluación.</p>
@@ -108,7 +109,6 @@
                 </div>
                 <div class="modal-body">
                     <form id="createQuestionAsocciatedForm">
-                        <input type="hidden" value="{{ $evaluation->id }}" id="evaluationId">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
                             <label for="question_title" class="col-form-label">Titulo de la pregunta</label>
@@ -132,7 +132,7 @@
         </div>
     </div>
     <!-- Modal to show options for a question -->
-    <div class="modal fade" id="viewOptions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal fade" id="mdlviewOptions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="createEvaluationForm">
@@ -157,7 +157,7 @@
         </div>
     </div>
     <!-- Modal to open the question bank -->
-    <div class="modal fade" id="bankQuestions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal fade" id="mdlbankQuestions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form id="bankQuestionsForm">
@@ -193,7 +193,7 @@
                             </nav>
                         </div>
                         <div class="text-center mb-2 mt-2">
-                            <button type="button" class="btn btn-primary disabled" id="btnEnviarOptions" data-dismiss="modal">Añadir Preguntas</button>
+                            <button type="submit" class="btn btn-primary disabled" id="btnSendAssociatedQuestion">Añadir Preguntas</button>
                         </div>
                     </div>
                 </form>

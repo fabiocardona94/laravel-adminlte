@@ -107,6 +107,44 @@ class BanksQuestionsController extends Controller
         }
     }
 
+
+    /**
+     * Method to add multiples  questions associated with an evaluation.
+     */
+    public function createMultipleAssociatedQuestions(Request $request)
+    {
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'evaluation_id' => 'required|string|integer',
+            'questions' => 'required|array',
+            'questions.*' => 'required|string|max:255',
+        ]);
+
+        $evaluation_id = $validatedData['evaluation_id'];
+
+        try {
+            // Crear las preguntas asociadas a la pregunta
+            foreach ($validatedData['questions'] as $question_id) {
+                EvaluationQuestion::create([
+                    'evaluation_id' =>$evaluation_id,
+                    'question_id' => $question_id,
+                ]);
+
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pregunta agregada exitosamente'
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ha ocurrido un error, vuelve a intentarlo: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
     /**
      * Method to open modal and display question data.
      */
@@ -201,13 +239,13 @@ class BanksQuestionsController extends Controller
     /**
      *Method to obtain questions from the question bank and questions associated with an evaluation
      */
-    public function consultQuestionBank($id)
+    public function consultQuestionBank($id,$page)
     {
-        return $id;
         //Busco las preguntas existentes en la relacion de muchos a muchos en el modelo Evaluation
         $evaluation = Evaluation::select('id', 'title', 'description')
-                                ->with('inactiveQuestions')
+                                ->with('questions')
                                 ->find($id);
+
         //Valido si existe relaciones y si  no envio  un mensaje
         if (!$evaluation) {
             return response()->json([
@@ -218,12 +256,11 @@ class BanksQuestionsController extends Controller
 
         //Si existe obtengo las preguntas relacinadas
         try {
-            $asociated_questions  = $evaluation->inactiveQuestions;
+            $asociated_questions  = $evaluation->questions;
             $quantity_associated_questions = $asociated_questions->count();
 
-            $associated_question_ids = $evaluation->inactiveQuestions->pluck('id')->toArray();
-            $page = request()->input('page', 1); // Página actual
-            $perPage = 10; // Número de preguntas por página
+            $associated_question_ids = $evaluation->questions->pluck('id')->toArray();
+            $perPage = 10;
 
             // Busca en el banco de preguntas las preguntas que no están relacionadas
             $unrelated_questions = EvaluationBankQuestion::whereNotIn('id', $associated_question_ids)
@@ -233,7 +270,6 @@ class BanksQuestionsController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'asociated_questions'  => $asociated_questions,
                 'unrelated_questions'  => $unrelated_questions->items(),
                 'quantity_associated_questions'  => $quantity_associated_questions,
                 'pagination' => [

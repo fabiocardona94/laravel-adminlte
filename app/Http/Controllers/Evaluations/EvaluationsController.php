@@ -141,14 +141,14 @@ class EvaluationsController extends Controller
     public function getEvaluationQuestions($id)
     {
         $evaluation = Evaluation::select('id', 'title', 'description')
-                                ->with('activeQuestions')
+                                ->with('questions')
                                 ->find($id);
 
         if(!$evaluation){
             return redirect()->route('admin.evaluacion.index')->with('error', 'Evaluación no encontrada');
         }
 
-        $associated_questions  = $evaluation->activeQuestions;
+        $associated_questions  = $evaluation->questions;
         $quantity_associated_questions = $associated_questions->count();
 
         return view('admin.evaluations.view_associated_questions',compact('evaluation','associated_questions','quantity_associated_questions'));

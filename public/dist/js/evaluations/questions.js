@@ -3,14 +3,19 @@ const Tokencsrf = document.querySelector('meta[name="csrf-token"]').getAttribute
 const BtnCreateQuestion = document.getElementById('btnCreateQuestion');
 const btnCreateAssociatedQuestion = document.getElementById('btnCreateAssociatedQuestion');
 const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQuestion');
-let  optionCounts = 0;
+const btnSendAssociatedQuestion = document.getElementById('btnSendAssociatedQuestion');
+const evaluation_id = document.getElementById('evaluationId').value;
 
+let  optionCounts = 0;
+let selectedValues = [];
 const headersFetch1 = {
     "Content-Type": "application/json",
     "Accept": "application/json, text-plain, */*",
     "X-Requested-With": "XMLHttpRequest",
     "X-CSRF-TOKEN": Tokencsrf
 };
+
+
 // Method to create a new Question
 let formCreateQuestion = document.getElementById("createQuestionForm");
 if(formCreateQuestion)
@@ -92,7 +97,6 @@ if(formCreateQuestionAsocciated)
 function createQuestioAsocciated()
 {
     const question_title = document.getElementById('question_title').value;
-    const evaluation_id = document.getElementById('evaluationId').value;
     const optionElements = document.querySelectorAll('[id^="option_"]');
     let options = [];
 
@@ -178,7 +182,7 @@ function openModalEditQuestion(id){
 //Method to obtain the data of a question and show them in the modal
 function getDataQuestuion(dataQuestion){
     // Llenar los campos del modal con los datos de la evaluación
-    $('#question_id').val(dataQuestion.id);
+    // $('#question_id').val(dataQuestion.id);
     $('#title_question_edit').val(dataQuestion.question_title);
     $('#question_status_edit').val(dataQuestion.status);
 
@@ -281,6 +285,7 @@ if(FormEditQuestion)
         updateQuestion();
     });
 }
+
 
 function updateQuestion(){
 
@@ -403,32 +408,24 @@ function updateAssociatedQuestion (evaluation_id,question_id){
 
 //Method to obtain questions from the question bank
 
+
+// Method for get the questions  and see the modal
 function consultQuestionBank(id, page = 1) {
-    // console.log(id);
-    let data = {
-        page: page,
-    }
-    fetch(`/admin/pregunta/bancopreguntas/${id}`,{
-        method : 'GET',
-        headers : headersFetch1,
-        body : JSON.stringify(data)
-    })
+    fetch(`/admin/pregunta/bancopreguntas/${id}/${page}`)
     .then(response => response.json())
     .then(response =>{
         if (response.status === 'success') {
-            console.log('Contador ' + response.quantity_associated_questions);
-            console.log('Holaa ');
-
             // Limpia la tabla antes de agregar nuevos datos
             $('#associated_questions tbody').empty();
 
             // Llena la tabla con las preguntas no asociadas
             response.unrelated_questions.forEach(function(question) {
+                const isChecked = selectedValues.includes(question.id.toString()); // Verifica si el valor está en selectedValues
                 $('#associated_questions tbody').append(`
                     <tr>
                         <td>${question.question_title}
                             <div class="d-flex justify-content-end pb-2">
-                                <input type="checkbox" id="selectOptions" name="unrelated_questions[]" value="${question.id}" class="">
+                                <input type="checkbox" id="inputSelectQuestion_${question.id}" name="unrelated_questions[]" value="${question.id}" class="" ${isChecked ? 'checked' : ''}>
                             </div>
                         </td>
                     </tr>
@@ -436,10 +433,10 @@ function consultQuestionBank(id, page = 1) {
             });
 
             // Actualiza el paginador
-            updatePagination(response.pagination,id);
+            updatePagination(response.pagination, id);
 
             // Muestra el modal
-            $('#bankQuestions').modal('show');
+            $('#mdlbankQuestions').modal('show');
 
         } else {
             alert('Error: ' + response.message);
@@ -454,58 +451,36 @@ function consultQuestionBank(id, page = 1) {
             title: "No se ha podido obtener las preguntas",
             icon: "error",
         });
-    })
-    // $.ajax({
-    //     method: 'GET',
-    //     data: {
-    //         _token: csrfToken,
-    //         id: id,
-    //         page: page,
-    //     },
-    //     success: function(response) {
-    //         if (response.status === 'success') {
-    //             console.log('Contador ' + response.quantity_associated_questions);
-
-    //             // Limpia la tabla antes de agregar nuevos datos
-    //             $('#associated_questions tbody').empty();
-
-    //             // Llena la tabla con las preguntas no asociadas
-    //             response.unrelated_questions.forEach(function(question) {
-    //                 $('#associated_questions tbody').append(`
-    //                     <tr>
-    //                         <td>${question.question_title}
-    //                             <div class="d-flex justify-content-end pb-2">
-    //                                 <input type="checkbox" id="selectOptions" name="unrelated_questions[]" value="${question.id}" class="">
-    //                             </div>
-    //                         </td>
-    //                     </tr>
-    //                 `);
-    //             });
-
-    //             // Actualiza el paginador
-    //             updatePagination(response.pagination,id);
-
-    //             // Muestra el modal
-    //             $('#bankQuestions').modal('show');
-
-    //         } else {
-    //             alert('Error: ' + response.message);
-    //             Swal.fire({
-    //                 title: response.message,
-    //                 icon: "error",
-    //             });
-    //         }
-    //     },
-    //     error: function(xhr, status, error) {
-    //         Swal.fire({
-    //             title: "No se ha podido obtener las preguntas",
-    //             icon: "error",
-    //         });
-    //     }
-    // });
+    });
 }
 
-function updatePagination(pagination,id) {
+// Agrega un evento de cambio al tbody que contiene los inputs dinámicos
+let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
+    if (event.target && event.target.matches('input[type="checkbox"]')) {
+        const checkboxValue = event.target.value;
+
+        if (event.target.checked) {
+            if (!selectedValues.includes(checkboxValue)) {
+                selectedValues.push(checkboxValue);
+            }
+        } else {
+            selectedValues = selectedValues.filter(value => value !== checkboxValue);
+        }
+
+        const anyChecked = selectedValues.length > 0;
+
+        if (anyChecked) {
+            btnSendAssociatedQuestion.classList.remove('disabled');
+            btnSendAssociatedQuestion.removeAttribute('disabled');
+        } else {
+            btnSendAssociatedQuestion.classList.add('disabled');
+            btnSendAssociatedQuestion.setAttribute('disabled', true);
+        }
+    }
+});
+
+//Mehod for the  paginator in modal when star the questions obtains del bank the questions
+function updatePagination(pagination, id) {
     let paginationHtml = '';
 
     if (pagination.current_page > 1) {
@@ -530,3 +505,62 @@ function updatePagination(pagination,id) {
 
     $('.pagination').html(paginationHtml);
 }
+
+//Method for the modal pager where I show the available questionsbank
+let formbankQuestions = document.getElementById("bankQuestionsForm");
+if(formbankQuestions)
+{
+    formbankQuestions.addEventListener('submit', function(event) {
+        event.preventDefault();
+        btnSendAssociatedQuestion.setAttribute('disabled','disabled');
+        createMultipleAssociatedQuestions();
+    });
+}else{
+    alert('Heror')
+}
+
+//Method to create
+function createMultipleAssociatedQuestions()
+{
+    let data = {
+        evaluation_id: evaluation_id,
+        questions : selectedValues
+    }
+
+    fetch(`/admin/pregunta/createmultiplequestionsasociated`,{
+        method : 'POST',
+        headers : headersFetch1,
+        body : JSON.stringify(data)
+
+    })
+    .then(response => response.json())
+    .then(response =>{
+        if(response.status === 'success') {
+            Swal.fire({
+                title: response.message,
+                icon: 'success',
+                confirmButtonText: "Aceptar",
+            }).then(() => {
+                $('#mdlbankQuestions').modal('hide');
+                location.reload();
+            });
+        } else {
+            alert('Error: ' + response.message);
+            Swal.fire({
+                title: response.message,
+                icon: "error",
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Hubo un error al crear la pregunta",
+            icon: "error",
+        });
+    })
+    .finally(() =>{
+        btnSendAssociatedQuestion.removeAttribute('disabled');
+    });
+}
+
+

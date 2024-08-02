@@ -27,15 +27,9 @@ class Evaluation extends Model
         return $this->belongsToMany(User::class, 'evaluations_re_users', 'evaluation_id', 'user_id');
     }
 
-    public function activeQuestions(): BelongsToMany
+    public function questions(): BelongsToMany
     {
         return $this->belongsToMany(EvaluationBankQuestion::class, 'evaluation_re_questions', 'evaluation_id', 'question_id')
-                                                                    ->wherePivot('status', 1);
-    }
-
-    public function inactiveQuestions(): BelongsToMany
-    {
-        return $this->belongsToMany(EvaluationBankQuestion::class, 'evaluation_re_questions', 'evaluation_id', 'question_id')
-                                                                    ->wherePivot('status', 0);
+                                                                           ->wherePivot('status',1);
     }
 }

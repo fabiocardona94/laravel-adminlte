@@ -47,7 +47,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/questions',[BanksQuestionsController::class,'listQuestions'])
             ->name('listQuestions');
 
-        Route::get('/bancopreguntas/{id}',[BanksQuestionsController::class,'consultQuestionBank'])
+        Route::get('/bancopreguntas/{id}/{page}',[BanksQuestionsController::class,'consultQuestionBank'])
             ->name('bancopreguntas');
 
         Route::get('/edit/{id}',[BanksQuestionsController::class,'edit'])
@@ -58,6 +58,9 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::post('/createquestionasociated',[BanksQuestionsController::class,'createAssociatedQuestion'])
             ->name('createquestionasociated');
+
+        Route::post('/createmultiplequestionsasociated',[BanksQuestionsController::class,'createMultipleAssociatedQuestions'])
+            ->name('createmultiplequestionsasociated');
 
         Route::patch('/update/{id}',[BanksQuestionsController::class,'update'])
             ->name('update');

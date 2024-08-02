@@ -102,7 +102,7 @@ function seeAQuestionOptions(id,title){
                 console.log('E1');
             }
             // Abrir el modal
-            $('#viewOptions').modal('show');
+            $('#mdlviewOptions').modal('show');
         } else {
             Swal.fire({
                 title: response.message,
