@@ -60,6 +60,21 @@
                             <i class="fas fa-list-ul"></i>
                             <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="optionsTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Título</th>
+                                            <th scope="col">Opción</th>
+                                            <th scope="col">Porcentaje</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trOptions">
+                                        <!-- Las opciones se agregarán aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
                             <i class="fas fa-plus"></i> Agregar Opción

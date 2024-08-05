@@ -1,60 +1,124 @@
 let optionCount = 0;
+let isTableVisible = false;
 // Method to add a new option
 function addOption() {
     optionCount++;
+    // console.log("Contador "+optionCount);
 
-    // Create a new div element to hold the label, input, and remove button
-    const newOptionDiv = document.createElement('div');
-    newOptionDiv.classList.add('form-group');
-    newOptionDiv.id = `option_div_${optionCount}`;
+    // Mostrar la tabla si no está visible
+    if (!isTableVisible) {
+        document.getElementById('optionsTable').style.display = 'table';
+        isTableVisible = true;
+    }
 
-    // Create a new label element
-    const newLabel = document.createElement('label');
-    newLabel.for = `option_${optionCount}`;
-    newLabel.className = 'col-form-label';
-    newLabel.textContent = `Opción ${optionCount}`;
+    // Create a new row (tr) element
+    const newOptionRow = document.createElement('tr');
+    newOptionRow.id = `option_row_${optionCount}`;
 
-    // Create a wrapper for input and remove button
-    const inputWrapper = document.createElement('div');
-    inputWrapper.classList.add('d-flex', 'align-items-center');
-
-    // Create a new input element
-    const newInput = document.createElement('input');
-    newInput.type = 'text';
-    newInput.className = 'form-control';
-    newInput.id = `option_${optionCount}`;
-    newInput.name = `option_${optionCount}`;
-    newInput.required = true;
-
+    // Create a new cell (td) for the title input
+    const titleCell = document.createElement('td');
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.className = 'form-control-plaintext';
+    titleInput.id = `title_${optionCount}`;
+    titleInput.name = `title_${optionCount}`;
+    titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
+    titleInput.required = true;
+    titleCell.appendChild(titleInput);
 
 
-    // Create a new remove button
+    // Crear una celda (td) para la opción
+    const optionCell = document.createElement('td');
+    const optionQuestion = document.createElement('span');
+    optionQuestion.className = 'badge badge-success';
+    optionQuestion.id = `option_${optionCount}`;
+    optionQuestion.textContent = 'VERDADERA';
+    optionQuestion.style.cursor = 'pointer';
+    optionQuestion.onclick = function() { toggleOptionStatus(optionQuestion); };
+    optionCell.appendChild(optionQuestion);
+
+
+    // Create a new cell (td) for the percentage sapn
+    const percentageCell = document.createElement('td');
+    const percentageSpan = document.createElement('span');
+    percentageSpan.id = `percentage_${optionCount}`;
+    percentageCell.appendChild(percentageSpan);
+
+
+    // Create a new cell (td) for the remove button
+    const actionsCell = document.createElement('td');
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
-    removeButton.className = 'btn btn-danger btn-sm ml-2';
+    removeButton.className = 'btn btn-danger btn-sm';
     removeButton.textContent = 'X';
     removeButton.title = 'Eliminar Opción';
     removeButton.onclick = function() { removeOption(optionCount); };
+    actionsCell.appendChild(removeButton);
 
+    // Append cells to the new rowpercentageCell
+    newOptionRow.appendChild(titleCell);
+    newOptionRow.appendChild(optionCell);
+    newOptionRow.appendChild(percentageCell);
+    newOptionRow.appendChild(actionsCell);
 
-    // Append the input and remove button to the input wrapper
-    inputWrapper.appendChild(newInput);
-    // inputWrapper.appendChild(correctOptionButton);
-    inputWrapper.appendChild(removeButton);
+    // Append the new row to the table body
+    document.getElementById('trOptions').appendChild(newOptionRow)
 
-    // Append the label and input wrapper to the new div
-    newOptionDiv.appendChild(newLabel);
-    newOptionDiv.appendChild(inputWrapper);
+    updatePercentages();
+}
 
-    // Append the new div to the divOptions container
-    document.getElementById('divOptions').appendChild(newOptionDiv);
+//Method to calculate the porcentage of a option
+function updatePercentages() {
+    const rows = document.querySelectorAll('#trOptions tr');
+    const trueRows = Array.from(rows).filter(row => {
+        const optionSpan = row.querySelector('span[id^="option_"]');
+        return optionSpan && optionSpan.textContent === 'VERDADERA';
+    });
+
+    const valuePercentage = (100 / trueRows.length); // Calcula el nuevo porcentaje basado solo en opciones VERDADERAS
+
+    rows.forEach((row) => {
+        const percentageSpan = row.querySelector('span[id^="percentage_"]');
+        const optionSpan = row.querySelector('span[id^="option_"]');
+        if (percentageSpan) {
+            if (optionSpan && optionSpan.textContent === 'VERDADERA') {
+                percentageSpan.textContent = `${valuePercentage}%`;
+            } else {
+                percentageSpan.textContent = `0%`; // Establecer porcentaje en 0 para opciones FALSAS
+            }
+        }
+    });
 }
 
 // Method to remove  a new option
+
 function removeOption(optionId) {
     optionCount--;
-    const optionDiv = document.getElementById(`option_div_${optionId}`);
-    optionDiv.remove();
+    const rowToRemove = document.getElementById(`option_row_${optionId}`);
+    if (rowToRemove) {
+        rowToRemove.parentNode.removeChild(rowToRemove);
+
+        // Ocultar la tabla si no hay más filas
+        if (document.getElementById('trOptions').childElementCount === 0) {
+            document.getElementById('optionsTable').style.display = 'none';
+            isTableVisible = false;
+        } else {
+            // Actualizar los porcentajes de todas las filas
+            updatePercentages();
+        }
+    }
+}
+
+//Method to change of option the question to TRUE or FALSE
+function toggleOptionStatus(optionQuestion) {
+    if (optionQuestion.textContent === 'VERDADERA') {
+        optionQuestion.textContent = 'FALSA';
+        optionQuestion.className = 'badge badge-danger';
+    } else {
+        optionQuestion.textContent = 'VERDADERA';
+        optionQuestion.className = 'badge badge-success';
+    }
+    updatePercentages();
 }
 
 //Method for get the options an question
