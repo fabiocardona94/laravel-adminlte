@@ -12,7 +12,6 @@
                         <div class="text-center">
                             <p class="h4">Editando:{{ $evaluation->title }}</p>
                         </div>
-                        <input type="hidden" value="{{ $evaluation->id }}" id="evaluationId">
                     @else
                         <div class="card-body">
                             <p class="text-center">No se encontró la evaluación.</p>
@@ -109,15 +108,31 @@
                 </div>
                 <div class="modal-body">
                     <form id="createQuestionAsocciatedForm">
+                        <input type="hidden"  id="idEvaluationAsociated" value="{{ $evaluation->id }}" name="idEvaluationAsociated">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="question_title" class="col-form-label">Titulo de la pregunta</label>
-                            <textarea class="form-control" id="question_title" name="question_title" required cols="30" rows="2" required></textarea>
+                            <label for="associatedQuestionTitle" class="col-form-label">Titulo de la pregunta</label>
+                            <textarea class="form-control" id="associatedQuestionTitle" name="associatedQuestionTitle" required cols="30" rows="2" required></textarea>
                         </div>
                         <div class="form-group" id="divOptions">
                             <i class="fas fa-list-ul"></i>
-                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="optionsTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Título</th>
+                                            <th scope="col">Opción</th>
+                                            <th scope="col">Porcentaje</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trOptions">
+                                        <!-- Las opciones se agregarán aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <button class="btn btn-sm btn-primary" type="button" id="buttonAddOption" onclick="addOption()">
                             <i class="fas fa-plus"></i> Agregar Opción
@@ -161,6 +176,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form id="bankQuestionsForm">
+                        <input type="hidden"  id="idBankEvaluationAsociated" value="{{ $evaluation->id }}" name="idBankEvaluationAsociated">
                     <div class="modal-header">
                         <h5 class="modal-title ml-2" id="exampleModalLabel">Agregar del banco de preguntas</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

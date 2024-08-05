@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('question_id');
             $table->string('question_option', 200);
-            $table->boolean('is_correct')->default(false);
+            $table->tinyInteger('is_correct');
             $table->integer('percentage_value');
             $table->tinyInteger('status')->default(1);
 

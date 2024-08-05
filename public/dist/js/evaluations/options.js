@@ -34,6 +34,7 @@ function addOption() {
     optionQuestion.id = `option_${optionCount}`;
     optionQuestion.textContent = 'VERDADERA';
     optionQuestion.style.cursor = 'pointer';
+    optionQuestion.title = "Cambiar estado de la opción";
     optionQuestion.onclick = function() { toggleOptionStatus(optionQuestion); };
     optionCell.appendChild(optionQuestion);
 
@@ -42,6 +43,8 @@ function addOption() {
     const percentageCell = document.createElement('td');
     const percentageSpan = document.createElement('span');
     percentageSpan.id = `percentage_${optionCount}`;
+    percentageSpan.title = "Porcentaje que vale esta opción";
+    percentageSpan.style.cursor = 'pointer';
     percentageCell.appendChild(percentageSpan);
 
 

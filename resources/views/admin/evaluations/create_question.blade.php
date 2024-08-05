@@ -10,7 +10,7 @@
             <h1 class="m-0 mb-3 text-center">Listado de preguntas</h1>
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#mdlcreateQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
+                    <button type="button" class="btn btn-outline-primary" title="Crear nueva pregunta" data-toggle="modal" data-target="#mdlcreateQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
                 </div>
                 <table id="questions" class="table table-bordered mt-2 mb-2" style="width:100%">
                     <thead>
@@ -76,7 +76,7 @@
                                 </table>
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
+                        <button class="btn btn-sm btn-primary" type="button" title="Agregar opciones a esta pregunta" onclick="addOption()">
                             <i class="fas fa-plus"></i> Agregar Opción
                         </button>
                         <div class="text-center mb-2 mt-2">

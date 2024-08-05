@@ -29,8 +29,9 @@ class BanksQuestionsController extends Controller
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
-            'options' => 'required|array',
-            'options.*' => 'required|string|max:255',
+            'options.*.title' => 'required|string|max:255',
+            'options.*.option' => 'required|integer|between:0,1',
+            'options.*.percentage' => 'required|numeric|between:0,100',
         ]);
 
         try {
@@ -40,10 +41,12 @@ class BanksQuestionsController extends Controller
             ]);
 
             // Crear las opciones asociadas a la pregunta
-            foreach ($validatedData['options'] as $optionTitle) {
+            foreach ($validatedData['options'] as $options) {
                 EvaluationQuestionOption::create([
                     'question_id' => $question->id,
-                    'question_option' => $optionTitle,
+                    'question_option' => $options['title'],
+                    'is_correct' => $options['option'],
+                    'percentage_value' => $options['percentage']
                 ]);
             }
 
@@ -64,12 +67,14 @@ class BanksQuestionsController extends Controller
      */
     public function createAssociatedQuestion(Request $request)
     {
+
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'question_title' => 'required|string|max:255',
             'evaluation_id' => 'required|string|integer',
-            'options' => 'required|array',
-            'options.*' => 'required|string|max:255',
+            'question_title' => 'required|string|max:255',
+            'options.*.title' => 'required|string|max:255',
+            'options.*.option' => 'required|integer|between:0,1',
+            'options.*.percentage' => 'required|numeric|between:0,100',
         ]);
 
         try {
@@ -79,12 +84,13 @@ class BanksQuestionsController extends Controller
             ]);
 
             // Crear las opciones asociadas a la pregunta
-            foreach ($validatedData['options'] as $optionTitle) {
-                EvaluationQuestionOption::create([
-                    'question_id' => $question->id,
-                    'question_option' => $optionTitle,
-                ]);
-
+            foreach ($validatedData['options'] as $options) {
+            EvaluationQuestionOption::create([
+                'question_id' => $question->id,
+                'question_option' => $options['title'],
+                'is_correct' => $options['option'],
+                'percentage_value' => $options['percentage']
+            ]);
             }
 
             //Insertar los datos a la tabla relacional entre las evaluaciones y preguntas

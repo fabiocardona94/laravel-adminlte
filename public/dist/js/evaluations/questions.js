@@ -4,7 +4,6 @@ const BtnCreateQuestion = document.getElementById('btnCreateQuestion');
 const btnCreateAssociatedQuestion = document.getElementById('btnCreateAssociatedQuestion');
 const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQuestion');
 const btnSendAssociatedQuestion = document.getElementById('btnSendAssociatedQuestion');
-// const evaluation_id = document.getElementById('evaluationId').value;
 
 let  optionCounts = 0;
 let selectedValues = [];
@@ -27,23 +26,37 @@ if(formCreateQuestion)
     });
 }
 
-function createQuestion(){
-    const question_title = document.getElementById('questionTitle').value;
-    const optionElements = document.querySelectorAll('[id^="option_"]');
-    let options = [];
+//Method to obtain the data de
+function getOptionsData() {
+    const rows = document.querySelectorAll('#trOptions tr');
+    const optionsData = [];
 
-    optionElements.forEach((input) => {
-        if (input.value !== undefined && input.value.trim() !== "") {
-            options.push(input.value.trim());
-        }
+    rows.forEach(row => {
+        const titleInput = row.querySelector('input[id^="title_"]');
+        const optionSpan = row.querySelector('span[id^="option_"]');
+        const optionValue = (optionSpan.textContent === "FALSA") ? 0 : 1;
+        const percentageSpan = row.querySelector('span[id^="percentage_"]');
+        const percentageValue = percentageSpan ? percentageSpan.textContent.replace('%', '') : '';
+
+        optionsData.push({
+            title: titleInput ? titleInput.value : '',
+            option: optionValue,
+            percentage: percentageValue
+        });
     });
-    // console.log("Titulo Pregunta "+question_title);
-    // console.log("Opcion"+options);
-    // console.log("Token"+Tokencsrf);
+
+    return optionsData;
+}
+
+//Method to create a new Question
+function createQuestion(){
+    const questionTitle = document.getElementById('questionTitle').value;
+    const dataQuestion = getOptionsData();
+    // console.log("Titulo Pregunta "+questionTitle);
 
     let data = {
-        question_title: question_title,
-        options: options
+        question_title: questionTitle,
+        options: dataQuestion
     }
 
     fetch(`/admin/pregunta/store`,{
@@ -96,24 +109,15 @@ if(formCreateQuestionAsocciated)
 
 function createQuestioAsocciated()
 {
-    const question_title = document.getElementById('question_title').value;
-    const optionElements = document.querySelectorAll('[id^="option_"]');
-    let options = [];
-
-    optionElements.forEach((input) => {
-        if (input.value !== undefined && input.value.trim() !== "") {
-            options.push(input.value.trim());
-        }
-    });
-    // console.log("Titulo Pregunta "+question_title);
-    // console.log("Opcion"+options);
-    // console.log("Token"+Tokencsrf);
-    // console.log("Id de la evaluación"+evaluation_id);
+    const idEvaluationAsociated = document.getElementById('idEvaluationAsociated').value;
+    // console.log("ID Evaluación "+idEvaluationAsociated);
+    const associatedQuestionTitle = document.getElementById('associatedQuestionTitle').value;
+    const dataAsociatedQuestion = getOptionsData();
 
     let data = {
-        question_title: question_title,
-        evaluation_id: evaluation_id,
-        options: options
+        question_title: associatedQuestionTitle,
+        evaluation_id: idEvaluationAsociated,
+        options: dataAsociatedQuestion
     }
 
     fetch(`/admin/pregunta/createquestionasociated`,{
@@ -457,29 +461,29 @@ function consultQuestionBank(id, page = 1) {
 }
 
 // Agrega un evento de cambio al tbody que contiene los inputs dinámicos
-// let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
-//     if (event.target && event.target.matches('input[type="checkbox"]')) {
-//         const checkboxValue = event.target.value;
+let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
+    if (event.target && event.target.matches('input[type="checkbox"]')) {
+        const checkboxValue = event.target.value;
 
-//         if (event.target.checked) {
-//             if (!selectedValues.includes(checkboxValue)) {
-//                 selectedValues.push(checkboxValue);
-//             }
-//         } else {
-//             selectedValues = selectedValues.filter(value => value !== checkboxValue);
-//         }
+        if (event.target.checked) {
+            if (!selectedValues.includes(checkboxValue)) {
+                selectedValues.push(checkboxValue);
+            }
+        } else {
+            selectedValues = selectedValues.filter(value => value !== checkboxValue);
+        }
 
-//         const anyChecked = selectedValues.length > 0;
+        const anyChecked = selectedValues.length > 0;
 
-//         if (anyChecked) {
-//             btnSendAssociatedQuestion.classList.remove('disabled');
-//             btnSendAssociatedQuestion.removeAttribute('disabled');
-//         } else {
-//             btnSendAssociatedQuestion.classList.add('disabled');
-//             btnSendAssociatedQuestion.setAttribute('disabled', true);
-//         }
-//     }
-// });
+        if (anyChecked) {
+            btnSendAssociatedQuestion.classList.remove('disabled');
+            btnSendAssociatedQuestion.removeAttribute('disabled');
+        } else {
+            btnSendAssociatedQuestion.classList.add('disabled');
+            btnSendAssociatedQuestion.setAttribute('disabled', true);
+        }
+    }
+});
 
 //Mehod for the  paginator in modal when star the questions obtains del bank the questions
 function updatePagination(pagination, id) {
@@ -524,8 +528,9 @@ if(formbankQuestions)
 //Method to create
 function createMultipleAssociatedQuestions()
 {
+    const idBankEvaluationAsociated = document.getElementById('idBankEvaluationAsociated').value;
     let data = {
-        evaluation_id: evaluation_id,
+        evaluation_id: idBankEvaluationAsociated,
         questions : selectedValues
     }
 

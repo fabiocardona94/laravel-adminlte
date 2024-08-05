@@ -16,7 +16,7 @@ class EvaluationQuestionOption extends Model
         'question_id',
         'question_option',
         'is_correct',
-        'percentage_value',
+        'percentage_value'
     ];
 
     public function question() : BelongsTo
