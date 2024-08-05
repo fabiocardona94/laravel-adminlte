@@ -184,6 +184,7 @@ class BanksQuestionsController extends Controller
      */
     function update (Request $request,$id)
     {
+
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
             'status' => 'required|integer',

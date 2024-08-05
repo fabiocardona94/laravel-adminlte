@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-       <!-- Modal edit Questions -->
+    <!-- Modal edit Questions -->
     <div class="modal fade" id="modalEditQuestion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -85,7 +85,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="editQuestionForm">
-                        <input type="hidden" id="question_id" name="evaluation_id">
+                        <input type="hidden"  id="idQuestionEdit" name="idQuestionEdit">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
                             <label for="title_question_edit" class="col-form-label">Titulo de la pregunta</label>
@@ -98,13 +98,10 @@
                         </div>
                         <div class="form-group">
                             <i class="fas fa-list-ul"></i>
-                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
+                            <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
                         </div>
                         <div class="form-group" id="containerEditOptions">
-                            <i class="fas fa-list-ul"></i>
-                            <label for="question_title" class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
-                            <br>
                         </div>
                         <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
                             <i class="fas fa-plus"></i> Agregar Opción

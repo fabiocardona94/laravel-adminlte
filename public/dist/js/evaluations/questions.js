@@ -4,7 +4,7 @@ const BtnCreateQuestion = document.getElementById('btnCreateQuestion');
 const btnCreateAssociatedQuestion = document.getElementById('btnCreateAssociatedQuestion');
 const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQuestion');
 const btnSendAssociatedQuestion = document.getElementById('btnSendAssociatedQuestion');
-const evaluation_id = document.getElementById('evaluationId').value;
+// const evaluation_id = document.getElementById('evaluationId').value;
 
 let  optionCounts = 0;
 let selectedValues = [];
@@ -39,7 +39,7 @@ function createQuestion(){
     });
     // console.log("Titulo Pregunta "+question_title);
     // console.log("Opcion"+options);
-    // console.log("Token"+Token);
+    // console.log("Token"+Tokencsrf);
 
     let data = {
         question_title: question_title,
@@ -107,7 +107,7 @@ function createQuestioAsocciated()
     });
     // console.log("Titulo Pregunta "+question_title);
     // console.log("Opcion"+options);
-    // console.log("Token"+csrfToken);
+    // console.log("Token"+Tokencsrf);
     // console.log("Id de la evaluación"+evaluation_id);
 
     let data = {
@@ -182,7 +182,7 @@ function openModalEditQuestion(id){
 //Method to obtain the data of a question and show them in the modal
 function getDataQuestuion(dataQuestion){
     // Llenar los campos del modal con los datos de la evaluación
-    // $('#question_id').val(dataQuestion.id);
+    $('#idQuestionEdit').val(dataQuestion.id);
     $('#title_question_edit').val(dataQuestion.question_title);
     $('#question_status_edit').val(dataQuestion.status);
 
@@ -289,7 +289,7 @@ if(FormEditQuestion)
 
 function updateQuestion(){
 
-    const id = document.getElementById('question_id').value;
+    const idQuestionEdit = document.getElementById('idQuestionEdit').value;
     const question_title = document.getElementById('title_question_edit').value;
     const status = document.getElementById('question_status_edit').value;
     // console.log('id '+id);
@@ -297,13 +297,15 @@ function updateQuestion(){
     // console.log('status '+status);
     status === "INACTIVA" ? status == 0:  status == 1;
 
+    console.log('Id '+idQuestionEdit);
 
     let data = {
+        id : idQuestionEdit,
         question_title: question_title,
         status: status,
     }
 
-    fetch(`/admin/pregunta/update/${id}`,{
+    fetch(`/admin/pregunta/update/${idQuestionEdit}`,{
         method : 'PATCH',
         headers : headersFetch1,
         body : JSON.stringify(data)
@@ -327,7 +329,7 @@ function updateQuestion(){
         } else {
             alert('Error: ' + response.message);
             Swal.fire({
-                title: response.message,
+                title: "Succes Fail",
                 icon: "error",
             });
         }
@@ -350,7 +352,7 @@ function updateAssociatedQuestion (evaluation_id,question_id){
 
     // console.log('Id Evaluación '+evaluation_id);
     // console.log('Id Pregunta '+question_id);
-    // console.log('Token '+Token);
+    // console.log('Token '+Tokencsrf);
 
     Swal.fire({
         title: '¿Estás seguro?',
@@ -455,29 +457,29 @@ function consultQuestionBank(id, page = 1) {
 }
 
 // Agrega un evento de cambio al tbody que contiene los inputs dinámicos
-let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
-    if (event.target && event.target.matches('input[type="checkbox"]')) {
-        const checkboxValue = event.target.value;
+// let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
+//     if (event.target && event.target.matches('input[type="checkbox"]')) {
+//         const checkboxValue = event.target.value;
 
-        if (event.target.checked) {
-            if (!selectedValues.includes(checkboxValue)) {
-                selectedValues.push(checkboxValue);
-            }
-        } else {
-            selectedValues = selectedValues.filter(value => value !== checkboxValue);
-        }
+//         if (event.target.checked) {
+//             if (!selectedValues.includes(checkboxValue)) {
+//                 selectedValues.push(checkboxValue);
+//             }
+//         } else {
+//             selectedValues = selectedValues.filter(value => value !== checkboxValue);
+//         }
 
-        const anyChecked = selectedValues.length > 0;
+//         const anyChecked = selectedValues.length > 0;
 
-        if (anyChecked) {
-            btnSendAssociatedQuestion.classList.remove('disabled');
-            btnSendAssociatedQuestion.removeAttribute('disabled');
-        } else {
-            btnSendAssociatedQuestion.classList.add('disabled');
-            btnSendAssociatedQuestion.setAttribute('disabled', true);
-        }
-    }
-});
+//         if (anyChecked) {
+//             btnSendAssociatedQuestion.classList.remove('disabled');
+//             btnSendAssociatedQuestion.removeAttribute('disabled');
+//         } else {
+//             btnSendAssociatedQuestion.classList.add('disabled');
+//             btnSendAssociatedQuestion.setAttribute('disabled', true);
+//         }
+//     }
+// });
 
 //Mehod for the  paginator in modal when star the questions obtains del bank the questions
 function updatePagination(pagination, id) {

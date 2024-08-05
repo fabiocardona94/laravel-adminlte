@@ -23,7 +23,7 @@
             </div>
             <div class="card mt-2">
                 <div class="card-header bg-success">
-                  <h3 class="card-title">Cantidad de preguntas: {{$quantity_associated_questions }}</h3>
+                  <h3 class="card-title">Cantidad de preguntas: {{$quantity_associated_questions}}</h3>
 
                   <div class="card-tools">
                         <div class="dropdown">
