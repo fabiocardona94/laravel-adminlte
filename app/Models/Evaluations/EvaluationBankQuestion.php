@@ -25,7 +25,7 @@ class EvaluationBankQuestion extends Model
     public function options() : HasMany
     {
         return $this->hasMany(EvaluationQuestionOption::class, 'question_id')
-                    ->select('question_id', 'question_option', 'is_correct');
+                    ->select('question_id', 'question_option', 'is_correct','percentage_value');
     }
 }
 //

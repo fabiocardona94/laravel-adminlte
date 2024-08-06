@@ -56,7 +56,7 @@
                             <label for="questionTitle" class="col-form-label">Titulo de la pregunta</label>
                             <textarea class="form-control" id="questionTitle" name="questionTitle" required cols="30" rows="2" required></textarea>
                         </div>
-                        <div class="form-group" id="divOptions">
+                        <div class="form-group">
                             <i class="fas fa-list-ul"></i>
                             <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
@@ -81,7 +81,7 @@
                         </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success" id="btnCreateQuestion">Crear</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnCreateQuestion" disabled>Crear</button>
                         </div>
                     </form>
                 </div>
@@ -104,7 +104,7 @@
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
                             <label for="title_question_edit" class="col-form-label">Titulo de la pregunta</label>
-                            <input type="text" value="" class="form-control" id="title_question_edit" name="title_question_edit" required>
+                            <input type="text" value="Hola" class="form-control" id="title_question_edit" name="title_question_edit" required>
                         </div>
                         <div class="form-group">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -115,17 +115,29 @@
                             <i class="fas fa-list-ul"></i>
                             <label class="col-form-label text-center">Opciones de respuesta para esta pregunta</label>
                             <br>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="optionsAsociatedTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Título</th>
+                                            <th scope="col">Opción</th>
+                                            <th scope="col">Porcentaje</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trOptionsAsociated">
+                                        <!-- Las opciones asociadas se agregarán aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="form-group" id="containerEditOptions">
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="addOption()">
+                        <button class="btn btn-sm btn-primary" type="button" onclick="addOptionAsociated()">
                             <i class="fas fa-plus"></i> Agregar Opción
                         </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger"  data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success" id="btnEditAssociatedQuestion" >Actualizar</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnEditAssociatedQuestion" disabled >Actualizar</button>
                         </div>
-
                     </form>
                 </div>
             </div>

@@ -133,7 +133,7 @@
                             >
                         </div>
                         <div class="form-group">
-                            <i class="fas fa-toggle-on"></i>
+                            <i class="fas fa-exclamation-triangle"></i>
                             <label for="editEvaluationStatus" class="col-form-label">Estado</label>
                             <select class="form-control text-black" name="editEvaluationStatus" id="editEvaluationStatus"></select>
                         </div>

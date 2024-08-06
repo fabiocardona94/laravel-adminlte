@@ -2,6 +2,7 @@ let optionCount = 0;
 let isTableVisible = false;
 // Method to add a new option
 function addOption() {
+    console.log("Add si");
     optionCount++;
     // console.log("Contador "+optionCount);
 
@@ -25,7 +26,7 @@ function addOption() {
     titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
     titleInput.required = true;
     titleCell.appendChild(titleInput);
-
+    statusButtonCreateEvaluation(titleInput);
 
     // Crear una celda (td) para la opción
     const optionCell = document.createElement('td');
@@ -70,8 +71,26 @@ function addOption() {
     updatePercentages();
 }
 
+function statusButtonCreateEvaluation(titleInput){
+    const btnCreateQuestion= document.getElementById('btnCreateQuestion');
+    titleInput.addEventListener('input', function() {
+        if (titleInput.value.trim() !== '') {
+            btnCreateQuestion.removeAttribute('disabled');
+            console.log('se ejecuta1')
+        } else {
+            btnCreateQuestion.setAttribute('disabled', 'disabled');
+            console.log('se ejecuta2')
+        }
+    });
+
+}
+
+
+
 //Method to calculate the porcentage of a option
 function updatePercentages() {
+    console.log('UpdatePorcentage');
+
     const rows = document.querySelectorAll('#trOptions tr');
     const trueRows = Array.from(rows).filter(row => {
         const optionSpan = row.querySelector('span[id^="option_"]');
@@ -96,6 +115,8 @@ function updatePercentages() {
 // Method to remove  a new option
 
 function removeOption(optionId) {
+    console.log('Remove');
+
     optionCount--;
     const rowToRemove = document.getElementById(`option_row_${optionId}`);
     if (rowToRemove) {

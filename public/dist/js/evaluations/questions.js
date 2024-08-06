@@ -1,11 +1,13 @@
 
 const Tokencsrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const BtnCreateQuestion = document.getElementById('btnCreateQuestion');
+const btnCreateQuestion = document.getElementById('btnCreateQuestion');
 const btnCreateAssociatedQuestion = document.getElementById('btnCreateAssociatedQuestion');
 const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQuestion');
 const btnSendAssociatedQuestion = document.getElementById('btnSendAssociatedQuestion');
 
 let  optionCounts = 0;
+let objectEcxit = true;
+let isTableOptionsVisible = false;
 let selectedValues = [];
 const headersFetch1 = {
     "Content-Type": "application/json",
@@ -14,25 +16,13 @@ const headersFetch1 = {
     "X-CSRF-TOKEN": Tokencsrf
 };
 
-
-// Method to create a new Question
-let formCreateQuestion = document.getElementById("createQuestionForm");
-if(formCreateQuestion)
-{
-    formCreateQuestion.addEventListener('submit', function(event) {
-        event.preventDefault();
-        BtnCreateQuestion.setAttribute('disabled','disabled');
-        createQuestion();
-    });
-}
-
 //Method to obtain the data de
 function getOptionsData() {
     const rows = document.querySelectorAll('#trOptions tr');
     const optionsData = [];
 
     rows.forEach(row => {
-        const titleInput = row.querySelector('input[id^="title_"]');
+        const titleInput = row.querySelector('input[id^="title_asociated"]');
         const optionSpan = row.querySelector('span[id^="option_"]');
         const optionValue = (optionSpan.textContent === "FALSA") ? 0 : 1;
         const percentageSpan = row.querySelector('span[id^="percentage_"]');
@@ -48,7 +38,18 @@ function getOptionsData() {
     return optionsData;
 }
 
-//Method to create a new Question
+
+// Method to create a new Question
+let formCreateQuestion = document.getElementById("createQuestionForm");
+if(formCreateQuestion)
+{
+    formCreateQuestion.addEventListener('submit', function(event) {
+        event.preventDefault();
+        btnCreateQuestion.setAttribute('disabled','disabled');
+        createQuestion();
+    });
+}
+
 function createQuestion(){
     const questionTitle = document.getElementById('questionTitle').value;
     const dataQuestion = getOptionsData();
@@ -91,7 +92,7 @@ function createQuestion(){
         });
     })
     .finally(() =>{
-        BtnCreateQuestion.removeAttribute('disabled');
+        btnCreateQuestion.removeAttribute('disabled');
     });
 }
 
@@ -187,7 +188,9 @@ function openModalEditQuestion(id){
 function getDataQuestuion(dataQuestion){
     // Llenar los campos del modal con los datos de la evaluación
     $('#idQuestionEdit').val(dataQuestion.id);
-    $('#title_question_edit').val(dataQuestion.question_title);
+    $('#title_asociatedquestion_edit').val(dataQuestion.question_title);
+    console.log('Titulo '+dataQuestion.question_title);
+
     $('#question_status_edit').val(dataQuestion.status);
 
     // Limpiar el select antes de agregar opciones
@@ -204,97 +207,225 @@ function getDataQuestuion(dataQuestion){
 }
 
 //Method to obtain the associated options of a question and show them in the modal
-function getOptionsasociateds(options){
-
-    // Verifica si response.options_asociated es un array
+function getOptionsasociateds(options) {
+    // Verifica si options es un array
     if (Array.isArray(options)) {
         // Limpiar el contenedor de opciones
-        $('#containerEditOptions').empty();
+        $('#trOptionsAsociated').empty();
 
-        options.forEach(options => {
+        options.forEach(option => {
             optionCounts++;
-            // Create a new div element to hold the label, input, and remove button
-            const newOptionDiv = document.createElement('div');
-            newOptionDiv.classList.add('form-group');
-            newOptionDiv.id = `option_div_${optionCounts}`;
+            // Create a new row (tr) element
+            const newOptionRow = document.createElement('tr');
+            newOptionRow.id = `option_asociated_row_${optionCounts}`;
 
-            // Create a new label element
-            const newLabel = document.createElement('label');
-            newLabel.for = `option_${optionCounts}`;
-            newLabel.className = 'col-form-label';
-            newLabel.textContent = `Opción ${optionCounts}`;
+            // Create a new cell (td) for the title input
+            const titleCell = document.createElement('td');
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.className = 'form-control-plaintext';
+            titleInput.id = `title_asociated${optionCounts}`;
+            titleInput.name = `title_asociated${optionCounts}`;
+            titleInput.value = option.question_option;
+            titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
+            titleInput.required = true;
+            titleCell.appendChild(titleInput);
+            // statusbtnCreateAssociatedQuestion(titleInput);
 
-            // Create a wrapper for input and remove button
-            const inputWrapper = document.createElement('div');
-            inputWrapper.classList.add('d-flex', 'align-items-center');
+            // Create a new cell (td) for the option span
+            const optionCell = document.createElement('td');
+            const optionQuestion = document.createElement('span');
+            optionQuestion.className = option.is_correct === 1 ? 'badge badge-success' : 'badge badge-danger';
+            optionQuestion.id = `option_asociated${optionCounts}`;
+            optionQuestion.textContent = option.is_correct === 1 ? 'VERDADERA' : 'FALSA';
+            optionQuestion.style.cursor = 'pointer';
+            optionQuestion.title = "Cambiar estado de la opción";
+            optionQuestion.onclick = function() { toggleAssociatedOptionStatus(optionQuestion); };
+            optionCell.appendChild(optionQuestion);
 
-            // Create a new input element
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.className = 'form-control';
-            newInput.id = `option_${optionCounts}`;
-            newInput.name = `option_${optionCounts}`;
-            newInput.value = options.question_option;
-            newInput.required = true;
+            // Create a new cell (td) for the percentage span
+            const percentageCell = document.createElement('td');
+            const percentageSpan = document.createElement('span');
+            percentageSpan.id = `percentage_asociated${optionCounts}`;
+            percentageSpan.title = "Porcentaje que vale esta opción";
+            percentageSpan.style.cursor = 'pointer';
+            percentageSpan.textContent = option.percentage_value + '%';
+            percentageCell.appendChild(percentageSpan);
 
-            if (options.is_correct === 1) {
-                newInput.classList.add('text-success');
-            } else {
-                newInput.classList.add('text-danger');
-            }
-
-            // Create a new remove button
+            // Create a new cell (td) for the remove button
+            const actionsCell = document.createElement('td');
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
-            removeButton.className = 'btn btn-danger btn-sm ml-2';
+            removeButton.className = 'btn btn-danger btn-sm';
             removeButton.textContent = 'X';
             removeButton.title = 'Eliminar Opción';
-            removeButton.onclick = function() { removeOption(optionCounts); };
+            removeButton.onclick = function() { removeAsocitedOption(optionCounts); };
+            actionsCell.appendChild(removeButton);
 
+            // Append cells to the new row
+            newOptionRow.appendChild(titleCell);
+            newOptionRow.appendChild(optionCell);
+            newOptionRow.appendChild(percentageCell);
+            newOptionRow.appendChild(actionsCell);
 
-            // Append the input and remove button to the input wrapper
-            inputWrapper.appendChild(newInput);
-            // inputWrapper.appendChild(correctOptionButton);
-            inputWrapper.appendChild(removeButton);
-
-            // Append the label and input wrapper to the new div
-            newOptionDiv.appendChild(newLabel);
-            newOptionDiv.appendChild(inputWrapper);
-
-            // Append the new div to the divOptions container
-            document.getElementById('containerEditOptions').appendChild(newOptionDiv);
+            // Append the new row to the table body
+            document.getElementById('trOptionsAsociated').appendChild(newOptionRow);
+            updatePercentagesQuestions();
         });
 
         // Muestra el modal
         $('#modalEditQuestion').modal('show');
     } else {
-        console.error('options_asociated no es un array:', response.options_asociated);
+        console.error('options no es un array:', options);
         Swal.fire({
             title: 'Error en los datos recibidos',
             icon: 'error',
         });
     }
-
 }
 
-//Method to update the data of a question.
+
+function addOptionAsociated() {
+
+    optionCounts++;
+    // console.log("Contador "+optionCounts);
+
+    // Mostrar la tabla si no está visible
+    if (!isTableOptionsVisible) {
+        document.getElementById('optionsAsociatedTable').style.display = 'table';
+        isTableOptionsVisible = true;
+    }
+
+    // Create a new row (tr) element
+    const newOptionRow = document.createElement('tr');
+    newOptionRow.id = `option_asociated_row_${optionCounts}`;
+
+    // Create a new cell (td) for the title input
+    const titleCell = document.createElement('td');
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.className = 'form-control-plaintext';
+    titleInput.id = `title_asociated${optionCounts}`;
+    titleInput.name = `title_asociated${optionCounts}`;
+    titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
+    titleInput.required = true;
+    titleCell.appendChild(titleInput);
+
+    // Crear una celda (td) para la opción
+    const optionCell = document.createElement('td');
+    const optionQuestion = document.createElement('span');
+    optionQuestion.className = 'badge badge-success';
+    optionQuestion.id = `option_asociated${optionCounts}`;
+    optionQuestion.textContent = 'VERDADERA';
+    optionQuestion.style.cursor = 'pointer';
+    optionQuestion.title = "Cambiar estado de la opción";
+    optionQuestion.onclick = function() { toggleAssociatedOptionStatus(optionQuestion); };
+    optionCell.appendChild(optionQuestion);
 
 
-let FormEditQuestion = document.getElementById("editQuestionForm");
-if(FormEditQuestion)
-{
-    FormEditQuestion.addEventListener('submit', function(event) {
-        event.preventDefault();
-        btnEditAssociatedQuestion.setAttribute('disabled','disabled')
-        updateQuestion();
+    // Create a new cell (td) for the percentage sapn
+    const percentageCell = document.createElement('td');
+    const percentageSpan = document.createElement('span');
+    percentageSpan.id = `percentage_asociated${optionCounts}`;
+    percentageSpan.title = "Porcentaje que vale esta opción";
+    percentageSpan.style.cursor = 'pointer';
+    percentageCell.appendChild(percentageSpan);
+
+
+    // Create a new cell (td) for the remove button
+    const actionsCell = document.createElement('td');
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-danger btn-sm';
+    removeButton.textContent = 'X';
+    removeButton.title = 'Eliminar Opción';
+    removeButton.onclick = function() { removeAsocitedOption(optionCounts); };
+    actionsCell.appendChild(removeButton);
+
+    // Append cells to the new rowpercentageCell
+    newOptionRow.appendChild(titleCell);
+    newOptionRow.appendChild(optionCell);
+    newOptionRow.appendChild(percentageCell);
+    newOptionRow.appendChild(actionsCell);
+
+    // Append the new row to the table body
+    document.getElementById('trOptionsAsociated').appendChild(newOptionRow)
+
+    updatePercentagesQuestions();
+}
+
+function statusbtnCreateAssociatedQuestion(titleInput){
+    const btnCreateAssociatedQuestion= document.getElementById('btnCreateAssociatedQuestion');
+    titleInput.addEventListener('input', function() {
+        if (titleInput.value.trim() !== '') {
+            btnCreateAssociatedQuestion.removeAttribute('disabled');
+            console.log('se ejecuta3')
+        } else {
+            btnCreateAssociatedQuestion.setAttribute('disabled', 'disabled');
+            console.log('se ejecuta4')
+        }
     });
 }
+//Method to calculate the porcentage of a option asociated
+function updatePercentagesQuestions() {
+    const rowsAsociated = document.querySelectorAll('#trOptionsAsociated tr');
+    const trueRows = Array.from(rowsAsociated).filter(row => {
+        const optionSpan = row.querySelector('span[id^="option_asociated"]');
+        return optionSpan && optionSpan.textContent === 'VERDADERA';
+    });
+
+    const valuePercentage = (100 / trueRows.length); // Calcula el nuevo porcentaje basado solo en opciones VERDADERAS
+
+    rowsAsociated.forEach((row) => {
+        const percentageSpan = row.querySelector('span[id^="percentage_asociated"]');
+        const optionSpan = row.querySelector('span[id^="option_asociated"]');
+        if (percentageSpan) {
+            if (optionSpan && optionSpan.textContent === 'VERDADERA') {
+                percentageSpan.textContent = `${valuePercentage}%`;
+            } else {
+                percentageSpan.textContent = `0%`; // Establecer porcentaje en 0 para opciones FALSAS
+            }
+        }
+    });
+}
+
+function removeAsocitedOption(optionId) {
+    optionCounts--;
+    const rowToRemove = document.getElementById(`option_asociated_row_${optionId}`);
+    if (rowToRemove) {
+        rowToRemove.parentNode.removeChild(rowToRemove);
+
+        // Ocultar la tabla si no hay más filas
+        if (document.getElementById('trOptionsAsociated').childElementCount === 0) {
+            document.getElementById('optionsAsociatedTable').style.display = 'none';
+            isTableOptionsVisible = false;
+        } else {
+            // Actualizar los porcentajes de todas las filas
+            updatePercentagesQuestions();
+        }
+    }
+}
+
+//Method to change of option the question to TRUE or FALSE
+function toggleAssociatedOptionStatus(optionQuestion) {
+    if (optionQuestion.textContent === 'VERDADERA') {
+        optionQuestion.textContent = 'FALSA';
+        optionQuestion.className = 'badge badge-danger';
+    } else {
+        optionQuestion.textContent = 'VERDADERA';
+        optionQuestion.className = 'badge badge-success';
+    }
+    updatePercentagesQuestions();
+}
+
+
+
 
 
 function updateQuestion(){
 
     const idQuestionEdit = document.getElementById('idQuestionEdit').value;
-    const question_title = document.getElementById('title_question_edit').value;
+    const question_title = document.getElementById('title_asociatedquestion_edit').value;
     const status = document.getElementById('question_status_edit').value;
     // console.log('id '+id);
     // console.log('title '+question_title);
@@ -349,7 +480,6 @@ function updateQuestion(){
     });
 
 }
-
 
 // Method to update the status of an question ascociated
 function updateAssociatedQuestion (evaluation_id,question_id){
