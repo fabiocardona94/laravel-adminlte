@@ -14,6 +14,7 @@ use Yajra\DataTables\Facades\DataTables;
 class BanksQuestionsController extends Controller
 {
 
+
     /**
      *  Method to show the view of the questions that are in the system
      */
@@ -194,13 +195,40 @@ class BanksQuestionsController extends Controller
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
             'status' => 'required|integer',
+            'optionsAsociated.*.title' => 'required|string|max:255',
+            'optionsAsociated.*.option' => 'required|integer|between:0,1',
+            'optionsAsociated.*.percentage' => 'required|numeric|between:0,100',
         ]);
+
 
         try {
             $question = EvaluationBankQuestion::findOrFail($id);
             $question->question_title = $validatedData['question_title'];
             $question->status = $validatedData['status'];
             $question->save();
+
+
+
+            // foreach ($validatedData['optionsAsociated'] as $optionsAsociated) {
+            //     // Encuentra la opción existente basada en su id
+            //     $option = EvaluationQuestionOption::where('question_id', $id)->get();
+            //     if ($option) {
+            //         // Si la opción existe, actualiza sus campos
+            //         $option->update([
+            //             'question_option' => $optionsAsociated['title'],
+            //             'is_correct' => $optionsAsociated['option'],
+            //             'percentage_value' => $optionsAsociated['percentage']
+            //         ]);
+            //     } else {
+
+            //         EvaluationQuestionOption::create([
+            //             'question_id' => $id,
+            //             'question_option' => $optionsAsociated['title'],
+            //             'is_correct' => $optionsAsociated['option'],
+            //             'percentage_value' => $optionsAsociated['percentage']
+            //         ]);
+            //     }
+            // }
 
             return response()->json([
                 'status' => 'success',

@@ -103,8 +103,8 @@
                         <input type="hidden"  id="idQuestionEdit" name="idQuestionEdit">
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
-                            <label for="title_question_edit" class="col-form-label">Titulo de la pregunta</label>
-                            <input type="text" value="Hola" class="form-control" id="title_question_edit" name="title_question_edit" required>
+                            <label for="titleQuestionEdit" class="col-form-label">Estado</label>
+                            <input type="text" value="" class="form-control" id="titleQuestionEdit" name="titleQuestionEdit" required>
                         </div>
                         <div class="form-group">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -136,7 +136,7 @@
                         </button>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger"  data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-outline-success" id="btnEditAssociatedQuestion" disabled >Actualizar</button>
+                            <button type="submit" class="btn btn-outline-success" id="btnEditAssociatedQuestion" >Actualizar</button>
                         </div>
                     </form>
                 </div>
@@ -167,7 +167,7 @@
                         { data: 'actions', name: 'actions', orderable: false, searchable: false },
                     ],
                     initComplete: function () {
-                        $('#evaluations tfoot tr').appendTo('#evaluations thead');
+                        $('#questions tfoot tr').appendTo('#questions thead');
                         this.api()
                             .columns()
                             .every(function () {

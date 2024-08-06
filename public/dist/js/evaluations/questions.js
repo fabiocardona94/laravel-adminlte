@@ -22,14 +22,14 @@ function getOptionsData() {
     const optionsData = [];
 
     rows.forEach(row => {
-        const titleInput = row.querySelector('input[id^="title_asociated"]');
+        const titleInput = row.querySelector('input[id^="title_"]');
         const optionSpan = row.querySelector('span[id^="option_"]');
         const optionValue = (optionSpan.textContent === "FALSA") ? 0 : 1;
         const percentageSpan = row.querySelector('span[id^="percentage_"]');
         const percentageValue = percentageSpan ? percentageSpan.textContent.replace('%', '') : '';
 
         optionsData.push({
-            title: titleInput ? titleInput.value : '',
+            title: titleInput.value,
             option: optionValue,
             percentage: percentageValue
         });
@@ -188,7 +188,7 @@ function openModalEditQuestion(id){
 function getDataQuestuion(dataQuestion){
     // Llenar los campos del modal con los datos de la evaluación
     $('#idQuestionEdit').val(dataQuestion.id);
-    $('#title_asociatedquestion_edit').val(dataQuestion.question_title);
+    $('#titleQuestionEdit').val(dataQuestion.question_title);
     console.log('Titulo '+dataQuestion.question_title);
 
     $('#question_status_edit').val(dataQuestion.status);
@@ -219,6 +219,15 @@ function getOptionsasociateds(options) {
             const newOptionRow = document.createElement('tr');
             newOptionRow.id = `option_asociated_row_${optionCounts}`;
 
+
+            // Create a new cell (td) for the id of option
+            const trIdOption = document.createElement('td');
+            trIdOption.className = 'd-none';
+            const idption = document.createElement('span');
+            idption.id = `id_option${optionCounts}`;
+            idption.textContent = option.id;
+            trIdOption.appendChild(idption)
+
             // Create a new cell (td) for the title input
             const titleCell = document.createElement('td');
             const titleInput = document.createElement('input');
@@ -230,7 +239,8 @@ function getOptionsasociateds(options) {
             titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
             titleInput.required = true;
             titleCell.appendChild(titleInput);
-            // statusbtnCreateAssociatedQuestion(titleInput);
+
+
 
             // Create a new cell (td) for the option span
             const optionCell = document.createElement('td');
@@ -263,6 +273,7 @@ function getOptionsasociateds(options) {
             actionsCell.appendChild(removeButton);
 
             // Append cells to the new row
+            newOptionRow.appendChild(trIdOption);
             newOptionRow.appendChild(titleCell);
             newOptionRow.appendChild(optionCell);
             newOptionRow.appendChild(percentageCell);
@@ -310,6 +321,7 @@ function addOptionAsociated() {
     titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
     titleInput.required = true;
     titleCell.appendChild(titleInput);
+    statusbtnCreateAssociatedQuestion(titleInput);
 
     // Crear una celda (td) para la opción
     const optionCell = document.createElement('td');
@@ -355,13 +367,13 @@ function addOptionAsociated() {
 }
 
 function statusbtnCreateAssociatedQuestion(titleInput){
-    const btnCreateAssociatedQuestion= document.getElementById('btnCreateAssociatedQuestion');
+    const btnEditAssociatedQuestion= document.getElementById('btnEditAssociatedQuestion');
     titleInput.addEventListener('input', function() {
         if (titleInput.value.trim() !== '') {
-            btnCreateAssociatedQuestion.removeAttribute('disabled');
+            btnEditAssociatedQuestion.removeAttribute('disabled');
             console.log('se ejecuta3')
         } else {
-            btnCreateAssociatedQuestion.setAttribute('disabled', 'disabled');
+            btnEditAssociatedQuestion.setAttribute('disabled', 'disabled');
             console.log('se ejecuta4')
         }
     });
@@ -421,23 +433,52 @@ function toggleAssociatedOptionStatus(optionQuestion) {
 
 
 
+//Method to obtain the data de
+function getDataAssociatedOptions() {
+    const associatedOptionRows = document.querySelectorAll('#trOptionsAsociated tr');
+    const dataOptionsAssociated = [];
+
+    associatedOptionRows.forEach(row => {
+        const titleAsociatedOption = row.querySelector('input[id^="title_asociated"]');
+        const optionSpanAsociated = row.querySelector('span[id^="option_asociated"]');
+        const optionValue = (optionSpanAsociated.textContent === "FALSA") ? 0 : 1;
+        const percentageSpan = row.querySelector('span[id^="percentage_asociated"]');
+        const percentageOption = percentageSpan ? percentageSpan.textContent.replace('%', '') : '';
+
+        dataOptionsAssociated.push({
+            title: titleAsociatedOption.value,
+            option: optionValue,
+            percentage: percentageOption
+        });
+    });
+
+    return dataOptionsAssociated;
+}
+
+let FormEditQuestion = document.getElementById("editQuestionForm");
+if(FormEditQuestion)
+{
+    FormEditQuestion.addEventListener('submit', function(event) {
+        event.preventDefault();
+        btnEditAssociatedQuestion.setAttribute('disabled','disabled')
+        updateQuestion();
+    });
+}
 
 function updateQuestion(){
 
     const idQuestionEdit = document.getElementById('idQuestionEdit').value;
-    const question_title = document.getElementById('title_asociatedquestion_edit').value;
-    const status = document.getElementById('question_status_edit').value;
-    // console.log('id '+id);
-    // console.log('title '+question_title);
-    // console.log('status '+status);
-    status === "INACTIVA" ? status == 0:  status == 1;
+    const stausQuestionEdit = document.getElementById('question_status_edit').value;
+    console.log('Status '+stausQuestionEdit);
 
-    console.log('Id '+idQuestionEdit);
+    const question_title = document.getElementById('titleQuestionEdit').value;
 
+    const associatedOptionData = getDataAssociatedOptions();
     let data = {
         id : idQuestionEdit,
         question_title: question_title,
-        status: status,
+        status: stausQuestionEdit,
+        optionsAsociated : associatedOptionData
     }
 
     fetch(`/admin/pregunta/update/${idQuestionEdit}`,{
@@ -471,7 +512,7 @@ function updateQuestion(){
     })
     .catch(error => {
         Swal.fire({
-            title: "Hubo un error al crear la evaluación",
+            title: "Hubo un error al editar la pregunta",
             icon: "error",
         });
     })
