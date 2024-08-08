@@ -8,8 +8,16 @@
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('admin.pregunta.index')}}">Preguntas</a>
             </nav>
         </div>
+        <div class="col-sm-6">
+            <h1 class="m-0">Listado Evaluaciones</h1>
+        </div>
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"></li>
+            </ol>
+        </div>
         <div class="col-sm-12 mt-2">
-            <p class="m-0 mb-3 text-center h2">Listado de las evaluaciones</p>
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
                     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#mdlCreateEvalution" title="Crear Evaluación"><i class="fas fa-edit"></i></i>Crear Evaluación</button>

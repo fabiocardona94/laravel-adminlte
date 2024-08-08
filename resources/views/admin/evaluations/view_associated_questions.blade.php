@@ -1,5 +1,12 @@
 <x-layout.app meta-title='Evaluación' meta-description="Evaluación">
     <div class="row">
+        <div class="col-sm-12 mt-2">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.evaluacion.index') }}">Evaluaciones</a></li>
+                <li class="breadcrumb-item">Preguntas Asociadas</li>
+            </ol>
+        </div>
         <div class="col-12">
             <div class="card mt-2">
                 <div class="card-header">

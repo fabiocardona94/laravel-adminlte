@@ -6,8 +6,17 @@
                 <a class="flex-sm-fill text-sm-center nav-link active" href="{{ route('admin.pregunta.index')}}">Preguntas</a>
             </nav>
         </div>
+        <div class="col-sm-6">
+            <h1 class="m-0">Listado Preguntas</h1>
+        </div>
+        <div class="col-sm-6 mt-2">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item">Preguntas</li>
+            </ol>
+        </div>
         <div class="col-sm-12 ">
-            <h1 class="m-0 mb-3 text-center">Listado de preguntas</h1>
+            {{-- <h1 class="m-0 mb-3 text-center">Listado de preguntas</h1> --}}
             <div class="table-responsive">
                 <div class="d-flex justify-content-end mb-2 mt-2">
                     <button type="button" class="btn btn-outline-primary" title="Crear nueva pregunta" data-toggle="modal" data-target="#mdlcreateQuestion"><i class="fas fa-question-circle"></i>Crear pregunta</button>
