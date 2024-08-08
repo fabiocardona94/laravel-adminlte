@@ -192,12 +192,17 @@ class BanksQuestionsController extends Controller
     function update (Request $request,$id)
     {
 
+        // return $request;
         $validatedData = $request->validate([
             'question_title' => 'required|string|max:255',
             'status' => 'required|integer',
             'optionsAsociated.*.title' => 'required|string|max:255',
+            'optionsAsociated.*.id' => 'required|integer',
             'optionsAsociated.*.option' => 'required|integer|between:0,1',
             'optionsAsociated.*.percentage' => 'required|numeric|between:0,100',
+            'newOptions.*.title' => 'required|string|max:255',
+            'newOptions.*.option' => 'required|integer|between:0,1',
+            'newOptions.*.percentage' => 'required|numeric|between:0,100',
         ]);
 
 
@@ -208,27 +213,30 @@ class BanksQuestionsController extends Controller
             $question->save();
 
 
+            foreach ($validatedData['optionsAsociated'] as $optionsAsociated) {
+                // Actualiza opciones existentes
+                $option = EvaluationQuestionOption::where('id', $optionsAsociated['id'])->where('question_id', $id)->first();
+                if ($option) {
+                    $option->update([
+                        'question_option' => $optionsAsociated['title'],
+                        'is_correct' => $optionsAsociated['option'],
+                        'percentage_value' => $optionsAsociated['percentage']
+                    ]);
+                }
+            }
 
-            // foreach ($validatedData['optionsAsociated'] as $optionsAsociated) {
-            //     // Encuentra la opción existente basada en su id
-            //     $option = EvaluationQuestionOption::where('question_id', $id)->get();
-            //     if ($option) {
-            //         // Si la opción existe, actualiza sus campos
-            //         $option->update([
-            //             'question_option' => $optionsAsociated['title'],
-            //             'is_correct' => $optionsAsociated['option'],
-            //             'percentage_value' => $optionsAsociated['percentage']
-            //         ]);
-            //     } else {
-
-            //         EvaluationQuestionOption::create([
-            //             'question_id' => $id,
-            //             'question_option' => $optionsAsociated['title'],
-            //             'is_correct' => $optionsAsociated['option'],
-            //             'percentage_value' => $optionsAsociated['percentage']
-            //         ]);
-            //     }
-            // }
+            // Crea nuevas opciones
+            if (isset($validatedData['newOptions']) && !empty($validatedData['newOptions'])) {
+                // Ejecuta el registro
+                foreach ($validatedData['newOptions'] as $newOption) {
+                    EvaluationQuestionOption::create([
+                        'question_id' => $id,
+                        'question_option' => $newOption['title'],
+                        'is_correct' => $newOption['option'],
+                        'percentage_value' => $newOption['percentage']
+                    ]);
+                }
+            }
 
             return response()->json([
                 'status' => 'success',

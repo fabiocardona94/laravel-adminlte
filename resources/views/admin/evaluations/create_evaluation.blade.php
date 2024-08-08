@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
                             <label for="titleEvaluation" class="col-form-label">Titulo de la evaluación</label>
-                            <input type="text" value="" class="form-control" id="titleEvaluation" name="titleEvaluation" required>
+                            <input type="text" value="" class="form-control" id="titleEvaluation" name="titleEvaluation" min="4" max="255" required>
                         </div>
                         <div class="form-group">
                             <i class="far fa-comment-dots"></i>

@@ -221,12 +221,12 @@ function getOptionsasociateds(options) {
 
 
             // Create a new cell (td) for the id of option
-            const trIdOption = document.createElement('td');
-            trIdOption.className = 'd-none';
+            const tdIdOption = document.createElement('td');
+            tdIdOption.className = 'd-none';
             const idption = document.createElement('span');
-            idption.id = `id_option${optionCounts}`;
+            idption.id = `option_id${optionCounts}`;
             idption.textContent = option.id;
-            trIdOption.appendChild(idption)
+            tdIdOption.appendChild(idption)
 
             // Create a new cell (td) for the title input
             const titleCell = document.createElement('td');
@@ -273,7 +273,7 @@ function getOptionsasociateds(options) {
             actionsCell.appendChild(removeButton);
 
             // Append cells to the new row
-            newOptionRow.appendChild(trIdOption);
+            newOptionRow.appendChild(tdIdOption);
             newOptionRow.appendChild(titleCell);
             newOptionRow.appendChild(optionCell);
             newOptionRow.appendChild(percentageCell);
@@ -433,26 +433,35 @@ function toggleAssociatedOptionStatus(optionQuestion) {
 
 
 
-//Method to obtain the data de
+//Method to obtain the data de options asociated and  new options
 function getDataAssociatedOptions() {
     const associatedOptionRows = document.querySelectorAll('#trOptionsAsociated tr');
-    const dataOptionsAssociated = [];
+    const existingOptions = [];
+    const newOptions = [];
 
     associatedOptionRows.forEach(row => {
+        const idAsociatedOption = row.querySelector('span[id^="option_id"]');
         const titleAsociatedOption = row.querySelector('input[id^="title_asociated"]');
         const optionSpanAsociated = row.querySelector('span[id^="option_asociated"]');
         const optionValue = (optionSpanAsociated.textContent === "FALSA") ? 0 : 1;
         const percentageSpan = row.querySelector('span[id^="percentage_asociated"]');
         const percentageOption = percentageSpan ? percentageSpan.textContent.replace('%', '') : '';
 
-        dataOptionsAssociated.push({
+        const optionData = {
             title: titleAsociatedOption.value,
             option: optionValue,
             percentage: percentageOption
-        });
+        };
+
+        if (idAsociatedOption && idAsociatedOption.textContent) {
+            optionData.id = idAsociatedOption.textContent;
+            existingOptions.push(optionData);
+        } else {
+            newOptions.push(optionData);
+        }
     });
 
-    return dataOptionsAssociated;
+    return { existingOptions, newOptions };
 }
 
 let FormEditQuestion = document.getElementById("editQuestionForm");
@@ -465,47 +474,42 @@ if(FormEditQuestion)
     });
 }
 
-function updateQuestion(){
 
+function updateQuestion() {
     const idQuestionEdit = document.getElementById('idQuestionEdit').value;
     const stausQuestionEdit = document.getElementById('question_status_edit').value;
-    console.log('Status '+stausQuestionEdit);
-
     const question_title = document.getElementById('titleQuestionEdit').value;
 
-    const associatedOptionData = getDataAssociatedOptions();
+    const { existingOptions, newOptions } = getDataAssociatedOptions();
+
     let data = {
-        id : idQuestionEdit,
+        id: idQuestionEdit,
         question_title: question_title,
         status: stausQuestionEdit,
-        optionsAsociated : associatedOptionData
-    }
+        optionsAsociated: existingOptions,
+        newOptions: newOptions
+    };
 
-    fetch(`/admin/pregunta/update/${idQuestionEdit}`,{
-        method : 'PATCH',
-        headers : headersFetch1,
-        body : JSON.stringify(data)
-
+    fetch(`/admin/pregunta/update/${idQuestionEdit}`, {
+        method: 'PATCH',
+        headers: headersFetch1,
+        body: JSON.stringify(data)
     })
     .then(response => response.json())
-    .then(response =>{
-        if(response.status === 'success') {
+    .then(response => {
+        if (response.status === 'success') {
             Swal.fire({
-
                 title: response.message,
                 icon: 'success',
                 confirmButtonText: "Aceptar",
-
             }).then(() => {
-                // Cerrar el modal
                 $('#modalEditQuestion').modal('hide');
-                // Recargar la DataTable
                 $('#questions').DataTable().ajax.reload();
             });
         } else {
-            alert('Error: ' + response.message);
+            // alert('Error: ' + response.message);
             Swal.fire({
-                title: "Succes Fail",
+                title: response.message,
                 icon: "error",
             });
         }
@@ -516,10 +520,9 @@ function updateQuestion(){
             icon: "error",
         });
     })
-    .finally(() =>{
+    .finally(() => {
         btnEditAssociatedQuestion.removeAttribute('disabled');
     });
-
 }
 
 // Method to update the status of an question ascociated

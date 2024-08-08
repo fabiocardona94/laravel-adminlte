@@ -104,7 +104,7 @@
                         <div class="form-group">
                             <i class="fas fa-pencil-alt"></i>
                             <label for="titleQuestionEdit" class="col-form-label">Estado</label>
-                            <input type="text" value="" class="form-control" id="titleQuestionEdit" name="titleQuestionEdit" required>
+                            <input type="text" value="" class="form-control" id="titleQuestionEdit" name="titleQuestionEdit" min="4" max="255" required>
                         </div>
                         <div class="form-group">
                             <i class="fas fa-exclamation-triangle"></i>
