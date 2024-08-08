@@ -81,5 +81,8 @@ Route::prefix('/admin')->name('admin.')->group(function () {
 
         Route::get('opcionesasociadas/{id}',[OptionsController::class,'optionsOfAQuestion'])
             ->name('opciones.asociadas');
+
+        Route::patch('update/{id}',[OptionsController::class,'update'])
+            ->name('update');
     });
 });

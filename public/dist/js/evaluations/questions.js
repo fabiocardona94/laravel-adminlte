@@ -6,7 +6,6 @@ const btnEditAssociatedQuestion = document.getElementById('btnEditAssociatedQues
 const btnSendAssociatedQuestion = document.getElementById('btnSendAssociatedQuestion');
 
 let  optionCounts = 0;
-let objectEcxit = true;
 let isTableOptionsVisible = false;
 let selectedValues = [];
 const headersFetch1 = {
@@ -160,7 +159,7 @@ function createQuestioAsocciated()
 // Method to display evaluation data in a modal.
 
 function openModalEditQuestion(id){
-    optionCounts = 0;
+    // optionCounts = 0;
     fetch(`/admin/pregunta/edit/${id}`)
     .then(response => response.json())
     .then(response =>{
@@ -189,7 +188,7 @@ function getDataQuestuion(dataQuestion){
     // Llenar los campos del modal con los datos de la evaluación
     $('#idQuestionEdit').val(dataQuestion.id);
     $('#titleQuestionEdit').val(dataQuestion.question_title);
-    console.log('Titulo '+dataQuestion.question_title);
+    // console.log('Titulo '+dataQuestion.question_title);
 
     $('#question_status_edit').val(dataQuestion.status);
 
@@ -215,16 +214,19 @@ function getOptionsasociateds(options) {
 
         options.forEach(option => {
             optionCounts++;
+
+            const getUniqueIdAssociatedOption = `${Date.now()}_${optionCounts}`;
+
             // Create a new row (tr) element
             const newOptionRow = document.createElement('tr');
-            newOptionRow.id = `option_asociated_row_${optionCounts}`;
+            newOptionRow.id = `option_asociated_row_${getUniqueIdAssociatedOption}`;
 
 
             // Create a new cell (td) for the id of option
             const tdIdOption = document.createElement('td');
             tdIdOption.className = 'd-none';
             const idption = document.createElement('span');
-            idption.id = `option_id${optionCounts}`;
+            idption.id = `option_id${getUniqueIdAssociatedOption}`;
             idption.textContent = option.id;
             tdIdOption.appendChild(idption)
 
@@ -233,8 +235,8 @@ function getOptionsasociateds(options) {
             const titleInput = document.createElement('input');
             titleInput.type = 'text';
             titleInput.className = 'form-control-plaintext';
-            titleInput.id = `title_asociated${optionCounts}`;
-            titleInput.name = `title_asociated${optionCounts}`;
+            titleInput.id = `title_asociated${getUniqueIdAssociatedOption}`;
+            titleInput.name = `title_asociated${getUniqueIdAssociatedOption}`;
             titleInput.value = option.question_option;
             titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
             titleInput.required = true;
@@ -246,7 +248,7 @@ function getOptionsasociateds(options) {
             const optionCell = document.createElement('td');
             const optionQuestion = document.createElement('span');
             optionQuestion.className = option.is_correct === 1 ? 'badge badge-success' : 'badge badge-danger';
-            optionQuestion.id = `option_asociated${optionCounts}`;
+            optionQuestion.id = `option_asociated${getUniqueIdAssociatedOption}`;
             optionQuestion.textContent = option.is_correct === 1 ? 'VERDADERA' : 'FALSA';
             optionQuestion.style.cursor = 'pointer';
             optionQuestion.title = "Cambiar estado de la opción";
@@ -256,7 +258,7 @@ function getOptionsasociateds(options) {
             // Create a new cell (td) for the percentage span
             const percentageCell = document.createElement('td');
             const percentageSpan = document.createElement('span');
-            percentageSpan.id = `percentage_asociated${optionCounts}`;
+            percentageSpan.id = `percentage_asociated${getUniqueIdAssociatedOption}`;
             percentageSpan.title = "Porcentaje que vale esta opción";
             percentageSpan.style.cursor = 'pointer';
             percentageSpan.textContent = option.percentage_value + '%';
@@ -269,7 +271,7 @@ function getOptionsasociateds(options) {
             removeButton.className = 'btn btn-danger btn-sm';
             removeButton.textContent = 'X';
             removeButton.title = 'Eliminar Opción';
-            removeButton.onclick = function() { removeAsocitedOption(optionCounts); };
+            removeButton.onclick = function() { removeAsocitedOption(getUniqueIdAssociatedOption,option.id); };
             actionsCell.appendChild(removeButton);
 
             // Append cells to the new row
@@ -297,9 +299,9 @@ function getOptionsasociateds(options) {
 
 
 function addOptionAsociated() {
-
     optionCounts++;
-    // console.log("Contador "+optionCounts);
+    const uniqueIdAssociatedOption = `${Date.now()}_${optionCounts}`;
+
 
     // Mostrar la tabla si no está visible
     if (!isTableOptionsVisible) {
@@ -307,65 +309,62 @@ function addOptionAsociated() {
         isTableOptionsVisible = true;
     }
 
-    // Create a new row (tr) element
+    // Crear una nueva fila (tr)
     const newOptionRow = document.createElement('tr');
-    newOptionRow.id = `option_asociated_row_${optionCounts}`;
+    newOptionRow.id = `option_asociated_row_${uniqueIdAssociatedOption}`;
 
-    // Create a new cell (td) for the title input
+    // Celda del título
     const titleCell = document.createElement('td');
     const titleInput = document.createElement('input');
     titleInput.type = 'text';
     titleInput.className = 'form-control-plaintext';
-    titleInput.id = `title_asociated${optionCounts}`;
-    titleInput.name = `title_asociated${optionCounts}`;
-    titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
+    titleInput.id = `title_asociated${uniqueIdAssociatedOption}`;
+    titleInput.name = `title_asociated${uniqueIdAssociatedOption}`;
+    titleInput.placeholder = "Escribe aquí la opción de esta pregunta";
     titleInput.required = true;
     titleCell.appendChild(titleInput);
     statusbtnCreateAssociatedQuestion(titleInput);
 
-    // Crear una celda (td) para la opción
+    // Celda de la opción
     const optionCell = document.createElement('td');
     const optionQuestion = document.createElement('span');
     optionQuestion.className = 'badge badge-success';
-    optionQuestion.id = `option_asociated${optionCounts}`;
+    optionQuestion.id = `option_asociated${uniqueIdAssociatedOption}`;
     optionQuestion.textContent = 'VERDADERA';
     optionQuestion.style.cursor = 'pointer';
     optionQuestion.title = "Cambiar estado de la opción";
     optionQuestion.onclick = function() { toggleAssociatedOptionStatus(optionQuestion); };
     optionCell.appendChild(optionQuestion);
 
-
-    // Create a new cell (td) for the percentage sapn
+    // Celda del porcentaje
     const percentageCell = document.createElement('td');
     const percentageSpan = document.createElement('span');
-    percentageSpan.id = `percentage_asociated${optionCounts}`;
+    percentageSpan.id = `percentage_asociated${uniqueIdAssociatedOption}`;
     percentageSpan.title = "Porcentaje que vale esta opción";
     percentageSpan.style.cursor = 'pointer';
     percentageCell.appendChild(percentageSpan);
 
-
-    // Create a new cell (td) for the remove button
+    // Celda del botón de eliminar
     const actionsCell = document.createElement('td');
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'btn btn-danger btn-sm';
     removeButton.textContent = 'X';
     removeButton.title = 'Eliminar Opción';
-    removeButton.onclick = function() { removeAsocitedOption(optionCounts); };
+    removeButton.onclick = function() { removeAsocitedOption(uniqueIdAssociatedOption); };
     actionsCell.appendChild(removeButton);
 
-    // Append cells to the new rowpercentageCell
+    // Agregar celdas a la fila
     newOptionRow.appendChild(titleCell);
     newOptionRow.appendChild(optionCell);
     newOptionRow.appendChild(percentageCell);
     newOptionRow.appendChild(actionsCell);
 
-    // Append the new row to the table body
-    document.getElementById('trOptionsAsociated').appendChild(newOptionRow)
+    // Agregar la fila a la tabla
+    document.getElementById('trOptionsAsociated').appendChild(newOptionRow);
 
     updatePercentagesQuestions();
 }
-
 function statusbtnCreateAssociatedQuestion(titleInput){
     const btnEditAssociatedQuestion= document.getElementById('btnEditAssociatedQuestion');
     titleInput.addEventListener('input', function() {
@@ -401,21 +400,61 @@ function updatePercentagesQuestions() {
     });
 }
 
-function removeAsocitedOption(optionId) {
-    optionCounts--;
-    const rowToRemove = document.getElementById(`option_asociated_row_${optionId}`);
-    if (rowToRemove) {
-        rowToRemove.parentNode.removeChild(rowToRemove);
 
-        // Ocultar la tabla si no hay más filas
-        if (document.getElementById('trOptionsAsociated').childElementCount === 0) {
-            document.getElementById('optionsAsociatedTable').style.display = 'none';
-            isTableOptionsVisible = false;
-        } else {
-            // Actualizar los porcentajes de todas las filas
-            updatePercentagesQuestions();
+function removeAsocitedOption(optionIdD,optionId) {
+    Swal.fire({
+        title: "Seguro quieres eliminar esta opción?",
+        text: "Esta opción ya no sera parte de esta pregunta!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Eliminar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+            // console.log('Id opcion '+optionId);
+
+            const rowToRemove = document.getElementById(`option_asociated_row_${optionIdD}`);
+            if (rowToRemove) {
+                rowToRemove.parentNode.removeChild(rowToRemove);
+
+                let data = {
+                    id : optionId
+                };
+
+                fetch(`/admin/opciones/update/${optionId}`,{
+                    method : 'PATCH',
+                    headers: headersFetch1,
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(response =>{
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            title: response.message,
+                            icon: 'success',
+                            confirmButtonText: "Aceptar",
+                        })
+                    } else {
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                });
+
+                // Ocultar la tabla si no hay más filas
+                if (document.getElementById('trOptionsAsociated').childElementCount === 0) {
+                    document.getElementById('optionsAsociatedTable').style.display = 'none';
+                    isTableOptionsVisible = false;
+                } else {
+                    // Actualizar los porcentajes de todas las filas
+                    updatePercentagesQuestions();
+                }
+            }
         }
-    }
+      });
 }
 
 //Method to change of option the question to TRUE or FALSE
@@ -634,7 +673,7 @@ function consultQuestionBank(id, page = 1) {
     });
 }
 
-// Agrega un evento de cambio al tbody que contiene los inputs dinámicos
+// Add a change event to the tbody containing the dynamic inputs
 let inputSelectQuestion = document.querySelector('#associated_questions tbody').addEventListener('change', function(event) {
     if (event.target && event.target.matches('input[type="checkbox"]')) {
         const checkboxValue = event.target.value;
@@ -695,8 +734,6 @@ if(formbankQuestions)
         btnSendAssociatedQuestion.setAttribute('disabled','disabled');
         createMultipleAssociatedQuestions();
     });
-}else{
-    alert('Heror')
 }
 
 //Method to create

@@ -213,15 +213,17 @@ class BanksQuestionsController extends Controller
             $question->save();
 
 
-            foreach ($validatedData['optionsAsociated'] as $optionsAsociated) {
-                // Actualiza opciones existentes
-                $option = EvaluationQuestionOption::where('id', $optionsAsociated['id'])->where('question_id', $id)->first();
-                if ($option) {
-                    $option->update([
-                        'question_option' => $optionsAsociated['title'],
-                        'is_correct' => $optionsAsociated['option'],
-                        'percentage_value' => $optionsAsociated['percentage']
-                    ]);
+            if(isset($validatedData['optionsAsociated']) && !empty($validatedData['optionsAsociated'])){
+                foreach ($validatedData['optionsAsociated'] as $optionsAsociated) {
+                    // Actualiza opciones existentes
+                    $option = EvaluationQuestionOption::where('id', $optionsAsociated['id'])->where('question_id', $id)->first();
+                    if ($option) {
+                        $option->update([
+                            'question_option' => $optionsAsociated['title'],
+                            'is_correct' => $optionsAsociated['option'],
+                            'percentage_value' => $optionsAsociated['percentage']
+                        ]);
+                    }
                 }
             }
 

@@ -1,10 +1,11 @@
 let optionCount = 0;
 let isTableVisible = false;
+
+
 // Method to add a new option
 function addOption() {
-    console.log("Add si");
     optionCount++;
-    // console.log("Contador "+optionCount);
+    const uniqueOptionId = `${Date.now()}_${optionCount}`;
 
     // Mostrar la tabla si no está visible
     if (!isTableVisible) {
@@ -14,15 +15,15 @@ function addOption() {
 
     // Create a new row (tr) element
     const newOptionRow = document.createElement('tr');
-    newOptionRow.id = `option_row_${optionCount}`;
+    newOptionRow.id = `option_row_${uniqueOptionId}`;
 
     // Create a new cell (td) for the title input
     const titleCell = document.createElement('td');
     const titleInput = document.createElement('input');
     titleInput.type = 'text';
     titleInput.className = 'form-control-plaintext';
-    titleInput.id = `title_${optionCount}`;
-    titleInput.name = `title_${optionCount}`;
+    titleInput.id = `title_${uniqueOptionId}`;
+    titleInput.name = `title_${uniqueOptionId}`;
     titleInput.placeholder = "Escribe aqui la opción de esta pregunta";
     titleInput.required = true;
     titleCell.appendChild(titleInput);
@@ -32,7 +33,7 @@ function addOption() {
     const optionCell = document.createElement('td');
     const optionQuestion = document.createElement('span');
     optionQuestion.className = 'badge badge-success';
-    optionQuestion.id = `option_${optionCount}`;
+    optionQuestion.id = `option_${uniqueOptionId}`;
     optionQuestion.textContent = 'VERDADERA';
     optionQuestion.style.cursor = 'pointer';
     optionQuestion.title = "Cambiar estado de la opción";
@@ -43,7 +44,7 @@ function addOption() {
     // Create a new cell (td) for the percentage sapn
     const percentageCell = document.createElement('td');
     const percentageSpan = document.createElement('span');
-    percentageSpan.id = `percentage_${optionCount}`;
+    percentageSpan.id = `percentage_${uniqueOptionId}`;
     percentageSpan.title = "Porcentaje que vale esta opción";
     percentageSpan.style.cursor = 'pointer';
     percentageCell.appendChild(percentageSpan);
@@ -56,7 +57,7 @@ function addOption() {
     removeButton.className = 'btn btn-danger btn-sm';
     removeButton.textContent = 'X';
     removeButton.title = 'Eliminar Opción';
-    removeButton.onclick = function() { removeOption(optionCount); };
+    removeButton.onclick = function() { removeOption(uniqueOptionId); };
     actionsCell.appendChild(removeButton);
 
     // Append cells to the new rowpercentageCell
@@ -71,15 +72,16 @@ function addOption() {
     updatePercentages();
 }
 
+
+
+//Method to disabled button to create or update  a question yes the input its empty
 function statusButtonCreateEvaluation(titleInput){
     const btnCreateQuestion= document.getElementById('btnCreateQuestion');
     titleInput.addEventListener('input', function() {
         if (titleInput.value.trim() !== '') {
             btnCreateQuestion.removeAttribute('disabled');
-            console.log('se ejecuta1')
         } else {
             btnCreateQuestion.setAttribute('disabled', 'disabled');
-            console.log('se ejecuta2')
         }
     });
 
@@ -89,15 +91,13 @@ function statusButtonCreateEvaluation(titleInput){
 
 //Method to calculate the porcentage of a option
 function updatePercentages() {
-    console.log('UpdatePorcentage');
-
     const rows = document.querySelectorAll('#trOptions tr');
     const trueRows = Array.from(rows).filter(row => {
         const optionSpan = row.querySelector('span[id^="option_"]');
         return optionSpan && optionSpan.textContent === 'VERDADERA';
     });
 
-    const valuePercentage = (100 / trueRows.length); // Calcula el nuevo porcentaje basado solo en opciones VERDADERAS
+    const valuePercentage = (100 / trueRows.length);
 
     rows.forEach((row) => {
         const percentageSpan = row.querySelector('span[id^="percentage_"]');
@@ -106,7 +106,7 @@ function updatePercentages() {
             if (optionSpan && optionSpan.textContent === 'VERDADERA') {
                 percentageSpan.textContent = `${valuePercentage}%`;
             } else {
-                percentageSpan.textContent = `0%`; // Establecer porcentaje en 0 para opciones FALSAS
+                percentageSpan.textContent = `0%`;
             }
         }
     });
@@ -115,9 +115,6 @@ function updatePercentages() {
 // Method to remove  a new option
 
 function removeOption(optionId) {
-    console.log('Remove');
-
-    optionCount--;
     const rowToRemove = document.getElementById(`option_row_${optionId}`);
     if (rowToRemove) {
         rowToRemove.parentNode.removeChild(rowToRemove);
@@ -149,7 +146,6 @@ function toggleOptionStatus(optionQuestion) {
 function seeAQuestionOptions(id,title){
     // console.log('Id '+id);
     // console.log('Titulo de la pregunta '+title);
-
     fetch(`/admin/opciones/opcionesasociadas/${id}`)
     .then(response => response.json())
     .then((response) => {
