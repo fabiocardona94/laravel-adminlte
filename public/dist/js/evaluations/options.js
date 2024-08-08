@@ -158,32 +158,51 @@ function seeAQuestionOptions(id,title){
 
             // Verifica si response.data es un array
             if (Array.isArray(response.data)) {
-                // Crear los elementos para cada opción
-                response.data.forEach(option => {
-                    // Crear un div para la opción
-                    const optionDiv = $('<div class="form-group"></div>');
-                    // Crear el input para la opción
-                    const inputOptions = $('<input type="text" readonly class="form-control">');
-                    // Establecer el valor del input
-                    inputOptions.val(option.question_option);
+                const optionsContainer = document.getElementById('optionsContainer');
+                if (Array.isArray(response.data) && response.data.length > 0) {
+                    response.data.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'form-group';
 
-                    if (option.is_correct === 1) {
-                        inputOptions.addClass('text-success');
-                    } else {
-                        inputOptions.addClass('text-danger');
-                    }
-                    // Añadir el input al div
-                    optionDiv.append(inputOptions);
-                    // Añadir el div al contenedor
-                    $('#optionsContainer').append(optionDiv);
-                });
+                        const inputOptions = document.createElement('input');
+                        inputOptions.type = 'text';
+                        inputOptions.readOnly = true;
+                        inputOptions.className = 'form-control';
+                        inputOptions.value = option.question_option;
+
+                        if (option.is_correct === 1) {
+                            inputOptions.classList.add('text-success');
+                        } else {
+                            inputOptions.classList.add('text-danger');
+                        }
+
+                        optionDiv.appendChild(inputOptions);
+
+
+                        optionsContainer.appendChild(optionDiv);
+                    });
+                } else {
+                    const noOptionsMessage = document.createElement('p');
+                    noOptionsMessage.textContent = 'No hay opciones disponibles para esta pregunta.';
+                    noOptionsMessage.className = 'text-center'
+
+                    const divBtnAddQuestions = document.createElement('div');
+                    divBtnAddQuestions.className = ' text-center';
+
+
+                    const btnAddOptions = document.createElement('button');
+                    btnAddOptions.className = 'btn btn-sm btn-primary';
+                    btnAddOptions.textContent = 'Agregar Opción'
+                    divBtnAddQuestions.appendChild(btnAddOptions);
+
+                    optionsContainer.appendChild(noOptionsMessage);
+                    optionsContainer.appendChild(divBtnAddQuestions);
+                }
             } else {
-                console.error('Expected an array but received:', response.data);
                 Swal.fire({
                     title: "Datos no válidos recibidos",
                     icon: "error"
                 });
-                console.log('E1');
             }
             // Abrir el modal
             $('#mdlviewOptions').modal('show');
@@ -192,7 +211,6 @@ function seeAQuestionOptions(id,title){
                 title: response.message,
                 icon: "error"
             });
-            console.log('E2');
         }
     })
     .catch((err) => {
@@ -200,6 +218,5 @@ function seeAQuestionOptions(id,title){
             title: "Hubo un error al obtener las opciones de esta pregunta",
             icon: "error"
         });
-        console.log('E3');
     });
 }

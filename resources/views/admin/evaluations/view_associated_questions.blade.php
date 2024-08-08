@@ -170,6 +170,21 @@
                         </div>
                         <div id="optionsContainer">
                         </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="optionsTable" style="display: none;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Título</th>
+                                        <th scope="col">Opción</th>
+                                        <th scope="col">Porcentaje</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="trOptions">
+                                    <!-- Las opciones se agregarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="text-center mb-2 mt-2">
                             <button type="button" class="btn btn-outline-danger"  data-dismiss="modal">Atras</button>
                         </div>
@@ -215,7 +230,7 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="text-center mb-2 mt-2">
+                        <div   class="text-center mb-2 mt-2">
                             <button type="submit" class="btn btn-primary disabled" id="btnSendAssociatedQuestion">Añadir Preguntas</button>
                         </div>
                     </div>
