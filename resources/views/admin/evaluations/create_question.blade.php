@@ -140,7 +140,7 @@
                                 </table>
                             </div>
                         </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="addOptionAsociated()">
+                        <button class="btn btn-sm btn-primary" id="btnAddOptionAsociated" type="button">
                             <i class="fas fa-plus"></i> Agregar Opción
                         </button>
                         <div class="text-center mb-2 mt-2">
@@ -151,10 +151,11 @@
                 </div>
             </div>
         </div>
+
     </div>
     @push('scripts')
-        <script  src="/dist/js/evaluations/questions.js"></script>
-        <script src="/dist/js/evaluations/options.js"></script>
+        <script  src="/dist/js/evaluations/questions.js?v={{ time() }}" defer></script>
+        <script src="/dist/js/evaluations/options.js?v={{ time() }}" defer></script>
         <script>
             $(document).ready(function() {
                 $('#questions').DataTable( {

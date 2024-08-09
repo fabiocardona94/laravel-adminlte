@@ -1,6 +1,13 @@
 let optionCount = 0;
 let isTableVisible = false;
 
+const btnAddOptionAsociated = document.querySelector('#btnAddOptionAsociated');
+btnAddOptionAsociated.addEventListener('click', () => {
+    addOptionAsociated();
+})
+
+
+
 
 // Method to add a new option
 function addOption() {
@@ -84,7 +91,6 @@ function statusButtonCreateEvaluation(titleInput){
             btnCreateQuestion.setAttribute('disabled', 'disabled');
         }
     });
-
 }
 
 

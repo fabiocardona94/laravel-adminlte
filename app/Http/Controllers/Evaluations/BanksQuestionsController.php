@@ -253,6 +253,20 @@ class BanksQuestionsController extends Controller
     }
 
 
+    public function updateEvaluationReQuestion(int $evaluation_id,  int $question_id){
+        //evaluation_re_questions
+        //
+
+        /**
+         * SI VOY A ELIMINAR (DESACTIVAR ) LA EVALUACION
+         *  - TODO LO QUE ESTE ASOCIADO EN evaluation_re_questions SE PASA A STATUS 0 (CERO)
+         *
+         * SI VOY A ELIMINAR (DESACTIVAR) UNA OPCION
+         *  - TODO LO QUESTE ASOCIADO POR EVLUACION Y OPCION EN evaluation_re_questions PASA A STATUS (CERO)
+         */
+    }
+
+
 
 
     /**

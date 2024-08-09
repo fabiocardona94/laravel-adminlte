@@ -156,7 +156,7 @@
         </div>
     </div>
     @push('scripts')
-    <script  src="/dist/js/evaluations/evaluations.js"></script>
+    <script  src="/dist/js/evaluations/evaluations.js" defer></script>
     <script>
         $(document).ready(function() {
             $('#evaluations').DataTable( {
